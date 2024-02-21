@@ -12,12 +12,13 @@ module au_top (
   ) {
   
   sig rst;                  // reset signal
-  alu alu;
+  alu alu;                  // instantiate an alu unit
 
   .clk(clk) {
     // The reset conditioner is used to synchronize the reset signal to the FPGA
     // clock. This ensures the entire FPGA comes out of reset at the same time.
     reset_conditioner reset_cond;
+    // dffs to store values of a, b, and alufn to be fed to the alu 
     dff a[32](.rst(rst));
     dff b[32](.rst(rst));
     dff alufn[6](.rst(rst));
@@ -35,7 +36,8 @@ module au_top (
     
     io_seg = 8b0; // connect segments to the driver
     io_sel = 4b0110; // turn on rightmost digit, and leftmost digit
-    
+
+    // alu to receive inputs from the dffs  
     alu.a = a.q;
     alu.b = b.q;
     alu.alufn_signal = alufn.q;
