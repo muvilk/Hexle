@@ -21,7 +21,7 @@ module au_top (
     dff a[32](.rst(rst));
     dff b[32](.rst(rst));
     dff alufn[6](.rst(rst));
-    button_conditioner button_conditioner[3];
+    button_conditioner button_conditioner[3]; // this is to debounce the button signals
   }
   
   always {
