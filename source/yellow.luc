@@ -1,0 +1,17 @@
+module yellow (
+    input a[16],
+    input b[16],
+    output out[16]
+  ) {
+
+ count count[4];
+ var c;
+ 
+  always {
+    for (i = 3, i > -1, i++) {
+      count[i].a = a;
+      count[i].b = b[3+4*i:4*i];
+      out[3+4*i:4*i] = count[i];
+    }
+  }
+}

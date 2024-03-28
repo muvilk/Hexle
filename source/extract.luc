@@ -1,0 +1,25 @@
+module extract (
+    input a[16],
+    input b[2],
+    output out[4]
+  ) {
+
+  always {
+    case (b) {
+      b11:
+        out = a[15:12];
+
+      b10:
+        out = a[11:8];
+
+      b01:
+        out = a[7:4];
+
+      b00:
+        out = a[3:0];
+
+      default:
+        out = 4b0;
+    }
+  }
+}

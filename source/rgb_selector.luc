@@ -1,0 +1,27 @@
+module rgb_selector (
+    input char[16],
+    input digit[2],
+    input colour[2],
+    input cb,
+    output out
+  ) {
+ 
+colour_selector col_sel
+
+  always {
+
+    col_sel.char = char;
+    col_sel.digit = digit;
+    col_sel.cb = cb
+
+    case (colour) {
+        b00: // red
+            out = col_sel.out[2]
+        b01: // green
+            out = col_sel.out[1]
+        b10: // blue
+            out = col_sel.out[0]
+
+    }
+  }
+}

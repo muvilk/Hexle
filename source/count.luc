@@ -1,0 +1,21 @@
+module count (
+    input a[16],
+    input b[4],
+    output count[4]
+  ) {
+
+  var i;
+  var c;
+  
+  always {
+    
+    for (i = 3; i > -1; i--) { 
+      if (a[3+4*i:4*i] == b) {
+        c = c + b1;
+      }
+    }
+    
+    count = c;
+    
+  }
+}

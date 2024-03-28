@@ -1,0 +1,21 @@
+module sixteenbit_rca (
+  input a[16],
+  input b[16],
+  input ci,
+  output s[16],
+  output co
+)
+
+{ 
+full_adder fa[16];
+always {
+  
+  fa.a = a;
+  fa.b = b;
+  fa.ci = ci;
+  fa.ci[15:1] = fa.co[14:0]; // carry in of next fa = carry out of previous fa
+    
+  s = fa.s; // sum = array of the sums of all 16 adders
+  co = fa.co[15]; // carry out = carry out of last adder in the chain
+  }
+}

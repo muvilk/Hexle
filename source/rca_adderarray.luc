@@ -1,0 +1,39 @@
+module rca_adderarray (
+    input a[16],
+    input b[16],
+    output out[16]
+  ) {
+
+  
+ sixteenbit_rca adderarray[15];
+ var i;
+  
+  always {
+  
+    adderarray.a[0] = c{c{a[14:0]} & 15x{b[1]}, b0};
+    adderarray.a[1] = c{c{a[13:0]} & 14x{b[2]}, 2b0};
+    adderarray.a[2] = c{c{a[12:0]} & 13x{b[3]}, 3b0};
+    adderarray.a[3] = c{c{a[11:0]} & 12x{b[4]}, 4b0};
+    adderarray.a[4] = c{c{a[10:0]} & 11x{b[5]}, 5b0};
+    adderarray.a[5] = c{c{a[9:0]} & 10x{b[6]}, 6b0};
+    adderarray.a[6] = c{c{a[8:0]} & 9x{b[7]}, 7b0};
+    adderarray.a[7] = c{c{a[7:0]} & 8x{b[8]}, 8b0};
+    adderarray.a[8] = c{c{a[6:0]} & 7x{b[9]}, 9b0};
+    adderarray.a[9] = c{c{a[5:0]} & 6x{b[10]}, 10b0};
+    adderarray.a[10] = c{c{a[4:0]} & 5x{b[11]}, 11b0};
+    adderarray.a[11] = c{c{a[3:0]} & 4x{b[12]}, 12b0};
+    adderarray.a[12] = c{c{a[2:0]} & 3x{b[13]}, 13b0};
+    adderarray.a[13] = c{c{a[1:0]} & 2x{b[14]}, 14b0};
+    adderarray.a[14] = c{a[0] & b[15], 15b0};
+    
+    adderarray.b[0] = a & 16x{b[0]};
+    for (i = 1; i < 15; i++) {
+      adderarray.b[i] = adderarray.s[i-1];
+        }
+    
+    adderarray.ci = 16x{b0}; // ci of each row = GND
+    
+    out = adderarray.s[14];
+    
+  }
+}

@@ -1,0 +1,2 @@
+cd "C:/Users/rapha/OneDrive - Singapore University of Technology and Design/Documents/sutd/term 4/50.002 computational structures/labs/lab3/alu-starter/cores"
+create_project managed_ip_project "C:/Users/rapha/OneDrive - Singapore University of Technology and Design/Documents/sutd/term 4/50.002 computational structures/labs/lab3/alu-starter/cores/managed_ip_project" -part xc7a35tftg256-1 -ip

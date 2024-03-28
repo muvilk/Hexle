@@ -1,18 +1,24 @@
 module adder (
-    input a[32],
-    input b[32],
+    input a[16],
+    input b[16],
     input alufn_signal[6],
-    output out[32],
+    output out[16],
     output z,
     output v,
     output n
-  ) {
-
-  always {
-    // default values to silence errors 
-    out = 0;
-    z = 0;
-    v = 0;
-    n = 0;
+  ) 
+{
+sixteenbit_rca rca;
+  
+always {
+    // set the inputs to the first unit (LSB) of the RCA 
+    rca.a = a;
+    rca.b = b ^ 16x{alufn_signal[0]}; // bitwise XOR operation to create 1's complement during subtraction, b remains unmodified otherwise
+    rca.ci = alufn_signal[0]; // ci = 1 to add 1 to the 1's complement to create the 2's complement during subtraction, is 0 otherwise
+ 
+    out = rca.s;
+    v = (a[15] & ((b[15] ^ alufn_signal[0])) & ~rca.s[15]) | (~a[15] & ~(b[15] ^ alufn_signal[0]) & rca.s[15]); // 1 if positive/negative overflow, 0 otherwise
+    z = ((~(|rca.s)) == 1) ? 1 : 0; // 1 if all 0's, 0 otherwise
+    n = (rca.s[15] == 1) ? 1 : 0; // 1 if result is negative, 0 otherwise
   }
 }

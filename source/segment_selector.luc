@@ -1,0 +1,25 @@
+module segment_selector (
+    input char[16],
+    input digit[2],
+    input segment[3],
+    output out
+  ) {
+
+seven_seg_digit_selector sev;
+
+  always {
+
+    sev.char = char;
+    sev.digit = digit;
+    out = sev.out[segment];
+
+    // A: 000 
+    // B: 001 
+    // C: 010 
+    // D: 011 
+    // E: 100
+    // F: 101
+    // G: 110
+
+  }
+}

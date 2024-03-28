@@ -1,0 +1,28 @@
+module colour_selector (
+    input char[16],
+    input digit[2],
+    input cb,
+    output out[3]
+  ) {
+ 
+attempt_digit_selector sel;
+
+  always {
+
+    sel.char = char;
+    sel.digit = digit;
+
+    case (sel.out) {
+
+        b0111: // green
+            out = (cb == 0) ? 010 : 011
+
+        b0011: // yellow
+            out = (cb == 0) ? 110 : 101
+
+        b0001: // white
+            out = 111
+
+    }
+  }
+}

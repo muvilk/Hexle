@@ -1,0 +1,16 @@
+module min (
+    input a[16],
+    output out[16]
+  ) {
+
+var t = b1111;
+
+  always {
+    for (i = 3; i > -1; i--) {
+      if (a[3+4*i:4*i] < t) {
+        t = a[3+4*i:4*i];
+      }
+    }
+    out = c{12b0, t};
+  }
+}

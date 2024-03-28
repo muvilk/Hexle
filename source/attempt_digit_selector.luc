@@ -1,0 +1,15 @@
+module attempt_digit_selector (
+    input char[16],
+    input digit[2],
+    output out[4]
+  ) {
+ 
+extract extract;
+
+  always {
+
+    extract.a = char;
+    extract.b = digit;
+    out = extract.out;
+  }
+}

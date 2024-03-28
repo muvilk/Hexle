@@ -1,0 +1,206 @@
+module autotester (
+    output alu_a[16],
+    output alu_b[16],
+    output alu_output[16],
+    output alu_alufn[6],
+    input clk,         // clock
+    input rst         // reset
+
+  ) {
+ 
+  .clk(clk) {
+    .rst(rst) {
+      fsm state = {Z, I, II, III, IV, V, VI, VII, VIII, IX, X, XI, XII, XIII, XIV, XV, XVI, XVII, XVIII, XIX, XX, XXI, XXII, XXIII, XXIV, XXV, XXVI, XXVII, XXVIII, XXIX, XXX, XXXI, XXXII, XXXIII, XXXIV, XXXV, XXXVI, XXXVII, XXXVIII, XXXIX, XXXX, XXXXI, XXXXII};
+      dff address[6];
+    }
+  }
+ 
+  autotester_rom rom;
+ 
+  always {
+    rom.test = address.q;
+    alu_a = rom.auto_a;
+    alu_b = rom.auto_b;
+    alu_output = rom.auto_ans;
+    alu_alufn = rom.auto_alufn;
+    
+    case (state.q) {
+      state.Z:
+        address.d = b000000;
+        state.d = state.I;
+        
+      state.I:
+        address.d = address.q + b000001; // +1 to move to the address of the next test case
+        state.d = state.II;
+        
+      state.II:
+        address.d = address.q + b000001;
+        state.d = state.III;
+      
+      state.III:
+        address.d = address.q + b000001;
+        state.d = state.IV;
+        
+      state.IV:
+        address.d = address.q + b000001;
+        state.d = state.V;
+      
+      state.V:
+        address.d = address.q + b000001;
+        state.d = state.VI;
+      
+      state.VI:
+        address.d = address.q + b000001;
+        state.d = state.VII;
+        
+      state.VII:
+        address.d = address.q + b000001;
+        state.d = state.VIII;
+      
+      state.VIII:
+        address.d = address.q + b000001;
+        state.d = state.IX;
+      
+      state.IX:
+        address.d = address.q + b000001;
+        state.d = state.X;
+        
+      state.X:
+        address.d = address.q + b000001;
+        state.d = state.XI;
+      
+      state.XI:
+        address.d = address.q + b000001;
+        state.d = state.XII;
+      
+      state.XII:
+        address.d = address.q + b000001;
+        state.d = state.XIII;
+        
+      state.XIII:
+        address.d = address.q + b000001;
+        state.d = state.XIV;
+      
+      state.XIV:
+        address.d = address.q + b000001;
+        state.d = state.XV;
+      
+      state.XV:
+        address.d = address.q + b000001;
+        state.d = state.XVI;
+        
+      state.XVI:
+        address.d = address.q + b000001;
+        state.d = state.XVII;
+      
+      state.XVII:
+        address.d = address.q + b000001;
+        state.d = state.XVIII;
+      
+      state.XVIII:
+        address.d = address.q + b000001;
+        state.d = state.XIX;
+        
+      state.XIX:
+        address.d = address.q + b000001;
+        state.d = state.XX;
+        
+      state.XX:
+        address.d = address.q + b000001;
+        state.d = state.XXI;
+        
+      state.XXI:
+        address.d = address.q + b000001;
+        state.d = state.XXII;
+      
+      state.XXII:
+        address.d = address.q + b000001;
+        state.d = state.XXIII;
+        
+      state.XXIII:
+        address.d = address.q + b000001;
+        state.d = state.XXIV;
+      
+      state.XXIV:
+        address.d = address.q + b000001;
+        state.d = state.XXV;
+      
+      state.XXV:
+        address.d = address.q + b000001;
+        state.d = state.XXVI;
+        
+      state.XXVI:
+        address.d = address.q + b000001;
+        state.d = state.XXVII;
+      
+      state.XXVII:
+        address.d = address.q + b000001;
+        state.d = state.XXVIII;
+      
+      state.XXVIII:
+        address.d = address.q + b000001;
+        state.d = state.XXIX;
+        
+      state.XXIX:
+        address.d = address.q + b000001;
+        state.d = state.XXX;
+        
+      state.XXX:
+        address.d = address.q + b000001;
+        state.d = state.XXXI;
+        
+      state.XXXI:
+        address.d = address.q + b000001;
+        state.d = state.XXXII;
+      
+      state.XXXII:
+        address.d = address.q + b000001;
+        state.d = state.XXXIII;
+        
+      state.XXXIII:
+        address.d = address.q + b000001;
+        state.d = state.XXXIV;
+      
+      state.XXXIV:
+        address.d = address.q + b000001;
+        state.d = state.XXXV;
+      
+      state.XXXV:
+        address.d = address.q + b000001;
+        state.d = state.XXXVI;
+      
+      state.XXXVI:
+        address.d = address.q + b000001;
+        state.d = state.XXXVII;
+        
+      state.XXXVII:
+        address.d = address.q + b000001;
+        state.d = state.XXXVIII;
+        
+       state.XXXVIII:
+        address.d = address.q + b000001;
+        state.d = state.XXXIX;
+        
+      state.XXXIX:
+        address.d = address.q + b000001;
+        state.d = state.XXXX;
+        
+      state.XXXX:
+        address.d = address.q + b000001;
+        state.d = state.XXXXI;
+        
+      state.XXXXI:
+        address.d = address.q + b000001;
+        state.d = state.XXXXII;
+      
+      state.XXXXII:
+        address.d = address.q + b000001;
+        state.d = state.Z; // cycles back to start when done
+      
+      default:
+        address.d = 6b0;
+        state.d = state.Z;
+                
+    }
+  }
+}

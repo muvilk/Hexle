@@ -1,11 +1,17 @@
 module multiplier (
-    input a[32],
-    input b[32],
-    output mul[32]
+    input a[16],
+    input b[16],
+    output mul[16]
   ) {
 
+ 
+rca_adderarray adderarray;
+ 
   always {
-    // default values to silence errors 
-    mul = 0;
+    adderarray.a = a;
+    adderarray.b = b;
+    mul = adderarray.out; // adderarray module processes backend logic 
+    
   }
 }
+
