@@ -1,2 +1,1 @@
-## Lab 3: ALU FPGA 
-This is the starter code for 50.002 Lab3: ALU FPGA. Students are tasked to create a 32-bit ALU with 13 arithmetic functionalities. Read the lab handout found on 50.002 course handout for futher information. 
+The main goal of Hexle is to correctly guess all 4 hexadecimal digits of a randomly generated 16-bit number, in the least number of attempts. At the start of each game, the user is shown a subtraction operator (-) and an 4-bit number. This number, the hint, is equal to the result of the subtraction of the largest digit  with the smallest digit of the answer.
