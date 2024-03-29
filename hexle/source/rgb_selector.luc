@@ -6,21 +6,23 @@ module rgb_selector (
     output out
   ) {
  
-colour_selector col_sel
+colour_selector col_sel;
 
   always {
 
     col_sel.char = char;
     col_sel.digit = digit;
-    col_sel.cb = cb
+    col_sel.cb = cb;
 
     case (colour) {
         b00: // red
-            out = col_sel.out[2]
+            out = col_sel.out[2];
         b01: // green
-            out = col_sel.out[1]
+            out = col_sel.out[1];
         b10: // blue
-            out = col_sel.out[0]
+            out = col_sel.out[0];
+      default:
+            out = 0;
 
     }
   }

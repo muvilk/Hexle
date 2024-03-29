@@ -15,13 +15,16 @@ attempt_digit_selector sel;
     case (sel.out) {
 
         b0111: // green
-            out = (cb == 0) ? 010 : 011 // cyan for high contrast mode
+          out = (cb == 0) ? b010 : b011; // cyan for high contrast mode
 
         b0011: // yellow
-            out = (cb == 0) ? 110 : 101 // magenta for high contrast mode
+          out = (cb == 0) ? b110 : b101; // magenta for high contrast mode
 
         b0001: // white
-            out = 111
+          out = b111;
+        
+        default:
+          out = b000;   
 
     }
   }
