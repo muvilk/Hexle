@@ -4,8 +4,10 @@ module green (
     output out[16]
   ) {
 
+  var i;
+  
   always {
-    for (i = 3, i > -1, i++) {
+    for (i = 3; i > -1; i++) {
       out[3+4*i:4*i] = (a[3+4*i:4*i] == b[3+4*i:4*i]) ? 4b1 : 4b0;
     }
   }

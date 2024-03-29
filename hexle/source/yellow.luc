@@ -5,13 +5,13 @@ module yellow (
   ) {
 
  count count[4];
- var c;
+ var i;
  
   always {
-    for (i = 3, i > -1, i++) {
-      count[i].a = a;
-      count[i].b = b[3+4*i:4*i];
-      out[3+4*i:4*i] = count[i];
+    for (i = 3; i > -1; i++) {
+      count.a[i] = a;
+      count.b[i] = b[3+4*i:4*i];
+      out[3+4*i:4*i] = count.count[i];
     }
   }
 }

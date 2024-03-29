@@ -1,0 +1,37 @@
+module regfile_unit (
+    input clk,  // clock
+    input rst,  // reset
+    input ra[4],
+    input rb[4], 
+    input rc[4],
+    input we,
+    input wdsel_out[16],
+    input slowclk, // keep
+    output reg_data_1[16],
+    output reg_data_2[16]
+  ) {
+  
+  regfile_memory regfile(.clk(clk), .rst(rst));
+  
+  always {
+
+    //*****REGFILE*******//
+    // do not write anything to the regfile unless PC advances 
+    regfile.write_enable = 0;
+    
+    if (slowclk) {
+      regfile.write_enable = we;
+    }    
+    
+    // connections to regfile memory
+    regfile.read_address_2 = rb;
+    regfile.read_address_1 = ra;
+    regfile.write_address = rc;
+    regfile.write_data = wdsel_out;
+
+    // output connections
+    reg_data_1 = regfile.reg_data_1; 
+    reg_data_2 = regfile.reg_data_2;
+    
+  }
+}
