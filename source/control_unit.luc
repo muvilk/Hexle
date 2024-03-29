@@ -1,0 +1,79 @@
+module control_unit (
+    input clk,
+    input rst,    
+    input slowclk,
+    input green,
+    input red,
+    input keypad[4],
+    input high_contrast,
+    input ra_data[16],
+    output we,
+    output ra[4],
+    output rb[4],
+    output rc[4],
+    output bsel[3],
+    output wdsel,
+    output alufn[6]
+  ) {
+  
+  const CU_ROM = { // format: c{ we (1 bit) + ra (4 bits) + rb (4 bits) + rc (4 bits) + bsel (3 bits) + wdsel (1 bit) + alufn (6 bits)} IN THIS ORDER; total: 23 bits in length
+    b10000000011100000000000, // max digit, last 6 for alufn placeholder for MAX operation
+    b10001000000000100000110, // answer generation
+    b00000000000000000000000 // initialization
+  };
+  
+  .clk(clk) {
+    .rst(rst) {
+      fsm state = {INITIALIZATION, ANSWER_GENERATION, MAX_DIGIT, EXAMPLE, EXAMPLE2, EXAMPLE3}; // we need to add everything here
+      dff address[6]; // adjust bits when we finalise our number of unique control signal combinations ALSO not sure if we need to use dffs or can just initialise a varialbe
+    }
+  }
+ 
+  always {
+    
+   
+    we = CU_ROM[address.q][22];
+    ra = CU_ROM[address.q][21:18];
+    rb = CU_ROM[address.q][17:14];
+    rc = CU_ROM[address.q][13:10];
+    bsel = CU_ROM[address.q][9:7];
+    wdsel = CU_ROM[address.q][6];
+    alufn = CU_ROM[address.q][5:0];
+    
+    case (state.q) {
+      state.INITIALIZATION:
+        address.d = b00;
+        state.d = state.ANSWER_GENERATION;
+        
+      state.ANSWER_GENERATION:
+        address.d = b01;
+        state.d = state.MAX_DIGIT;
+        
+      state.MAX_DIGIT:
+        address.d = b10;
+        state.d = state.MIN_DIGIT; // min digit not defined yet
+        
+      state.EXAMPLE:
+        address.d = 6b0; // address of CURRENT state, will be the same regardless of button pressed
+        case(green || red) { // if enter/delete is pressed
+          b1:
+            state.d = state.INITIALIZATION; //go to initialization NO NEED to define b0 case, that would lead to automatic switching which we don't want
+            state.d = state.EXAMPLE; // in the event that it is meant to loop, actually code wise we don't need to put the case for a loop in i think cause naturally if not defined nothing will happen
+         }
+        
+      state.EXAMPLE2:
+        address.d = 6b0;
+        ra = keypad; // i believe this will overwrite the default value, so for instructions taking in keypad for an input can just put 0000 as a placeholder or sth
+      
+        
+      state.EXAMPLE3: // branching example - NOT CONFIRMED
+        case(ra_data) { // for branching states, no control signals 
+          h4444:
+            state.d = state.EXAMPLE;
+          default:
+            state.d = state.EXAMPLE2
+          
+                
+    }
+  }
+}

@@ -1,6 +1,6 @@
 module keypad (
     input in[8],
-    output out[16]
+    output out[4]
   ) {
  
 var c;
@@ -26,6 +26,6 @@ var c;
     
       default: c = 4b0;
     }
-    out = c{12b0, c};
+    out = c;
   }
 }

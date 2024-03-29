@@ -3,9 +3,11 @@ module max (
     output out[16]
   ) {
 
-var t = 4b0;
+var t;
+var i;
 
   always {
+    t = 4b0;
     for (i = 3; i > -1; i--) {
       if (a[3+4*i:4*i] > t) {
         t = a[3+4*i:4*i];

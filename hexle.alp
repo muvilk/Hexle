@@ -2,38 +2,39 @@
 <project name="hexle" board="Alchitry Au" language="Lucid" version="3">
   <files>
     <component>pipeline.luc</component>
-    <src>max.luc</src>
     <component>counter.luc</component>
-    <src>extract.luc</src>
+    <src>fsm_unit.luc</src>
     <src>boolean.luc</src>
-    <src>yellow.luc</src>
-    <src>decimal_counter.luc</src>
-    <src>seven_seg.luc</src>
-    <src>x_bit_rotator.luc</src>
+    <src>max.luc</src>
     <src>green.luc</src>
-    <src>x_bit_shifter.luc</src>
+    <src>mux_4.luc</src>
+    <src>control_unit.luc</src>
+    <src>adder.luc</src>
     <component>reset_conditioner.luc</component>
-    <src>mux_2.luc</src>
     <component>button_conditioner.luc</component>
-    <src>rca_adderarray.luc</src>
+    <src>yellow.luc</src>
+    <src>multiplier.luc</src>
+    <src>full_adder.luc</src>
+    <src>regfile_memory.luc</src>
+    <src>count.luc</src>
+    <src>seven_seg.luc</src>
+    <src>autotester.luc</src>
+    <src>keypad.luc</src>
+    <src>regfile_unit.luc</src>
+    <component>decoder.luc</component>
     <src top="true">au_top.luc</src>
-    <src>sixteenbit_rca.luc</src>
     <src>autotester_rom.luc</src>
     <src>shifter.luc</src>
-    <src>multiplier.luc</src>
-    <src>autotester.luc</src>
-    <component>decoder.luc</component>
-    <src>min.luc</src>
-    <src>multi_seven_seg.luc</src>
-    <src>full_adder.luc</src>
-    <src>multi_dec_ctr.luc</src>
-    <src>adder.luc</src>
-    <src>rotator.luc</src>
+    <src>extract.luc</src>
+    <src>x_bit_shifter.luc</src>
     <src>compare.luc</src>
-    <src>count.luc</src>
-    <src>mux_4.luc</src>
-    <component>edge_detector.luc</component>
     <src>alu.luc</src>
+    <src>mux_2.luc</src>
+    <src>rca_adderarray.luc</src>
+    <src>hexle_cpu.luc</src>
+    <src>sixteenbit_rca.luc</src>
+    <src>min.luc</src>
+    <component>edge_detector.luc</component>
     <constraint lib="true">alchitry.acf</constraint>
     <constraint lib="true">io.acf</constraint>
     <constraint lib="true">au.xdc</constraint>
