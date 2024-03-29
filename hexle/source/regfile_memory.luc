@@ -7,7 +7,11 @@ module regfile_memory (
     output reg_data_2[16],
     input write_address[4],
     input write_data[16],
-    input write_enable
+    input write_enable,
+    input sa[4],
+    input ca[4],
+    output sd[16],
+    output cd[16]
   ) {
   
   dff registers[16][16](#INIT(16x{{16h0}}), .clk(clk), .rst(rst));
@@ -17,6 +21,8 @@ module regfile_memory (
     // initial setups to silence output compilation errors
     reg_data_1 = 0;
     reg_data_2 = 0;
+    sd = 0;
+    cd = 0;
     
     case(read_address_1) {
       b0000:
@@ -87,6 +93,78 @@ module regfile_memory (
       b1111:
         reg_data_2 = registers.q[15];
     }
+    
+    case(sa) {
+      b0000:
+        sd = registers.q[0];
+      b0001:
+        sd = registers.q[1];
+      b0010:
+        sd = registers.q[2];
+      b0011:
+        sd = registers.q[3];
+      b0100:
+        sd = registers.q[4];
+      b0101:
+        sd = registers.q[5];
+      b0110:
+        sd = registers.q[6];
+      b0111:
+        sd = registers.q[7];
+      b1000:
+        sd = registers.q[8];
+      b1001:
+        sd = registers.q[9];
+      b1010:
+        sd = registers.q[10];
+      b1011:
+        sd = registers.q[11];
+      b1100:
+        sd = registers.q[12];
+      b1101:
+        sd = registers.q[13];
+      b1110:
+        sd = registers.q[14];
+      b1111:
+        sd = registers.q[15];
+    }
+    
+    case(ca) {
+      b0000:
+        cd = registers.q[0];
+      b0001:
+        cd = registers.q[1];
+      b0010:
+        cd = registers.q[2];
+      b0011:
+        cd = registers.q[3];
+      b0100:
+        cd = registers.q[4];
+      b0101:
+        cd = registers.q[5];
+      b0110:
+        cd = registers.q[6];
+      b0111:
+        cd = registers.q[7];
+      b1000:
+        cd = registers.q[8];
+      b1001:
+        cd = registers.q[9];
+      b1010:
+        cd = registers.q[10];
+      b1011:
+        cd = registers.q[11];
+      b1100:
+        cd = registers.q[12];
+      b1101:
+        cd = registers.q[13];
+      b1110:
+        cd = registers.q[14];
+      b1111:
+        cd = registers.q[15];
+    }
+    
+    
     
     case(write_enable) {
     

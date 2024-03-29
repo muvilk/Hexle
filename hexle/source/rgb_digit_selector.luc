@@ -1,0 +1,20 @@
+module rgb_digit_selector (
+    input cd[16],
+    input rgb_sig[6],
+    input cb,
+    output cur_rgb
+  ) {
+
+rgb_selector rgb;
+digit_selector sel;
+
+  always {
+  
+    sel.data = cd;
+    sel.digit = rgb_sig[3:2];
+    rgb.cd = sel.out;
+    rgb.cb = cb;
+    rgb.rgb_sig = rgb_sig;
+    cur_rgb = rgb.cur_rgb;
+  }
+}

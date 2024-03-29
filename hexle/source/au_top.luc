@@ -10,7 +10,7 @@ module au_top (
     input io_button [5],    // 5 buttons on IO Shield
     input io_dip [3][8],     // DIP switches on IO Shield
     
-    input keypad[8],
+    input key_sig[8],
     input green,
     input red,
     input high_contrast,
@@ -29,25 +29,18 @@ module au_top (
     // The reset conditioner is used to synchronize the reset signal to the FPGA
     // clock. This ensures the entire FPGA comes out of reset at the same time.
     reset_conditioner reset_cond;
-    button_conditioner button_conditioner[5];
-    edge_detector edge_detector_manual[5](#RISE(1), #FALL(0));
-    edge_detector edge_detector_auto(#RISE(1), #FALL(0));
+    button_conditioner green_conditioner;
+    button_conditioner red_conditioner;
+    button_conditioner hc_conditioner;
+    button_conditioner keypad_conditioner[8];
     
     .rst(rst) {
-      dff a[16];
-      dff b[16];
-      dff alufn[6];
-      dff out[16];
-      dff ans[16];
-      fsm alu_runner = {A, B, OUT};
       hexle_cpu hexle_cpu;
+      counter frequency_divider(#SIZE(15));
       
     }
   }
-  
-  counter slowclock(#SIZE(1),#DIV(26), .clk(clk), .rst(rst));
-  autotester autotester(.clk(slowclock.value), .rst(rst));
-  
+    
   always {
   
     reset_cond.in = ~rst_n; // input raw inverted reset signal
@@ -59,29 +52,28 @@ module au_top (
     
     io_led = 3x{{8h00}};
     io_seg = 8b0; // connect segments to the driver
-    io_sel = 4b0000; // turn on rightmost digit, and leftmost digit
-    
-    edge_detector_auto.in = slowclock.value;
-    dec_ctr.inc = edge_detector_auto.out;
-    seg.values = dec_ctr.digits;
-     
-    io_seg = 8hff; // connect segments to the driver
-    io_sel = 4hf; // connect digit select to the driver
-    
-    button_conditioner.in = io_button[4:0];
-    edge_detector_manual.in = button_conditioner.out;
-    
+    io_sel = 4b1111; // turn off all digits
+      
     //
     
-    hexle_cpu.red = red;
-    hexle_cpu.green = green;
-    hexle_cpu.keypad = keypad;
-    hexle_cpu.slowclk = slowclk;
-    hexle_cpu.high_contrast = high_contrast
+    red_conditioner.in = red;
+    green_conditioner.in = green;
+    keypad_conditioner.in = key_sig;
+    hc_conditioner.in = high_contrast;
     
+    hexle_cpu.red = red_conditioner.out;
+    hexle_cpu.green = green_conditioner.out;
+    hexle_cpu.key_sig = keypad_conditioner.out;
+    hexle_cpu.high_contrast = hc_conditioner.out;    
     
-  
-
+    hexle_cpu.seg_sig = frequency_divider.value[12:6];
+    hexle_cpu.rgb_sig = frequency_divider.value[5:0];
+    
+    digitclock = frequency_divider.value[12:6];
+    rgbclock = frequency_divider.value[5:0];
+    
+    digit = hexle_cpu.cur_seg;
+    rgb = hexle_cpu.cur_rgb;
      
   }
 }

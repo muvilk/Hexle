@@ -1,7 +1,7 @@
 module control_unit (
     input clk,
     input rst,    
-    input slowclk,
+    //input slowclk,
     input green,
     input red,
     input keypad[4],
