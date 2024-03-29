@@ -1,11 +1,10 @@
 module control_unit (
     input clk,
     input rst,    
-    input slowclk,
+    //input slowclk,
     input green,
     input red,
     input keypad[4],
-    input high_contrast,
     input ra_data[16],
     output we,
     output ra[4],
@@ -24,7 +23,7 @@ module control_unit (
   
   .clk(clk) {
     .rst(rst) {
-      fsm state = {INITIALIZATION, ANSWER_GENERATION, MAX_DIGIT, EXAMPLE, EXAMPLE2, EXAMPLE3}; // we need to add everything here
+      fsm state = {INITIALIZATION, ANSWER_GENERATION, MAX_DIGIT, MIN_DIGIT, EXAMPLE, EXAMPLE2, EXAMPLE3}; // we need to add everything here
       dff address[6]; // adjust bits when we finalise our number of unique control signal combinations ALSO not sure if we need to use dffs or can just initialise a varialbe
     }
   }
@@ -66,14 +65,12 @@ module control_unit (
         ra = keypad; // i believe this will overwrite the default value, so for instructions taking in keypad for an input can just put 0000 as a placeholder or sth
       
         
-      state.EXAMPLE3: // branching example - NOT CONFIRMED
+      state.EXAMPLE3: // branching example - reads ra directly from REGFILE
         case(ra_data) { // for branching states, no control signals 
           h4444:
             state.d = state.EXAMPLE;
           default:
-            state.d = state.EXAMPLE2
-          
-                
+            state.d = state.EXAMPLE2;               
     }
   }
 }

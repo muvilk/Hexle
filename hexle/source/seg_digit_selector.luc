@@ -1,0 +1,18 @@
+module seg_digit_selector (
+    input sd[16],
+    input seg_sig[7],
+    output cur_seg
+  ) {
+
+seg_selector seg;
+digit_selector sel;
+
+  always {
+  
+    sel.data = sd;
+    sel.digit = seg_sig[4:3];
+    seg.sd = sel.out;
+    seg.seg_sig = seg_sig;
+    cur_seg = seg.cur_seg;
+  }
+}

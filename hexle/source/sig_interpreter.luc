@@ -1,0 +1,26 @@
+module sig_interpreter (
+    input key_sig[8],
+    input seg_sig[7],
+    input rgb_sig[6],
+    
+    output k[4],
+    output sa[4],
+    output ca[4]
+  ) {
+  
+  key_interpreter key;
+  rgb_interpreter rgb;
+  seg_interpreter seg;
+
+  always {
+    
+    key.in = key_sig;
+    seg.seg_signal = seg_sig;
+    rgb.rgb_signal = rgb_sig;
+    
+    k = key.out;
+    sa = seg.address;
+    ca = rgb.address;
+    
+  }
+}

@@ -1,0 +1,22 @@
+module rgb_interpreter (
+    input rgb_signal[6],
+    output address[4]
+  ) {
+
+  always {
+
+    case (rgb_signal[5:4]) {
+      
+      b00:
+        address = h3; // attempt reg 1
+      b01:
+        address = h4; // attempt reg 2
+      b10:
+        address = h7; // hint answer reg
+      b11:
+        address = h5; // attempt counter reg
+      default:
+        address = hA; // unused register, b0
+  }
+}
+

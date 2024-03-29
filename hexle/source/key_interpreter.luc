@@ -1,4 +1,4 @@
-module keypad (
+module key_interpreter (
     input in[8],
     output out[4]
   ) {

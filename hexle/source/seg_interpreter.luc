@@ -1,0 +1,21 @@
+module seg_interpreter (
+    input seg_signal[7],
+    output address[4]
+  ) {
+
+  always {
+
+    case (seg_signal[6:5]) {
+      
+      b00:
+        address = h1; // attempt reg 1
+      b01:
+        address = h2; // attempt reg 2
+      b10:
+        address = h6; // hint answer reg
+      b11:
+        address = h8; // attempt counter reg
+      default:
+        address = hA; // unused register, b0
+  }
+}
