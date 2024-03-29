@@ -17,6 +17,7 @@ module rgb_interpreter (
         address = h5; // attempt counter reg
       default:
         address = hA; // unused register, b0
+    }
   }
 }
 
