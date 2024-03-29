@@ -1,0 +1,8 @@
++====================+===================+==================================================================+
+| Launch Setup Clock | Launch Hold Clock | Pin                                                              |
++====================+===================+==================================================================+
+| clk_0              | clk_0             | motherboard/beta/regfile_system/regfile/M_registers_q_reg[67]/D  |
+| clk_0              | clk_0             | motherboard/beta/regfile_system/regfile/M_registers_q_reg[3]/D   |
+| clk_0              | clk_0             | motherboard/beta/regfile_system/regfile/M_registers_q_reg[898]/D |
+| clk_0              | clk_0             | motherboard/beta/pc_system/M_pc_q_reg[31]/D                      |
++--------------------+-------------------+------------------------------------------------------------------+
