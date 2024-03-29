@@ -1,0 +1,23 @@
+module digit_selector (
+    input data[16],
+    input digit[2],
+    output out[4]
+  ) {
+
+
+  always {
+
+    case (digit) {
+      b00:
+        out = data[3:0];
+      b01:
+        out = data[7:4];
+      b10:
+        out = data[11:8];
+      b11:
+        out = data[15:12];
+      default:
+        out = 4b0;
+    }
+  }
+}

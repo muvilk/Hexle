@@ -1,0 +1,28 @@
+module sig_selector (
+    input seg_sig[7],
+    input rgb_sig[6],
+    input sd[16],
+    input cd[16],
+    input cb,
+    
+    output cur_seg,
+    output cur_rgb
+  ) {
+
+  seg_digit_selector seg;
+  rgb_digit_selector rgb;
+  
+  always {
+    
+    seg.sd = sd;
+    seg.seg_sig = seg_sig;
+    
+    rgb.cd = cd;
+    rgb.rgb_sig = rgb_sig;
+    rgb.cb = cb;
+    
+    cur_rgb = rgb.cur_rgb;
+    cur_seg = seg.cur_seg;
+    
+  }
+}

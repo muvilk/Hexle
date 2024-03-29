@@ -1,0 +1,39 @@
+module sig_processor (
+    input key_sig[8],
+    input seg_sig[7],
+    input rgb_sig[6],
+    input sd[16],
+    input cd[16],
+    input cb,
+    
+    output k[4],
+    output sa[4],
+    output ca[4],
+    output cur_seg,
+    output cur_rgb
+  ) {
+
+  sig_interpreter int;
+  sig_selector sel;
+  
+  always {
+    
+    int.key_sig = key_sig;
+    int.seg_sig = seg_sig;
+    int.rgb_sig = rgb_sig;
+    
+    sel.sd = sd;
+    sel.cd = cd;
+    sel.seg_sig = seg_sig;
+    sel.rgb_sig = rgb_sig;
+    sel.cb = cb;
+    
+    k = int.k;
+    sa = int.sa;
+    ca = int.ca;
+    
+    cur_seg = sel.cur_seg;
+    cur_rgb = sel.cur_rgb;
+    
+  }
+}
