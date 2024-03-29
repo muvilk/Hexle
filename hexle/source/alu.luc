@@ -8,71 +8,63 @@ module alu (
     output n
   ) {
   adder adder;
-  boolean boolean;
   shifter shifter;
   compare compare; 
-  multiplier multiplier;
-  rotator rotator;
-  mux_2 mux_a[16];
-  mux_2 mux_b[16];
-  mux_4 mux_c[16];
-  var i;
-  
+  max max;
+  min min;
+  extract extract;
+  count count;
+  green green;
+  yellow yellow;
+  rng rng;
+  count count;
+
   always {
-    // default values to silence errors 
-    mux_c.in = 16x{{4b0}}; 
     
     // input-module assignments
     
     adder.a = a;
     adder.b = b;
-    adder.alufn_signal = alufn_signal;
-    z = adder.z;
-    v = adder.v;
-    n = adder.n;
-    out = adder.out; 
         
-    compare.z = adder.z;
-    compare.v = adder.v;
-    compare.n = adder.n;
-    compare.alufn_signal = alufn_signal;
-    
-    boolean.a = a;
-    boolean.b = b;
-    boolean.alufn_signal = alufn_signal;
-    
+    compare.a = a;
+    compare.b = b;
+        
     shifter.a = a;
-    shifter.b = b[3:0];
-    shifter.alufn_signal = alufn_signal;
+    shifter.b = b;
     
-    multiplier.a = a;
-    multiplier.b = b;
+    max.a = a;
     
-    rotator.a = a;
-    rotator.b = b[3:0];
-    rotator.alufn_signal = alufn_signal;
+    min.a = a;
     
-    // output mux logic
+    extract.a = a;
+    extract.b = b;
     
-    mux_a.g0 = adder.out;
-    mux_a.g1 = multiplier.mul;
-    mux_a.s0 = 16x{alufn_signal[1]};
+    count.a = a;
+    count.b = b;
     
+    green.a = a;
+    green.b = b;
     
-    mux_b.g0 = shifter.shift;
-    mux_b.g1 = rotator.out;
-    mux_b.s0 = 16x{alufn_signal[3]};
+    yellow.a = a;
+    yellow.b = b;
     
-    for (i = 0; i < 16; i++) {
-      mux_c.in[i][0] = mux_a.out[i];
-      mux_c.in[i][1] = boolean.bool[i];
-      mux_c.in[i][2] = mux_b.out[i];
-      mux_c.in[i][3] = (i == 0) ? compare.cmp : 0;
-    }
-    
-    mux_c.s0 = 16x{alufn_signal[4]};
-    mux_c.s1 = 16x{alufn_signal[5]};
-    out = mux_c.out;
+    rng.a = a;
+
+    case(alufn_signal)
+      b000000: out = adder_inst.out;
+      b000001: out = sub.out; // module for SUB
+      b000010: out = shifter.out; // module for SHL
+      b000011: out = compare.out; // module for CMPEQ
+      b000100: out = compare.out; // module for CMPLE
+      b000101: out = compare.out; // module for B
+      b000110: out = rng.out; // module for RNG
+      b000111: out = green.out; // module for GRN
+      b010111: out = yellow.out; // module for YLW
+      b100111: out = extract.out; // module for EXT
+      b110111: out = count.out; // module for CNT
+      b101111: out = max.out; // module for MAX
+      b111111: out = min.out; // module for MIN
+    endcase
     
   }
 }
