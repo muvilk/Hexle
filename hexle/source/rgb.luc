@@ -13,6 +13,7 @@ rgb_selector rgb_sel;
     rgb_sel.char = char;
     rgb_sel.digit = digit;
     rgb_sel.colour = colour;
+    rgb_sel.cb = cb;
     out = rgb_sel.out;
   }
 }

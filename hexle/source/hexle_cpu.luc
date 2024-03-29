@@ -2,15 +2,19 @@ module hexle_cpu (
     input clk,  // clock
     input slowclk,
     input rst,
-    input irq,
-    input instruction[32],
-    input mem_data_input[32],
     input green,
     input red,
-    input keypad[8]
-    output mem_data_address[32],
-    output mem_data_output[32],
-    output wr,
+    input keypad[8],
+    input high_contrast,
+    
+    input cur_seg,
+    input cur_dig,
+    input cur_col,
+    
+    output digit_signal,
+    output digit_clock[7],
+    output rgb_signal,
+    output rgb_clock[6],
     output debug[4][16]
 
   ) {
@@ -18,6 +22,10 @@ module hexle_cpu (
   control_unit control_system(.clk(clk), .rst(rst));
   alu alu_system;
   regfile_unit regfile_system(.clk(clk), .rst(rst));
+  keypad key_interpreter;
+  
+  rgb rgb;
+  seven_seg seven_seg;
 
   sig asel_out[16];
   sig bsel_out[16];
@@ -25,16 +33,15 @@ module hexle_cpu (
 
   always {
     // initial setups to silence output compilation errors
-    ia = 0;
-    mem_data_address = 0;
-    mem_data_output = 0;
-    wr = 0;
     debug = 4x{{16h0}};
-    control_system.irq = 0;
+    
+    key_interpreter.in = keypad;
+    
+    control_system.green = 0;
+    control_system.red = 0;
+    control_system.keypad = 0;
     control_system.slowclk = 0;
-    control_system.ia31 = 0;
-    control_system.opcode = 0;
-    control_system.z = 0;
+    
     regfile_system.ra = 0;
     regfile_system.rb = 0;
     regfile_system.rc = 0;
@@ -42,21 +49,19 @@ module hexle_cpu (
     regfile_system.slowclk = 0;
     
     alu_system.alufn_signal = control_system.alufn;
-    case(control_system.asel){
-      b0:
-        asel_out = regfile_system.reg_data_1;
-      b1:
-        asel_out = c{0, pc_system.pc_4_sxtc[30:0]}; // supervisor bit is ignored in LDR
-      default:
-        asel_out = regfile_system.reg_data_1;
-    }
 
     // BSEL mux
     case(control_system.bsel){
-      b0:
+      b000:
         bsel_out = regfile_system.reg_data_2;
-      b1:
-        bsel_out = c{instruction[15], instruction[15:0]};
+      b001:
+        bsel_out = control_system.rb;
+      b010:
+        bsel_out = h10;
+      b011:
+        bsel_out = h100;
+      b100:
+        bsel_out = h1000;
         
       default:
         bsel_out = regfile_system.reg_data_2;
@@ -64,50 +69,36 @@ module hexle_cpu (
 
     // WDSEL mux
     case(control_system.wdsel){
-      b00:
-        wdsel_out = pc_system.pc_4; // Supervisor bit is already protected in pc_unit
-      b01: 
+      b0:
         wdsel_out = alu_system.out;
-      b10:
-        wdsel_out = mem_data_input;
+      b1: 
+        wdsel_out = b0;
       default:
         wdsel_out = alu_system.out;
     } 
     
     // connect asel, bsel, alu, and wdsel
-    alu_system.a = asel_out;
+    alu_system.a = regfile_system.reg_data_1;
     alu_system.b = bsel_out; 
     regfile_system.wdsel_out = wdsel_out;
 
-    // TASK 12
     // output connections
     
-    ia = pc_system.ia;
-    mem_data_address = alu_system.out;
-    mem_data_output = regfile_system.reg_data_2;
-    wr = control_system.wr;
-    
     //***** CONTROL unit ******//
-    control_system.irq = irq;
     control_system.slowclk = slowclk;
-    control_system.ia31 = pc_system.ia[31];
-    control_system.opcode = instruction[31:26];
-    control_system.z = regfile_system.z;
-    
-    //***** PC unit ******// 
-    pc_system.slowclk = slowclk;
-    pc_system.id = instruction[15:0];
-    pc_system.reg_data_1 = regfile_system.reg_data_1;
-    pc_system.pcsel = control_system.pcsel;
+    control_system.green = green;
+    control_system.red = red;
+    control_system.keypad = key_interpreter.out;
+    control_system.ra_data = regfile_system.reg_data_1;
     
     //***** REGFILE unit *****//
-    regfile_system.ra2sel = control_system.ra2sel;
-    regfile_system.wasel = control_system.wasel;
-    regfile_system.ra = instruction[20:16];
-    regfile_system.rb = instruction[15:11];
-    regfile_system.rc = instruction[25:21];
-    regfile_system.werf = control_system.werf;
+    regfile_system.ra = control_system.ra;
+    regfile_system.rb = control_system.rb;
+    regfile_system.rc = control_system.rc;
+    regfile_system.we = control_system.we;
     regfile_system.slowclk = slowclk;
+    
+    
 
     // debug signals
     
