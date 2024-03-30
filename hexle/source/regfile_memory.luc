@@ -164,8 +164,6 @@ module regfile_memory (
         cd = registers.q[15];
     }
     
-    
-    
     case(write_enable) {
     
       b0:

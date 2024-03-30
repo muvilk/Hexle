@@ -1,11 +1,11 @@
 module seg_digit_selector (
-    input sd[16],
-    input seg_sig[7],
+    input sd[16], // segment data from register
+    input seg_sig[7], // [6:5] = register; [4:3] = 1/2/3/4; [2:0] = 0-F
     output cur_seg
   ) {
 
-seg_selector seg;
-digit_selector sel;
+seg_selector seg; // translates digit data into 7-seg data, extracting data for requested segment for current clock signal
+digit_selector sel; // generic digit selector module
 
   always {
   
