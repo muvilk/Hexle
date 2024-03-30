@@ -1,8 +1,8 @@
 module sig_selector (
-    input seg_sig[7],
-    input rgb_sig[6],
-    input sd[16],
-    input cd[16],
+    input seg_sig[7], // [6:5] = register; [4:3] = 1/2/3/4; [2:0] = 0-F
+    input rgb_sig[6], // [5:4] = register; [3:2] = g/y/w; [1:0] = r/g/b
+    input sd[16], // segment data from register
+    input cd[16], // rgb data from register
     input cb,
     
     output cur_seg,

@@ -19,8 +19,7 @@ module hexle_cpu (
   control_unit control_system(.clk(clk), .rst(rst));
   alu alu_system;
   regfile_unit regfile_system(.clk(clk), .rst(rst));
-  
-  sig_processor proc;
+  sig_processor proc; // handles all necessary signal processing for outputs
 
   sig asel_out[16];
   sig bsel_out[16];
@@ -40,6 +39,7 @@ module hexle_cpu (
     control_system.green = 0;
     control_system.red = 0;
     control_system.keypad = 0;
+    control_system.ra_data = 0;
     //control_system.slowclk = 0;
     
     regfile_system.ra = 0;
@@ -74,7 +74,7 @@ module hexle_cpu (
       b0:
         wdsel_out = alu_system.out;
       b1: 
-        wdsel_out = b0;
+        wdsel_out = 16b0;
       default:
         wdsel_out = alu_system.out;
     } 
@@ -89,12 +89,7 @@ module hexle_cpu (
     proc.key_sig = key_sig;
     proc.seg_sig = seg_sig;
     proc.rgb_sig = rgb_sig;
-    proc.cd = regfile_system.cd;
-    proc.sd = regfile_system.sd;
     proc.cb = high_contrast;
-    
-    cur_rgb = proc.cur_rgb;
-    cur_seg = proc.cur_seg;
     
     //***** CONTROL unit ******//
     //control_system.slowclk = slowclk;
@@ -112,7 +107,10 @@ module hexle_cpu (
     regfile_system.ca = proc.ca;
     //regfile_system.slowclk = slowclk;
     
-    
+    proc.cd = regfile_system.cd;
+    proc.sd = regfile_system.sd;
+    cur_rgb = proc.cur_rgb;
+    cur_seg = proc.cur_seg;
 
     // debug signals
     

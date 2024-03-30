@@ -1,11 +1,11 @@
 module rgb_interpreter (
-    input rgb_signal[6],
-    output address[4]
+    input rgb_sig[6], // [5:4] = register; [3:2] = g/y/w; [1:0] = r/g/b
+    output address[4] // address of requested rgb register
   ) {
 
   always {
 
-    case (rgb_signal[5:4]) {
+    case (rgb_sig[5:4]) {
       
       b00:
         address = h3; // attempt reg 1

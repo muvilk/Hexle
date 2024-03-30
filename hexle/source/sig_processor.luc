@@ -1,20 +1,20 @@
 module sig_processor (
     input key_sig[8],
-    input seg_sig[7],
-    input rgb_sig[6],
-    input sd[16],
-    input cd[16],
-    input cb,
+    input seg_sig[7], // [6:5] = register; [4:3] = 1/2/3/4; [2:0] = 0-F
+    input rgb_sig[6], // [5:4] = register; [3:2] = g/y/w; [1:0] = r/g/b
+    input sd[16], // segment data from register
+    input cd[16], // rgb data from register
+    input cb, // high contrast signal
     
     output k[4],
-    output sa[4],
-    output ca[4],
+    output sa[4], // digit data extracted from requested segment register
+    output ca[4], // rgb data extracted from requested rgb register
     output cur_seg,
     output cur_rgb
   ) {
 
-  sig_interpreter int;
-  sig_selector sel;
+  sig_interpreter int; // translate clock signal to get relevant regfile address
+  sig_selector sel; // translate regfile data to extract current outputs using clock signal
   
   always {
     

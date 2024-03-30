@@ -1,6 +1,6 @@
 module seg_selector (
-    input sd[4],
-    input seg_sig[7],
+    input sd[4], // extracted digit data from register
+    input seg_sig[7], // [6:5] = register; [4:3] = 1/2/3/4; [2:0] = 0-F
     output cur_seg
   ) {
  
@@ -28,12 +28,10 @@ sig sel[7];
       default: sel = 7b0000000;
     }
     
-    if (seg_sig[2:0] == b111) {
-    
+    if (seg_sig[2:0] == b111) { // 111 unused, only 7 segments
       cur_seg = b0;
       
     } else {
-    
       cur_seg = sel[seg_sig[2:0]];
       
     }

@@ -1,11 +1,11 @@
 module sig_interpreter (
     input key_sig[8],
-    input seg_sig[7],
-    input rgb_sig[6],
+    input seg_sig[7], // [6:5] = register; [4:3] = 1/2/3/4; [2:0] = 0-F
+    input rgb_sig[6], // [5:4] = register; [3:2] = g/y/w; [1:0] = r/g/b
     
-    output k[4],
-    output sa[4],
-    output ca[4]
+    output k[4], // keypad data
+    output sa[4], // address of requested segment register
+    output ca[4] // address of requested rgb register
   ) {
   
   key_interpreter key;
@@ -15,8 +15,8 @@ module sig_interpreter (
   always {
     
     key.in = key_sig;
-    seg.seg_signal = seg_sig;
-    rgb.rgb_signal = rgb_sig;
+    seg.seg_sig = seg_sig;
+    rgb.rgb_sig = rgb_sig;
     
     k = key.out;
     sa = seg.address;
