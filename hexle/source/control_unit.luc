@@ -17,87 +17,86 @@ module control_unit (
   
   const CU_ROM = { // format: c{ we (1 bit) + ra (4 bits) + rb (4 bits) + rc (4 bits) + bsel (3 bits) + wdsel (1 bit) + alufn (6 bits)} IN THIS ORDER; total: 23 bits in length
     
-    b10000000000010001000000,  //Reset_A1
-    b10000000000110001000000,  //Reset_A1_RGB
-    b10000000000100001000000,  //Reset_A2_(Digit)
-    b10000000001000001000000,  //Reset_A2_(RGB)
-    b10000000010000001000000,  //Reset_Hint
-    b10000000001110001000000,  //Reset_Hint_RGB
-    b10000000001100001000000,  //Reset_Counter
-    b10000000001010001000000,  //Reset_Counter_RGB
-    b00000000000000000000000,  //Initialisation
-    b11001000000000100000110,  //Answer_Generation
-    b10000000011100000101111,  //Max_Digit
-    b10000000011110000111111,  //Min_Digit
-    b11110111110000000000001,  //Hint_Calculation_(-)
-    b10111000101110010000000,  //Hint_RGB
-    b10000000011110010000101,  //A1D1_(a)
-    b11111110011110010000010,  //A1D1_(b)
-    b10001111100010000000000,  //A1D1_(c)
-    b10011000000111000000000,  //A1D1_(d)
-    b11111100011110010000010,  //A1D2_(b)
-    b10011000000110110000000,  //A1D2_(d)
-    b11111010011110010000010,  //A1D3_(b)
-    b10011000000110100000000,  //A1D3_(d)
-    b11111000011110010000010,  //A1D4_(b)
-    b10011000100110010000000,  //A1D4_(d)
-    b10001111100010000000001,  //A1D1_(e)
-    b10011000000111000000001,  //A1D1_(f)
-    b10011000000110110000001,  //A1D2(f)
-    b10011000000110100000001,  //A1D3_(f)
-    b10011000100110010000001,  //A1D4_(f)
-    b10001000011110000101111,  //A1_Max
-    b10001000011100000111111,  //A1_Min
-    b11111111011100000000001,  //A1_Hint
+    b10000000000010001000000,  //RESET_A1
+    b10000000000110001000000,  //RESET_A1_RGB
+    b10000000000100001000000,  //RESET_A2_DIGIT
+    b10000000001000001000000,  //RESET_A2_RGB
+    b10000000010000001000000,  //RESET_HINT
+    b10000000001110001000000,  //RESET_HINT_RGB
+    b10000000001100001000000,  //RESET_COUNTER
+    b10000000001010001000000,  //RESET_COUNTER_RGB
+    b00000000000000000000000,  //INITIALISATION
+    b11001000000000100000110,  //ANSWER_GENERATION
+    b10000000011100000101111,  //MAX_DIGIT
+    b10000000011110000111111,  //MIN_DIGIT
+    b11110111110000000000001,  //HINT_CALCULATION
+    b10111000101110010000000,  //HINT_RGB
+    b10000000011110010000101,  //A1D1_A
+    b11111110011110010000010,  //A1D1_B
+    b10001111100010000000000,  //A1D1_C
+    b10011000000111000000000,  //A1D1_D
+    b11111100011110010000010,  //A1D2_B
+    b10011000000110110000000,  //A1D2_D
+    b11111010011110010000010,  //A1D3_B
+    b10011000000110100000000,  //A1D3_D
+    b11111000011110010000010,  //A1D4_B
+    b10011000100110010000000,  //A1D4_D
+    b10001111100010000000001,  //A1D1_E
+    b10011000000111000000001,  //A1D1_F
+    b10011000000110110000001,  //A1D2F
+    b10011000000110100000001,  //A1D3_F
+    b10011000100110010000001,  //A1D4_F
+    b10001000011110000101111,  //A1_MAX
+    b10001000011100000111111,  //A1_MIN
+    b11111111011100000000001,  //A1_HINT
     b11110100011100000000011,  //A1_CMPEQ
-    b11110000000000000000000,  //A1_Check
-    b10000000110010000000101,  //Seed
-    b10110000101100010000000,  //Counter
-    b10101000101010010000000,  //Counter_RGB
-    b10000000111110000000111,  //A1_Check_Green
-    b11111001011110010000010,  //A1_Shift_Green
-    b11111001100110000000000,  //A1_Merge_Green
-    b10000000111110000010111,  //A1_Check_Yellow
-    b11111000111110010000010,  //A1_Shift_Yellow
-    b10011111100110000000000,  //A1_Merge_Yellow
-    b10010111100100000000000,  //A2D1_(c)
-    b10100000001001000000000,  //A2D1_(d)
-    b10100000001000110000000,  //A2D2_(d)
-    b10100000001000100000000,  //A2D3_(d)
-    b10100000101000010000000,  //A2D4_(d)
-    b10010111100100000000001,  //A2D1_(e)
-    b10100000001001000000001,  //A2D1_(f)
-    b10100000001000110000001,  //A2D2(f)
-    b10100000001000100000001,  //A2D3_(f)
-    b10100000101000010000001,  //A2D4_(f)
-    b10010000011110000101111,  //A2_Max
-    b10010000011100000111111,  //A1_Min
-    b00011000000000000000000,  //Branch_D1
-    b10001001111100010100111,  //Extract_A1D1
-    b10010001111110010100111,  //Extract_A2D1
+    b11110000000000000000000,  //A1_CHECK
+    b10000000110010000000101,  //SEED
+    b10110000101100010000000,  //COUNTER
+    b10101000101010010000000,  //COUNTER_RGB
+    b10000000111110000000111,  //A1_CHECK_GREEN
+    b11111001011110010000010,  //A1_SHIFT_GREEN
+    b11111001100110000000000,  //A1_MERGE_GREEN
+    b10000000111110000010111,  //A1_CHECK_YELLOW
+    b11111000111110010000010,  //A1_SHIFT_YELLOW
+    b10011111100110000000000,  //A1_MERGE_YELLOW
+    b10010111100100000000000,  //A2D1_C
+    b10100000001001000000000,  //A2D1_D
+    b10100000001000110000000,  //A2D2_D
+    b10100000001000100000000,  //A2D3_D
+    b10100000101000010000000,  //A2D4_D
+    b10010111100100000000001,  //A2D1_E
+    b10100000001001000000001,  //A2D1_F
+    b10100000001000110000001,  //A2D2F
+    b10100000001000100000001,  //A2D3_F
+    b10100000101000010000001,  //A2D4_F
+    b10010000011110000101111,  //A2_MAX
+    b10010000011100000111111,  //A1_MIN
+    b00011000000000000000000,  //BRANCH_D1
+    b10001001111100010100111,  //EXTRACT_A1D1
+    b10010001111110010100111,  //EXTRACT_A2D1
     b11110111111100000000011,  //D1G_CMPEQ
-    b10001111011110000110111,  //Count_A1D1_in_A1
-    b10010111011100000110111,  //Count_A1D1_in_A2
+    b10001111011110000110111,  //COUNT_A1D1_IN_A1
+    b10010111011100000110111,  //COUNT_A1D1_IN_A2
     b11111111011100000000100,  //D1Y_CMPLE
-    b01110000000000000000000,  //D1_Return_Branch
-    b10001001011100010100111,  //Extract_A1D2
-    b10010001011110010100111,  //Extract_A2D2
-    b10001000111100010100111,  //Extract_A1D3
-    b10010000111110010100111,  //Extract_A2D3
-    b10001000011100010100111,  //Extract_A1D4
-    b10010000011110010100111,  //Extract_A2D4
-    b10000001011110000000111,  //A2_Check_Green
-    b11111010001000000000000,  //A2_Merge_Green
-    b10000001011110000010111,  //A2_Check_Yellow
-    b10100111101000000000000,  //A2_Merge_Yellow
-    b10000001000010001000101,  //Migrate_A2_(Digit)
-    b10000010000110001000101,  //Migrate_A2_(RGB)
-
+    b01110000000000000000000,  //D1_RETURN_BRANCH
+    b10001001011100010100111,  //EXTRACT_A1D2
+    b10010001011110010100111,  //EXTRACT_A2D2
+    b10001000111100010100111,  //EXTRACT_A1D3
+    b10010000111110010100111,  //EXTRACT_A2D3
+    b10001000011100010100111,  //EXTRACT_A1D4
+    b10010000011110010100111,  //EXTRACT_A2D4
+    b10000001011110000000111,  //A2_CHECK_GREEN
+    b11111010001000000000000,  //A2_MERGE_GREEN
+    b10000001011110000010111,  //A2_CHECK_YELLOW
+    b10100111101000000000000,  //A2_MERGE_YELLOW
+    b10000001000010001000101,  //MIGRATE_A2_DIGIT
+    b10000010000110001000101  //MIGRATE_A2_RGB
   };
   
   .clk(clk) {
     .rst(rst) {
-      fsm state = {Initialisation, Answer_Generation, Max_Digit, Min_Digit, Hint_Calculation_(-), Hint_RGB, A1D0, A1D1_(a), A1D1_(b), A1D1_(c), A1D1_(d), A1D1, A1D1_(e), A1D1_(f), A1D2_(a), A1D2_(b), A1D2_(c), A1D2_(d), A1D2, A1D2_(e), A1D2(f), A1D3_(a), A1D3_(b), A1D3_(c), A1D3_(d), A1D3, A1D3_(e), A1D3_(f), A1D4_(a), A1D4_(b), A1D4_(c), A1D4_(d), A1D4, A1D4_(e), A1D4_(f), A1_Max, A1_Min, A1_Hint, A1_CMPEQ, A1_Check, Seed, Counter, Counter_RGB, A1_Check_Green, A1_Shift_Green, A1_Merge_Green, A1_Check_Yellow, A1_Shift_Yellow, A1_Merge_Yellow, A2D0, A2D1_(a), A2D1_(b), A2D1_(c), A2D1_(d), A2D1, A2D1_(e), A2D1_(f), A2D2_(a), A2D2_(b), A2D2_(c), A2D2_(d), A2D2, A2D2_(e), A2D2(f), A2D3_(a), A2D3_(b), A2D3_(c), A2D3_(d), A2D3, A2D3_(e), A2D3_(f), A2D4_(a), A2D4_(b), A2D4_(c), A2D4_(d), A2D4, A2D4_(e), A2D4_(f), A2_Max, A1_Min, A2_Hint, A2_CMPEQ, A2_Check, Counter, Counter_RGB, Branch_D1, Extract_A1D1, Branch_D1_G/Y, Extract_A2D1, D1G_CMPEQ, Count_A1D1_in_A1, Count_A1D1_in_A2, D1Y_CMPLE, D1_Return_Branch, Branch_D2, Extract_A1D2, Branch_D2_G/Y, Extract_A2D2, D2G_CMPEQ, Count_A1D2_in_A1, Count_A1D2_in_A2, D2Y_CMPLE, D2_Return_Branch, Branch_D3, Extract_A1D3, Branch_D3_G/Y, Extract_A2D3, D3G_CMPEQ, Count_A1D3_in_A1, Count_A1D3_in_A2, D3Y_CMPLE, D3_Return_Branch, Branch_D4, Extract_A1D4, Branch_D4_G/Y, Extract_A2D4, D4G_CMPEQ, Count_A1D4_in_A1, Count_A1D4_in_A2, D4Y_CMPLE, D4_Return_Branch, A2_Check_Green, A2_Shift_Green, A2_Merge_Green, A2_Check_Yellow, A2_Shift_Yellow, A2_Merge_Yellow, Migrate_A2_(Digit), Migrate_A2_(RGB), Reset_A2_(Digit), Reset_A2_(RGB), End, Reset_A1, Reset_A2, Reset_A1_RGB, Reset_A2_RGB, Reset_Hint, Reset_Hint_RGB, Reset_Counter, Reset_Counter_RGB}; // we need to add everything here
+      fsm state = {INITIALISATION, ANSWER_GENERATION, MAX_DIGIT, MIN_DIGIT, HINT_CALCULATION, HINT_RGB, A1D0, A1D1_A, A1D1_B, A1D1_C, A1D1_D, A1D1, A1D1_E, A1D1_F, A1D2_A, A1D2_B, A1D2_C, A1D2_D, A1D2, A1D2_E, A1D2F, A1D3_A, A1D3_B, A1D3_C, A1D3_D, A1D3, A1D3_E, A1D3_F, A1D4_A, A1D4_B, A1D4_C, A1D4_D, A1D4, A1D4_E, A1D4_F, A1_MAX, A1_MIN, A1_HINT, A1_CMPEQ, A1_CHECK, SEED, COUNTER, COUNTER_RGB, A1_CHECK_GREEN, A1_SHIFT_GREEN, A1_MERGE_GREEN, A1_CHECK_YELLOW, A1_SHIFT_YELLOW, A1_MERGE_YELLOW, A2D0, A2D1_A, A2D1_B, A2D1_C, A2D1_D, A2D1, A2D1_E, A2D1_F, A2D2_A, A2D2_B, A2D2_C, A2D2_D, A2D2, A2D2_E, A2D2F, A2D3_A, A2D3_B, A2D3_C, A2D3_D, A2D3, A2D3_E, A2D3_F, A2D4_A, A2D4_B, A2D4_C, A2D4_D, A2D4, A2D4_E, A2D4_F, A2_MAX, A1_MIN, A2_HINT, A2_CMPEQ, A2_CHECK, COUNTER, COUNTER_RGB, BRANCH_D1, EXTRACT_A1D1, BRANCH_D1_GY, EXTRACT_A2D1, D1G_CMPEQ, COUNT_A1D1_IN_A1, COUNT_A1D1_IN_A2, D1Y_CMPLE, D1_RETURN_BRANCH, BRANCH_D2, EXTRACT_A1D2, BRANCH_D2_GY, EXTRACT_A2D2, D2G_CMPEQ, COUNT_A1D2_IN_A1, COUNT_A1D2_IN_A2, D2Y_CMPLE, D2_RETURN_BRANCH, BRANCH_D3, EXTRACT_A1D3, BRANCH_D3_GY, EXTRACT_A2D3, D3G_CMPEQ, COUNT_A1D3_IN_A1, COUNT_A1D3_IN_A2, D3Y_CMPLE, D3_RETURN_BRANCH, BRANCH_D4, EXTRACT_A1D4, BRANCH_D4_GY, EXTRACT_A2D4, D4G_CMPEQ, COUNT_A1D4_IN_A1, COUNT_A1D4_IN_A2, D4Y_CMPLE, D4_RETURN_BRANCH, A2_CHECK_GREEN, A2_SHIFT_GREEN, A2_MERGE_GREEN, A2_CHECK_YELLOW, A2_SHIFT_YELLOW, A2_MERGE_YELLOW, MIGRATE_A2_DIGIT, MIGRATE_A2_RGB, RESET_A2_DIGIT, RESET_A2_RGB, END, RESET_A1, RESET_A2, RESET_A1_RGB, RESET_A2_RGB, RESET_HINT, RESET_HINT_RGB, RESET_COUNTER, RESET_COUNTER_RGB}; // we need to add everything here
       dff address[7]; // adjust bits when we finalise our number of unique control signal combinations ALSO not sure if we need to use dffs or can just initialise a varialbe
     }
   }
@@ -114,47 +113,47 @@ module control_unit (
     
     case (state.q){
       
-      state.Initialisation:
+      state.INITIALISATION:
         address.d = b1000010;
-        state.d = state.Answer_Generation;
+        state.d = state.ANSWER_GENERATION;
         
-      state.Answer_Generation:
+      state.ANSWER_GENERATION:
         address.d = b1000001;
-        state.d = state.Max_Digit;
+        state.d = state.MAX_DIGIT;
         
-      state.Max_Digit:
+      state.MAX_DIGIT:
         address.d = b1000000;
         state.d = state.MIN_DIGIT;
 
-      state.Min_Digit:
+      state.MIN_DIGIT:
         address.d = b0111111;
-        state.d = state.Hint_Calculation;
+        state.d = state.HINT_CALCULATION;
 
-      state.Hint_Calculation_(-):
+      state.HINT_CALCULATION:
         address.d = b0111110;
-        state.d = state.hint_RGB_(-);
+        state.d = state.HINT_RGB;
 
-      state.Hint_RGB_(-):
+      state.HINT_RGB:
         address.d = b0111101;
         state.d = state.A1D0;
 
       state.A1D0:
         address.d = b1000010;
-        state.d = state.A1D1_(a);
+        state.d = state.A1D1_A;
 
-      state.A1D1_(a):
+      state.A1D1_A:
         address.d = b0111100;
-        state.d = state.A1D1_(b);
+        state.d = state.A1D1_B;
 
-      state.A1D1_(b):
+      state.A1D1_B:
         address.d = b0111011;
-        state.d = state.A1D1_(c);
+        state.d = state.A1D1_C;
 
-      state.A1D1_(c):
+      state.A1D1_C:
         address.d = b0111010;
-        state.d = state.A1D1_(c);
+        state.d = A1D1_D;
 
-      state.A1D1_(d):
+      state.A1D1_D:
         address.d = b0111001;
         state.d = state.A1D1;
 
@@ -162,65 +161,65 @@ module control_unit (
         address.d = b1000010;
         case(delete|| keypad){
           delete:
-            state.d = state.A1D1_(e);
+            state.d = state.A1D1_E;
           keypad:
-            state.d = A1D2_(a);
+            state.d = A1D2_A;
         }
 
-      state.A1D1_(e):
+      state.A1D1_E:
         address.d = b0110010;
-        state.d = state.A1D1_(f);
+        state.d = state.A1D1_F;
     
-      state.A1D1_(f):
+      state.A1D1_F:
         address.d = b0110001;
         state.d = state.A1D0;
    
-      state.A1D2_(a):
+      state.A1D2_A:
         address.d = b0111100;
-        state.d = state.A1D2_(b);
+        state.d = state.A1D2_B;
 
-      state.A1D2_(b):
+      state.A1D2_B:
         address.d = b0111000;
-        state.d = state.A1D2_(c);
+        state.d = state.A1D2_C;
 
-      state.A1D2_(c):
+      state.A1D2_C:
         address.d = b0111010;
-        state.d = state.A1D2_(c);
+        state.d = state.A1D2_D;
 
-      state.A1D2_(d):
+      state.A1D2_D:
         address.d = b0110111;
-        state.d = state.A1D1;
+        state.d = state.A1D2;
 
       state.A1D2:
         address.d = b1000010;
         case(delete|| keypad){
           delete:
-            state.d = state.A1D2_(e);
+            state.d = state.A1D2_E;
           keypad:
-            state.d = A1D3_(a);
+            state.d = A1D3_A;
         }
       
-      state.A1D2_(e):
+      state.A1D2_E:
         address.d = b0110010;
-        state.d = state.A1D2_(f);
+        state.d = state.A1D2_F;
     
-      state.A1D2_(f):
+      state.A1D2_F:
         address.d = b0110000;
         state.d = state.A1D1;
       
-      state.A1D3_(a):
+      state.A1D3_A:
         address.d = b0111100;
-        state.d = state.A1D3_(b);
+        state.d = state.A1D3_B;
 
-      state.A1D3_(b):
+      state.A1D3_B:
         address.d = b0110110;
-        state.d = state.A1D3_(c);
+        state.d = state.A1D3_C;
 
-      state.A1D3_(c):
+      state.A1D3_C:
         address.d = b0111010;
-        state.d = state.A1D3_(c);
+        state.d = state.A1D3_D;
 
-      state.A1D3_(d):
+      state.A1D3_D:
         address.d = b0110101;
         state.d = state.A1D3;
 
@@ -228,114 +227,114 @@ module control_unit (
         address.d = b1000010;
         case(delete|| keypad){
           delete:
-            state.d = state.A1D3_(e);
+            state.d = state.A1D3_E;
           keypad:
-            state.d = A1D4_(a);
+            state.d = A1D4_A;
         }
       
-      state.A1D3_(e):
+      state.A1D3_E:
         address.d = b0110010;
-        state.d = state.A1D3_(f);
+        state.d = state.A1D3_F;
     
-      state.A1D3_(f):
+      state.A1D3_F:
         address.d = b0101111;
         state.d = state.A1D2;
 
-      state.A1D4_(a):
+      state.A1D4_A:
         address.d = b0111100;
-        state.d = state.A1D3_(b);
+        state.d = state.A1D4_B;
 
-      state.A1D4_(b):
+      state.A1D4_B:
         address.d = b0110100;
-        state.d = state.A1D3_(c);
+        state.d = state.A1D4_C;
 
-      state.A1D4_(c):
+      state.A1D4_C:
         address.d = b0111010;
-        state.d = state.A1D3_(c);
+        state.d = state.A1D4_D;
 
-      state.A1D4_(d):
+      state.A1D4_D:
         address.d = b0110011;
-        state.d = state.A1D3;
+        state.d = state.A1D4;
 
       state.A1D4:
         address.d = b1000010;
         case(delete|| keypad){
           delete:
-            state.d = state.A1D4_(e);
+            state.d = state.A1D4_E;
           keypad:
-            state.d = state.A1_Max;
+            state.d = state.A1_MAX;
         }
       
-      state.A1D4_(e):
+      state.A1D4_E:
         address.d = b0110010;
-        state.d = state.A1D3_(f);
+        state.d = state.A1D4_F;
     
-      state.A1D4_(f):
+      state.A1D4_F:
         address.d = b0101110;
         state.d = state.A1D3;
 
-      state.A1_Max:
+      state.A1_MAX:
         address.d = b0101101;
-        state.d = state.A1_Min;
+        state.d = state.A1_MIN;
       
-      state.A1_Min:
+      state.A1_MIN:
         address.d = b0101100;
-        state.d = state.A1_Hint;
+        state.d = state.A1_HINT;
       
-      state.A1_Hint:
+      state.A1_HINT:
         address.d = b0101011;
         state.d = state.A1_CMPEQ;
 
       state.A1_CMPEQ:
         address.d = b0101010;
-        state.d = state.A1_Check;
+        state.d = state.A1_CHECK;
 
-      state.A1_Check:
+      state.A1_CHECK:
         case(ra_data) {
             h0001:
-              state.d = state.Seed;
+              state.d = state.SEED;
             default:
               state.d = state.A1D4;
         }  
         
-      state.Seed:
+      state.SEED:
         address.d = b0101000;
-        state.d = state.Counter;
+        state.d = state.COUNTER;
 
-      state.Counter:
+      state.COUNTER:
         address.d = b0100111;
-        state.d = state.Counter_RGB;
+        state.d = state.COUNTER_RGB;
       
-      state.Counter_RGB:
+      state.COUNTER_RGB:
         address.d = b0100110;
-        state.d = state.A1_Check_Green;
+        state.d = state.A1_CHECK_GREEN;
       
-      state.A1_Check_Green:
+      state.A1_CHECK_GREEN:
         address.d = b0100101;
-        state.d = state.A1_Shift_Green;
+        state.d = state.A1_SHIFT_GREEN;
       
-      state.A1_Shift_Green:
+      state.A1_SHIFT_GREEN:
         address.d = b0100100;
-        state.d = state.A1_Merge_Green;      
+        state.d = state.A1_MERGE_GREEN;      
       
-      state.A1_Merge_Green:
+      state.A1_MERGE_GREEN:
         address.d = b0100011;
         case(ra_data) {
           h4444:
-            state.d = state.End;
+            state.d = state.END;
           default:
-            state.d = state.A1_Check_Yellow;
+            state.d = state.A1_CHECK_YELLOW;
         }
 
-      state.A1_Check_Yellow:
+      state.A1_CHECK_YELLOW:
         address.d = b0100010;
-        state.d = state.A1_Shift_Yellow;
+        state.d = state.A1_SHIFT_YELLOW;
       
-      state.A1_Shift_Yellow:
+      state.A1_SHIFT_YELLOW:
         address.d = b0100001;
-        state.d = state.A1_Merge_Yellow;
+        state.d = state.A1_MERGE_YELLOW;
 
-      state.A1_Merge_Yellow:
+      state.A1_MERGE_YELLOW:
         address.d = b0100000;
         state.d = state.A2D0;
 
@@ -352,44 +351,44 @@ module control_unit (
 
 
 
-      state.End:
+      state.END:
         address.d = b1000010;
         case(green || red) { // if enter/delete is pressed
           b1:
-            state.d = Reset_A1;
+            state.d = RESET_A1;
         }
 
-      state.Reset_A1:
+      state.RESET_A1:
         address.d = b1001010;
-        state.d = state.Reset_A2;
+        state.d = state.RESET_A2;
       
-      state.Reset_A2:
+      state.RESET_A2:
         address.d = b1001000;
-        state.d = state.Reset_A1_RGB;
+        state.d = state.RESET_A1_RGB;
       
-      state.Reset_A1_RGB:
+      state.RESET_A1_RGB:
         address.d = b1001001;
-        state.d = state.Reset_A2_RGB;
+        state.d = state.RESET_A2_RGB;
 
-      state.Reset_A2_RGB:
+      state.RESET_A2_RGB:
         address.d = b1000111;
-        state.d = state.Reset_Hint;
+        state.d = state.RESET_HINT;
 
-      state.Reset_Hint:
+      state.RESET_HINT:
         address.d = b1000110;
-        state.d = state.Reset_Hint_RGB;
+        state.d = state.RESET_HINT_RGB;
 
-      state.Reset_Hint_RGB:
+      state.RESET_HINT_RGB:
         address.d = b1000101;
-        state.d = state.Reset_A2;
+        state.d = state.RESET_COUNTER;
       
-      state.Reset_Counter:
+      state.RESET_COUNTER:
         address.d = b1000100;
-        state.d = state.Reset_Counter_RGB;
+        state.d = state.RESET_COUNTER_RGB;
       
-      state.Reset_Counter_RGB:
+      state.RESET_COUNTER_RGB:
         address.d = b1000011;
-        state.d = state.Answer_Generation;
+        state.d = state.ANSWER_GENERATION;
 
       state.EXAMPLE:
         address.d = 6b0; // address of CURRENT state, will be the same regardless of button pressed
@@ -402,7 +401,6 @@ module control_unit (
       state.EXAMPLE2:
         address.d = 6b0;
         ra = keypad; // i believe this will overwrite the default value, so for instructions taking in keypad for an input can just put 0000 as a placeholder or sth
-      
         
       state.EXAMPLE3: // branching example - reads ra directly from REGFILE
         case(ra_data) { // for branching states, no control signals 
