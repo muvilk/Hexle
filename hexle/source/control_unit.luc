@@ -185,32 +185,12 @@ module control_unit (
 
       state.A1D1:
         address.d = b1000010;
-        case(delete|| keypad){
-          delete:
-            state.d = state.A1D1_E;
-          keypad:
-            state.d = A1D2_A;
-        }
-
-        //option 1
-
         case(delete) {
           b1: state.d = state.A1D1_E;
         }
         case(keypad) {
           b1: state.d = state.A1D2_A;
         }
-
-        //option 2
-
-        if (delete) {
-          state.d = state.A1D1_E;
-        }
-
-        if (keypad) {
-          state.d = state.A1D2_A;
-        }
-
 
       state.A1D1_E:
         address.d = b0110010;
@@ -238,13 +218,13 @@ module control_unit (
 
       state.A1D2:
         address.d = b1000010;
-        case(delete|| keypad){
-          delete:
-            state.d = state.A1D2_E;
-          keypad:
-            state.d = A1D3_A;
+        case(delete) {
+          b1: state.d = state.A1D2_E;
         }
-      
+        case(keypad) {
+          b1: state.d = state.A1D3_A;
+        }
+              
       state.A1D2_E:
         address.d = b0110010;
         state.d = state.A1D2_F;
@@ -271,11 +251,11 @@ module control_unit (
 
       state.A1D3:
         address.d = b1000010;
-        case(delete|| keypad){
-          delete:
-            state.d = state.A1D3_E;
-          keypad:
-            state.d = A1D4_A;
+        case(delete) {
+          b1: state.d = state.A1D3_E;
+        }
+        case(keypad) {
+          b1: state.d = state.A1D4_A;
         }
       
       state.A1D3_E:
@@ -304,11 +284,11 @@ module control_unit (
 
       state.A1D4:
         address.d = b1000010;
-        case(delete|| keypad){
-          delete:
-            state.d = state.A1D4_E;
-          keypad:
-            state.d = state.A1_MAX;
+        case(delete) {
+          b1: state.d = state.A1D4_E;
+        }
+        case(keypad) {
+          b1: state.d = state.A1_MAX;
         }
       
       state.A1D4_E:
