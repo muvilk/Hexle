@@ -8,6 +8,7 @@ module alu (
     output n
   ) {
   adder adder;
+  boolean boolean;
   shifter shifter;
   compare compare; 
   max max;
@@ -16,8 +17,6 @@ module alu (
   count count;
   green green;
   yellow yellow;
-  rng rng;
-  count count;
 
   always {
     
@@ -25,30 +24,40 @@ module alu (
     
     adder.a = a;
     adder.b = b;
+    adder.alufn_signal = alufn_signal;
         
-    compare.a = a;
-    compare.b = b;
+    compare.z = adder.z;
+    compare.v = adder.v;
+    compare.n = adder.n;
+    compare.alufn_signal = alufn_signal;
+    
+    boolean.a = a;
+    boolean.b = b;
+    boolean.alufn_signal = alufn_signal;
+    
+    z = adder.z;
+    v = adder.v;
+    n = adder.n;
         
     shifter.a = a;
-    shifter.b = b;
+    shifter.b = b[3:0];
+    shifter.alufn_signal = alufn_signal;
     
     max.a = a;
     
     min.a = a;
     
     extract.a = a;
-    extract.b = b;
+    extract.b = b[1:0];
     
     count.a = a;
-    count.b = b;
+    count.b = b[3:0];
     
     green.a = a;
     green.b = b;
     
     yellow.a = a;
     yellow.b = b;
-    
-    rng.a = a;
 
     case(alufn_signal) {
       b000000: out = adder.out;
@@ -56,8 +65,7 @@ module alu (
       b000010: out = shifter.shift; // module for SHL
       b000011: out = c{15b0, compare.cmp}; // module for CMPEQ
       b000100: out = c{15b0, compare.cmp}; // module for CMPLE
-      b000101: out = c{15b0, compare.cmp}; // module for B
-      b000110: out = rng.out; // module for RNG
+      b000101: out = boolean.bool; // module for B
       b000111: out = green.out; // module for GRN
       b010111: out = yellow.out; // module for YLW
       b100111: out = c{12b0, extract.out}; // module for EXT

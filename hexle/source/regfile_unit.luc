@@ -12,7 +12,8 @@ module regfile_unit (
     output reg_data_1[16],
     output reg_data_2[16],
     output sd[16], // 
-    output cd[16]
+    output cd[16],
+    output seed[16]
   ) {
   
   regfile_memory regfile(.clk(clk), .rst(rst));
@@ -37,6 +38,7 @@ module regfile_unit (
     reg_data_2 = regfile.reg_data_2;
     sd = regfile.sd;
     cd = regfile.cd;
+    seed = regfile.seed;
     
   }
 }
