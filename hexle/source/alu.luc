@@ -52,16 +52,16 @@ module alu (
 
     case(alufn_signal) {
       b000000: out = adder.out;
-      b000001: out = sub.out; // module for SUB
-      b000010: out = shifter.out; // module for SHL
-      b000011: out = c{15b0, compare.out}; // module for CMPEQ
-      b000100: out = c{15b0, compare.out}; // module for CMPLE
-      b000101: out = c{15b0, compare.out}; // module for B
+      b000001: out = adder.out; // module for SUB
+      b000010: out = shifter.shift; // module for SHL
+      b000011: out = c{15b0, compare.cmp}; // module for CMPEQ
+      b000100: out = c{15b0, compare.cmp}; // module for CMPLE
+      b000101: out = c{15b0, compare.cmp}; // module for B
       b000110: out = rng.out; // module for RNG
       b000111: out = green.out; // module for GRN
       b010111: out = yellow.out; // module for YLW
       b100111: out = c{12b0, extract.out}; // module for EXT
-      b110111: out = count.out; // module for CNT
+      b110111: out = count.count; // module for CNT
       b101111: out = c{12b0, max.out}; // module for MAX
       b111111: out = c{12b0, min.out}; // module for MIN
       default: out = 16b0;
