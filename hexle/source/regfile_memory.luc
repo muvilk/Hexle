@@ -11,7 +11,8 @@ module regfile_memory (
     input sa[4],
     input ca[4],
     output sd[16],
-    output cd[16]
+    output cd[16],
+    output seed[16]
   ) {
   
   dff registers[16][16](#INIT(16x{{16h0}}), .clk(clk), .rst(rst));
@@ -163,6 +164,8 @@ module regfile_memory (
       b1111:
         cd = registers.q[15];
     }
+    
+    seed = registers.q[9];
     
     case(write_enable) {
     
