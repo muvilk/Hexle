@@ -37,6 +37,7 @@ module au_top (
     .rst(rst) {
       hexle_cpu hexle_cpu;
       counter frequency_divider(#SIZE(15));
+      pn_gen rng;
       
     }
   }
@@ -56,6 +57,8 @@ module au_top (
       
     //
     
+    
+    
     red_conditioner.in = red;
     green_conditioner.in = green;
     keypad_conditioner.in = key_sig;
@@ -74,6 +77,10 @@ module au_top (
     
     digit = hexle_cpu.cur_seg;
     rgb = hexle_cpu.cur_rgb;
+    
+    rng.next = hexle_cpu.next;
+    rng.seed = hexle_cpu.seed;
+    hexle_cpu.ans = rng.num[15:0];
      
   }
 }

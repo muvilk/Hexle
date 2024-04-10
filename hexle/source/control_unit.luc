@@ -6,14 +6,16 @@ module control_unit (
     input red,
     input keypad[4],
     input ra_data[16],
+    input ans[16],
     output we,
     output ra[4],
     output rb[4],
     output rc[4],
     output bsel[3],
     output wdsel,
-    output alufn[6]
-  )
+    output alufn[6],
+    output next
+  ) {
   
   const CU_ROM = { // format: c{ we (1 bit) + ra (4 bits) + rb (4 bits) + rc (4 bits) + bsel (3 bits) + wdsel (1 bit) + alufn (6 bits)} IN THIS ORDER; total: 23 bits in length
     
@@ -136,6 +138,7 @@ module control_unit (
     bsel = CU_ROM[address.q][9:7];
     wdsel = CU_ROM[address.q][6];
     alufn = CU_ROM[address.q][5:0];
+    next = 0;
     
     case (state.q){
       
@@ -145,10 +148,13 @@ module control_unit (
         
       state.ANSWER_GENERATION:
         address.d = b1000001;
+        next = 1;
+        rb = ans;
         state.d = state.MAX_DIGIT;
         
       state.MAX_DIGIT:
         address.d = b1000000;
+        next = 0;
         state.d = state.MIN_DIGIT;
 
       state.MIN_DIGIT:
@@ -172,16 +178,18 @@ module control_unit (
         state.d = state.A1D1_A;
 
       state.A1D1_A:
+        rb = keypad;
         address.d = b0111100;
         state.d = state.A1D1_B;
 
       state.A1D1_B:
+        rb = CU_ROM[address.q][17:14];
         address.d = b0111011;
         state.d = state.A1D1_C;
 
       state.A1D1_C:
         address.d = b0111010;
-        state.d = A1D1_D;
+        state.d = state.A1D1_D;
 
       state.A1D1_D:
         address.d = b0111001;
@@ -193,7 +201,12 @@ module control_unit (
           b1: state.d = state.A1D1_E;
         }
         case(keypad) {
-          b1: state.d = state.A1D2_A;
+        
+          b00000000: state.d = state.A1D1;
+          
+          default:
+            
+            state.d = state.A1D2_A;
         }
 
       state.A1D1_E:
@@ -206,10 +219,12 @@ module control_unit (
 
 //ATTEMPT 1 DIGIT 2   
       state.A1D2_A:
+        rb = keypad;
         address.d = b0111100;
         state.d = state.A1D2_B;
 
       state.A1D2_B:
+        rb = CU_ROM[address.q][17:14];
         address.d = b0111000;
         state.d = state.A1D2_C;
 
@@ -391,7 +406,7 @@ module control_unit (
 
       state.A2D1_C:
         address.d = b0011111;
-        state.d = A2D1_D;
+        state.d = state.A2D1_D;
 
       state.A2D1_D:
         address.d = b0011110;
@@ -425,7 +440,7 @@ module control_unit (
 
       state.A2D2_C:
         address.d = b0011111;
-        state.d = A2D2_D;
+        state.d = state.A2D2_D;
 
       state.A2D2_D:
         address.d = b0011101;
@@ -459,7 +474,7 @@ module control_unit (
 
       state.A2D3_C:
         address.d = b0011111;
-        state.d = A2D3_D;
+        state.d = state.A2D3_D;
 
       state.A2D3_D:
         address.d = b0011100;
@@ -493,7 +508,7 @@ module control_unit (
 
       state.A2D4_C:
         address.d = b0011111;
-        state.d = A2D4_D;
+        state.d = state.A2D4_D;
 
       state.A2D4_D:
         address.d = b0011011;
@@ -818,7 +833,7 @@ module control_unit (
         address.d = b1000010;
         case(green || red) { // if enter/delete is pressed
           b1:
-            state.d = RESET_A1;
+            state.d = state.RESET_A1;
         }
 
       state.RESET_A1:
