@@ -16,8 +16,6 @@ pin led[7] LED7;
 pin usb_rx USB_TX;
 pin usb_tx USB_RX;
 
-pin outled C40;
-
 // outputs
 
 pin key_vdd[0] A15;
@@ -33,14 +31,14 @@ pin digitclock[4] A40;
 pin digitclock[5] A43;
 pin digitclock[6] A46;
 
-pin rgbclock[0] A9;
-pin rgbclock[1] A6;
-pin rgbclock[2] A3;
-pin rgbclock[3] A8;
-pin rgbclock[4] A5;
-pin rgbclock[5] A2;
+pin rgbclock[0] A6;
+pin rgbclock[1] A3;
+pin rgbclock[2] A5;
+pin rgbclock[3] A2;
 
-pin rgb A36;
+pin rgb[0] A33;
+pin rgb[1] A36;
+pin rgb[2] A34;
 pin digit A37;
 
 // inputs
@@ -49,8 +47,9 @@ pin key_sig[0] B40 pulldown;
 pin key_sig[1] B43 pulldown;
 pin key_sig[2] B46 pulldown;
 pin key_sig[3] B49 pulldown;
-pin green B6 pulldown;
-pin red B3 pulldown;
+pin green B9 pulldown;
+pin red B6 pulldown;
+pin high_contrast B3 pulldown;
 
 //pin io_led[0][0] B21;
 //pin io_led[0][1] B20;
