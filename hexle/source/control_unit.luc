@@ -4,12 +4,13 @@ module control_unit (
     //input slowclk,
     input green,
     input red,
+    input key,
     input keypad[4],
     input ra_data[16],
     input ans[16],
     output we,
     output ra[4],
-    output rb[4],
+    output rb[16],
     output rc[4],
     output bsel[3],
     output wdsel,
@@ -132,7 +133,7 @@ module control_unit (
     
     we = CU_ROM[address.q][22];
     ra = CU_ROM[address.q][21:18];
-    rb = CU_ROM[address.q][17:14];
+    rb = c{12b0, CU_ROM[address.q][17:14]};
     rc = CU_ROM[address.q][13:10];
     bsel = CU_ROM[address.q][9:7];
     wdsel = CU_ROM[address.q][6];
@@ -146,7 +147,7 @@ module control_unit (
         state.d = state.ANSWER_GENERATION;
         
       state.ANSWER_GENERATION:
-        address.d = b1000001;
+        address.d = b1000001; // need to update to store B, reading B as literal
         next = 1;
         rb = ans;
         state.d = state.MAX_DIGIT;
@@ -173,16 +174,19 @@ module control_unit (
 
 //ATTEMPT 1 DIGIT 1
       state.A1D0:
-        address.d = b1000010;
-        state.d = state.A1D1_A;
+      
+        if (key == 1) {
+          rb = keypad;
+          address.d = b1000010; // need to update to store B to temp reg of choice, reading B as literal
+          state.d = state.A1D1_A;
+        }
 
       state.A1D1_A:
-        rb = keypad;
-        address.d = b0111100;
+        rb = CU_ROM[address.q][17:14];
+        address.d = b0111100; // need to update to access register using rb, instead of reading as literal
         state.d = state.A1D1_B;
 
       state.A1D1_B:
-        rb = CU_ROM[address.q][17:14];
         address.d = b0111011;
         state.d = state.A1D1_C;
 
