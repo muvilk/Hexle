@@ -45,10 +45,10 @@ pin digit A37;
 
 // inputs
 
-pin key[0] B40 pulldown;
-pin key[1] B43 pulldown;
-pin key[2] B46 pulldown;
-pin key[3] B49 pulldown;
+pin key_sig[0] B40 pulldown;
+pin key_sig[1] B43 pulldown;
+pin key_sig[2] B46 pulldown;
+pin key_sig[3] B49 pulldown;
 pin green B6 pulldown;
 pin red B3 pulldown;
 

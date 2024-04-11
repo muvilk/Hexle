@@ -1,5 +1,6 @@
 module sig_processor (
-    input key_sig[8],
+    input key_sig[4],
+    input keyclk[2],
     input seg_sig[7], // [6:5] = register; [4:3] = 1/2/3/4; [2:0] = 0-F
     input rgb_sig[6], // [5:4] = register; [3:2] = g/y/w; [1:0] = r/g/b
     input sd[16], // segment data from register
@@ -21,6 +22,7 @@ module sig_processor (
     int.key_sig = key_sig;
     int.seg_sig = seg_sig;
     int.rgb_sig = rgb_sig;
+    int.keyclk = keyclk;
     
     sel.sd = sd;
     sel.cd = cd;

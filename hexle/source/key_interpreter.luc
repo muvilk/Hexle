@@ -1,30 +1,48 @@
 module key_interpreter (
-    input in[8],
+    input in[4],
+    input keyclk[2],
     output out[4]
   ) {
  
-var c;
+sig c[4];
 
   always {
-    case (in) {
-      b10001000: c = 4h1; // 1
-      b01001000: c = 4h2; // 2
-      b00101000: c = 4h3; // 3
-      b00011000: c = 4hF; // F
-      b10000100: c = 4h4; // 4
-      b01000100: c = 4h5; // 5
-      b00100100: c = 4h6; // 6
-      b00010100: c = 4hE; // E
-      b10000010: c = 4h7; // 7
-      b01000010: c = 4h8; // 8
-      b00100010: c = 4h9; // 9
-      b00010010: c = 4hD; // D
-      b10000001: c = 4hA; // A
-      b01000001: c = 4h0; // 0
-      b00100001: c = 4hB; // B
-      b00010001: c = 4hC; // C
+  
+    case (keyclk) {
+      h0:
+        case(in) {
+          h8: c = h1;
+          h4: c = h2;
+          h2: c = h3;
+          h1: c = hF;
+          default: c = h0;
+        }
+      h1:
+        case(in) {
+          h8: c = h4;
+          h4: c = h5;
+          h2: c = h6;
+          h1: c = hE;
+          default: c = h0;
+        }
+      h2:
+        case(in) {
+          h8: c = h7;
+          h4: c = h8;
+          h2: c = h9;
+          h1: c = hD;
+          default: c = h0;
+        }
+      h3: 
+        case(in) {
+          h8: c = hA;
+          h4: c = h0;
+          h2: c = hB;
+          h1: c = hC;
+          default: c = h0;
+        }
     
-      default: c = 4h0;
+      default: c = h0;
     }
     out = c;
   }
