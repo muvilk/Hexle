@@ -46,5 +46,6 @@
     <constraint lib="true">alchitry.acf</constraint>
     <constraint lib="true">io.acf</constraint>
     <constraint lib="true">au.xdc</constraint>
+    <constraint>custom.acf</constraint>
   </files>
 </project>

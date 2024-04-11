@@ -1,6 +1,6 @@
 module hexle_cpu (
     input clk,  // clock
-    //input slowclk
+    input slowclk,
     input rst,
     input green,
     input red,
