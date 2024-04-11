@@ -9,7 +9,7 @@ module hexle_cpu (
     input ans[16],
     
     input seg_sig[7],
-    input rgb_sig[6],
+    input rgb_sig[4],
     input keyclk[2],
     
     output cur_seg,

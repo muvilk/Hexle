@@ -1,6 +1,5 @@
 module rgb_selector (
     input cd[4], // extracted rgb data from register
-    input rgb_sig[6], // [5:4] = register; [3:2] = digit; [1:0] = colour 1/2/3
     input cb, // high contrast signal
     output cur_rgb[3]
   ) {
@@ -12,24 +11,18 @@ sig rgb[9];
     case (cd) {
 
         b0111: // green, cyan for high contrast mode
-          rgb = (cb == 0) ? b101000000 : b000101110; // off green off; off green blue
+          rgb = (cb == 0) ? b101 : b100;
 
         b0011: // yellow, magenta for high contrast mode
-          rgb = (cb == 0) ? b011101000 : b011000110; // red green off, red off blue 
+          rgb = (cb == 0) ? b001 : b010;
 
         b0001: // white
-          rgb = b011101110; // red green blue
+          rgb = b000;
         
         default:
-          rgb = b111111111; // off off off   
+          rgb = b111;
     }
 
-    case (rgb_sig[1:0]) {
-      b00: cur_rgb = rgb[8:6];
-      b01: cur_rgb = rgb[5:3];
-      b10: cur_rgb = rgb[2:0];
-      b11: cur_rgb = b000; // 11 unused, only 3 colour options
-      default: cur_rgb = rgb[2:0];
-    }
+    cur_rgb = rgb;
   }
 }
