@@ -10,11 +10,12 @@ module au_top (
     input io_button [5],    // 5 buttons on IO Shield
     input io_dip [3][8],     // DIP switches on IO Shield
     
-    input key_sig[8],
+    input key_sig[4],
     input green,
     input red,
     input high_contrast,
     
+    output key_vdd[4],
     output digit,
     output digitclock[7],
     output rgb,
@@ -23,20 +24,34 @@ module au_top (
   ) {
   
   sig rst;                  // reset signal
+  sig keyclock[2];
   
   
-  .clk(clk) {
+  .clk(clk) { // input > button conditioner > edge detector > dff
     // The reset conditioner is used to synchronize the reset signal to the FPGA
     // clock. This ensures the entire FPGA comes out of reset at the same time.
     reset_conditioner reset_cond;
-    button_conditioner green_conditioner;
-    button_conditioner red_conditioner;
-    button_conditioner hc_conditioner;
-    button_conditioner keypad_conditioner[8];
+    edge_detector slowclock_edge(#RISE(1), #FALL(0));
+    
+    button_conditioner green_button_conditioner;
+    edge_detector green_button_edge(#RISE(1), #FALL(0));
+    dff green_button;
+    
+    button_conditioner red_button_conditioner;
+    edge_detector red_button_edge(#RISE(1), #FALL(0));
+    dff red_button;
+    
+    button_conditioner hc_button_conditioner;
+    edge_detector hc_button_edge(#RISE(1), #FALL(0));
+    dff hc_button;
+    
+    button_conditioner keypad_button_conditioner[4];
+    edge_detector keypad_button_edge[4](#RISE(1), #FALL(0));
+    dff keypad_button[4];
     
     .rst(rst) {
       hexle_cpu hexle_cpu;
-      counter frequency_divider(#SIZE(15));
+      counter frequency_divider(#SIZE(16));
       pn_gen rng;
       
     }
@@ -57,23 +72,36 @@ module au_top (
       
     //
     
+    red_button_conditioner.in = red;
+    red_button_edge.in = red_button_conditioner.out;
+    red_button.d = red_button_edge.out;
     
+    green_button_conditioner.in = green;
+    green_button_edge.in = green_button_conditioner.out;
+    green_button.d = green_button_edge.out;
     
-    red_conditioner.in = red;
-    green_conditioner.in = green;
-    keypad_conditioner.in = key_sig;
-    hc_conditioner.in = high_contrast;
+    keypad_button_conditioner.in = key_sig;
+    keypad_button_edge.in = keypad_button_conditioner.out;
+    keypad_button.d = keypad_button_edge.out;
     
-    hexle_cpu.red = red_conditioner.out;
-    hexle_cpu.green = green_conditioner.out;
-    hexle_cpu.key_sig = keypad_conditioner.out;
-    hexle_cpu.high_contrast = hc_conditioner.out;    
+    hc_button_conditioner.in = high_contrast;
+    hc_button_edge.in = hc_button_conditioner.out;
+    hc_button.d = hc_button_edge.out;
+
+    digitclock = frequency_divider.value[15:9];
+    rgbclock = frequency_divider.value[8:3];
+    slowclock_edge.in = frequency_divider.value[2];
+    keyclock = frequency_divider.value[1:0];
     
-    hexle_cpu.seg_sig = frequency_divider.value[12:6];
-    hexle_cpu.rgb_sig = frequency_divider.value[5:0];
+    hexle_cpu.red = red_button.q;
+    hexle_cpu.green = green_button.q;
+    hexle_cpu.key_sig = keypad_button.q;
+    hexle_cpu.high_contrast = hc_button.q;  
+    hexle_cpu.slowclk = slowclock_edge.out;  
     
-    digitclock = frequency_divider.value[12:6];
-    rgbclock = frequency_divider.value[5:0];
+    hexle_cpu.seg_sig = frequency_divider.value[15:9];
+    hexle_cpu.rgb_sig = frequency_divider.value[8:3];
+    hexle_cpu.keyclk = frequency_divider.value[1:0];
     
     digit = hexle_cpu.cur_seg;
     rgb = hexle_cpu.cur_rgb;
@@ -81,6 +109,15 @@ module au_top (
     rng.next = hexle_cpu.next;
     rng.seed = hexle_cpu.seed;
     hexle_cpu.ans = rng.num[15:0];
+    
+    case (keyclock) {
+      
+      b00: key_vdd = b1000;
+      b01: key_vdd = b0100;
+      b10: key_vdd = b0010;
+      b11: key_vdd = b0001;
+      default: key_vdd = b0;
+    } 
      
   }
 }

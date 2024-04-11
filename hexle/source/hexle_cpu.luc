@@ -1,15 +1,16 @@
 module hexle_cpu (
     input clk,  // clock
-    //input slowclk
+    input slowclk,
     input rst,
     input green,
     input red,
-    input key_sig[8],
+    input key_sig[4],
     input high_contrast,
     input ans[16],
     
     input seg_sig[7],
     input rgb_sig[6],
+    input keyclk[2],
     
     output cur_seg,
     output cur_rgb,
@@ -93,6 +94,7 @@ module hexle_cpu (
     proc.seg_sig = seg_sig;
     proc.rgb_sig = rgb_sig;
     proc.cb = high_contrast;
+    proc.keyclk = keyclk;
     
     //***** CONTROL unit ******//
     //control_system.slowclk = slowclk;
