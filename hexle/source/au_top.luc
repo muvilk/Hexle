@@ -19,7 +19,7 @@ module au_top (
     output digit,
     output digitclock[7],
     output rgb[3],
-    output rgbclock[4] // last two digits omitted due to common anode configuration of rgb pins
+    output rgbclock[4]
     
   ) {
   
@@ -88,8 +88,8 @@ module au_top (
     hc_button_edge.in = hc_button_conditioner.out;
     hc_button.d = hc_button_edge.out;
 
-    digitclock = frequency_divider.value[15:9];
-    rgbclock = frequency_divider.value[8:5]; // last two digits omitted due to common anode configuration of rgb pins
+    digitclock = frequency_divider.value[13:7];
+    rgbclock = frequency_divider.value[6:3];
     slowclock_edge.in = frequency_divider.value[2];
     keyclock = frequency_divider.value[1:0];
     
@@ -99,8 +99,8 @@ module au_top (
     hexle_cpu.high_contrast = hc_button.q;  
     hexle_cpu.slowclk = slowclock_edge.out;  
     
-    hexle_cpu.seg_sig = frequency_divider.value[15:9];
-    hexle_cpu.rgb_sig = frequency_divider.value[8:3];
+    hexle_cpu.seg_sig = frequency_divider.value[13:7];
+    hexle_cpu.rgb_sig = frequency_divider.value[6:3];
     hexle_cpu.keyclk = frequency_divider.value[1:0];
     
     digit = hexle_cpu.cur_seg;
