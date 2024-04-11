@@ -18,8 +18,8 @@ module au_top (
     output key_vdd[4],
     output digit,
     output digitclock[7],
-    output rgb,
-    output rgbclock[6]
+    output rgb[3],
+    output rgbclock[4] // last two digits omitted due to common anode configuration of rgb pins
     
   ) {
   
@@ -89,7 +89,7 @@ module au_top (
     hc_button.d = hc_button_edge.out;
 
     digitclock = frequency_divider.value[15:9];
-    rgbclock = frequency_divider.value[8:3];
+    rgbclock = frequency_divider.value[8:5]; // last two digits omitted due to common anode configuration of rgb pins
     slowclock_edge.in = frequency_divider.value[2];
     keyclock = frequency_divider.value[1:0];
     
@@ -111,13 +111,11 @@ module au_top (
     hexle_cpu.ans = rng.num[15:0];
     
     case (keyclock) {
-      
       b00: key_vdd = b1000;
       b01: key_vdd = b0100;
       b10: key_vdd = b0010;
       b11: key_vdd = b0001;
       default: key_vdd = b0;
-    } 
-     
+    }   
   }
 }

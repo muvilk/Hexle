@@ -1,5 +1,5 @@
 module rgb_interpreter (
-    input rgb_sig[6], // [5:4] = register; [3:2] = g/y/w; [1:0] = r/g/b
+    input rgb_sig[6], // [5:4] = register; [3:2] = digit; [1:0] = colour 1/2/3
     output address[4] // address of requested rgb register
   ) {
 
