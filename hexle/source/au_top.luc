@@ -71,16 +71,7 @@ module au_top (
       
     //
     
-<<<<<<< Updated upstream
-    
-    
-    red_conditioner.in = red;
-    green_conditioner.in = green;
-    keypad_conditioner.in = key_sig;
-    hc_conditioner.in = high_contrast;
-=======
     slowclock_edge.in = frequency_divider.value[2];
->>>>>>> Stashed changes
     
     red_button_conditioner.in = red;
     red_button_edge.in = red_button_conditioner.out;
