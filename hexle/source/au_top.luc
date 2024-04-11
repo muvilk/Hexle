@@ -24,6 +24,7 @@ module au_top (
   ) {
   
   sig rst;                  // reset signal
+  sig keyclock[2];
   
   
   .clk(clk) { // input > button conditioner > edge detector > dff
@@ -50,7 +51,7 @@ module au_top (
     
     .rst(rst) {
       hexle_cpu hexle_cpu;
-      counter frequency_divider(#SIZE(15));
+      counter frequency_divider(#SIZE(16));
       pn_gen rng;
       
     }
@@ -71,8 +72,6 @@ module au_top (
       
     //
     
-    slowclock_edge.in = frequency_divider.value[2];
-    
     red_button_conditioner.in = red;
     red_button_edge.in = red_button_conditioner.out;
     red_button.d = red_button_edge.out;
@@ -81,7 +80,6 @@ module au_top (
     green_button_edge.in = green_button_conditioner.out;
     green_button.d = green_button_edge.out;
     
-    
     keypad_button_conditioner.in = key_sig;
     keypad_button_edge.in = keypad_button_conditioner.out;
     keypad_button.d = keypad_button_edge.out;
@@ -89,7 +87,11 @@ module au_top (
     hc_button_conditioner.in = high_contrast;
     hc_button_edge.in = hc_button_conditioner.out;
     hc_button.d = hc_button_edge.out;
-    
+
+    digitclock = frequency_divider.value[15:9];
+    rgbclock = frequency_divider.value[8:3];
+    slowclock_edge.in = frequency_divider.value[2];
+    keyclock = frequency_divider.value[1:0];
     
     hexle_cpu.red = red_button.q;
     hexle_cpu.green = green_button.q;
@@ -97,11 +99,9 @@ module au_top (
     hexle_cpu.high_contrast = hc_button.q;  
     hexle_cpu.slowclk = slowclock_edge.out;  
     
-    hexle_cpu.seg_sig = frequency_divider.value[12:6];
-    hexle_cpu.rgb_sig = frequency_divider.value[5:0];
-    
-    digitclock = frequency_divider.value[12:6];
-    rgbclock = frequency_divider.value[5:0];
+    hexle_cpu.seg_sig = frequency_divider.value[15:9];
+    hexle_cpu.rgb_sig = frequency_divider.value[8:3];
+    hexle_cpu.keyclk = frequency_divider.value[1:0];
     
     digit = hexle_cpu.cur_seg;
     rgb = hexle_cpu.cur_rgb;
@@ -109,6 +109,15 @@ module au_top (
     rng.next = hexle_cpu.next;
     rng.seed = hexle_cpu.seed;
     hexle_cpu.ans = rng.num[15:0];
+    
+    case (keyclock) {
+      
+      b00: key_vdd = b1000;
+      b01: key_vdd = b0100;
+      b10: key_vdd = b0010;
+      b11: key_vdd = b0001;
+      default: key_vdd = b0;
+    } 
      
   }
 }
