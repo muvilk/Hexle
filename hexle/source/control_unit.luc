@@ -147,7 +147,10 @@ module control_unit (
         
         state.INITIALISATION:
           address.d = b1000010;
-          state.d = state.ANSWER_GENERATION;
+          case(green || red) { // if enter/delete is pressed
+            b1:
+              state.d = state.ANSWER_GENERATION;
+          }
           
         state.ANSWER_GENERATION:
           address.d = b1000001; // need to update to store B, reading B as literal
