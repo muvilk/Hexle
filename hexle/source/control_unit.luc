@@ -270,7 +270,7 @@ module control_unit (
           state.d = state.A1D3;
 
         state.A1D3:
-          address.d = b1000010; // need to change?
+          address.d = b1001011;
           case(red) {
             b1: state.d = state.A1D3_E;
           }
