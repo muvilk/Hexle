@@ -16,10 +16,10 @@ module au_top (
     input high_contrast,
     
     output key_vdd[4],
-    output digit,
-    output digitclock[7],
-    output rgb[3],
-    output rgbclock[4]
+    output digit[7],
+    output rgb_red[4],
+    output rgb_green[4],
+    output rgb_blue[4]
     
   ) {
   
@@ -71,6 +71,11 @@ module au_top (
     io_sel = 4b1111; // turn off all digits
       
     //
+
+    rgb_red = b1111;
+    rgb_green = b1111;
+    rgb_blue = b1111;
+    key_vdd = b0000;
     
     red_button_conditioner.in = red;
     red_button_edge.in = red_button_conditioner.out;
@@ -88,8 +93,22 @@ module au_top (
     hc_button_edge.in = hc_button_conditioner.out;
     hc_button.d = hc_button_edge.out;
 
-    digitclock = frequency_divider.value[13:7];
-    rgbclock = frequency_divider.value[6:3];
+    if (hexle_cpu.cur_seg) {
+      digit = frequency_divider.value[13:7];
+    }
+
+    if (hexle_cpu.cur_rgb[2] == 0) {
+      rgb_red = frequency_divider.value[6:3];
+    }
+
+    if (hexle_cpu.cur_rgb[1] == 0) {
+      rgb_green = frequency_divider.value[6:3];
+    }
+
+    if (hexle_cpu.cur_rgb[0] == 0) {
+      rgb_blue = frequency_divider.value[6:3];
+    }
+
     slowclock_edge.in = frequency_divider.value[2];
     keyclock = frequency_divider.value[1:0];
     
@@ -103,9 +122,6 @@ module au_top (
     hexle_cpu.rgb_sig = frequency_divider.value[6:3];
     hexle_cpu.keyclk = frequency_divider.value[1:0];
     
-    digit = hexle_cpu.cur_seg;
-    rgb = hexle_cpu.cur_rgb;
-    
     rng.next = hexle_cpu.next;
     rng.seed = hexle_cpu.seed;
     hexle_cpu.ans = rng.num[15:0];
@@ -115,7 +131,6 @@ module au_top (
       b01: key_vdd = b0100;
       b10: key_vdd = b0010;
       b11: key_vdd = b0001;
-      default: key_vdd = b0;
-    }   
+    }
   }
 }

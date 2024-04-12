@@ -18,28 +18,33 @@ pin usb_tx USB_RX;
 
 // outputs
 
-pin key_vdd[0] A15;
-pin key_vdd[1] A12;
-pin key_vdd[2] A14;
-pin key_vdd[3] A11;
+pin key_vdd[0] A33;
+pin key_vdd[1] A36;
+pin key_vdd[2] A34;
+pin key_vdd[3] A37;
 
-pin digitclock[0] A39;
-pin digitclock[1] A42;
-pin digitclock[2] A45;
-pin digitclock[3] A48;
-pin digitclock[4] A40;
-pin digitclock[5] A43;
-pin digitclock[6] A46;
+pin digit[0] A39;
+pin digit[1] A42;
+pin digit[2] A45;
+pin digit[3] A48;
+pin digit[4] A40;
+pin digit[5] A43;
+pin digit[6] A46;
 
-pin rgbclock[0] A6;
-pin rgbclock[1] A3;
-pin rgbclock[2] A5;
-pin rgbclock[3] A2;
+pin rgb_red[0] A18;
+pin rgb_red[1] A15;
+pin rgb_red[2] A17;
+pin rgb_red[3] A14;
 
-pin rgb[0] A33;
-pin rgb[1] A36;
-pin rgb[2] A34;
-pin digit A37;
+pin rgb_green[0] A12;
+pin rgb_green[1] A9;
+pin rgb_green[2] A11;
+pin rgb_green[3] A8;
+
+pin rgb_blue[0] A6;
+pin rgb_blue[1] A3;
+pin rgb_blue[2] A5;
+pin rgb_blue[3] A2;
 
 // inputs
 
