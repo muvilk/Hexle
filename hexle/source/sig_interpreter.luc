@@ -1,7 +1,7 @@
 module sig_interpreter (
     input key_sig[4],
-    input seg_sig[7], // [6:5] = register; [4:3] = 1/2/3/4; [2:0] = 0-F
-    input rgb_sig[6], // [5:4] = register; [3:2] = g/y/w; [1:0] = r/g/b
+    input seg_sig[7], // [6:5] = register; [4:3] = digit; [2:0] = pin A-G
+    input rgb_sig[4], // [3:2] = register; [1:0] = digit
     input keyclk[2],
     
     output k[4], // keypad data

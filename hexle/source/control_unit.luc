@@ -1,7 +1,7 @@
 module control_unit (
     input clk,
     input rst,    
-    //input slowclk,
+    input slowclk,
     input green,
     input red,
     input key,
@@ -140,137 +140,349 @@ module control_unit (
     wdsel = CU_ROM[address.q][6];
     alufn = CU_ROM[address.q][5:0];
     next = 0;
+
+    if (slowclk) {
     
-    case (state.q){
-      
-      state.INITIALISATION:
-        address.d = b1000010;
-        state.d = state.ANSWER_GENERATION;
+        case (state.q){
+          
+          state.INITIALISATION:
+            address.d = b1000010;
+            state.d = state.ANSWER_GENERATION;
+            
+          state.ANSWER_GENERATION:
+            address.d = b1000001; // need to update to store B, reading B as literal
+            next = 1;
+            rb = ans;
+            state.d = state.MAX_DIGIT;
+            
+          state.MAX_DIGIT:
+            address.d = b1000000;
+            next = 0;
+            state.d = state.MIN_DIGIT;
+
+          state.MIN_DIGIT:
+            address.d = b0111111;
+            state.d = state.HINT_CALCULATION;
+
+          state.HINT_CALCULATION:
+            address.d = b0111110;
+            state.d = state.HINT_RGB;
+
+          state.HINT_RGB:
+            address.d = b0111101;
+            state.d = state.A1D0;
+
+
+    //ATTEMPT 1
+
+    //ATTEMPT 1 DIGIT 1
+          state.A1D0:
+          
+            if (key == 1) {
+              rb = keypad;
+              address.d = b1001011; // need to update to store B to temp reg of choice, reading B as literal
+              state.d = state.A1D1_A;
+            }
+
+          state.A1D1_A:
+            rb = CU_ROM[address.q][17:14];
+            address.d = b0111100; // need to update to access register using rb, instead of reading as literal
+            state.d = state.A1D1_B;
+
+          state.A1D1_B:
+            address.d = b0111011;
+            state.d = state.A1D1_C;
+
+          state.A1D1_C:
+            address.d = b0111010;
+            state.d = state.A1D1_D;
+
+          state.A1D1_D:
+            address.d = b0111001;
+            state.d = state.A1D1;
+
+          state.A1D1:
+            address.d = b1001011;
+            case(red) {
+              b1: state.d = state.A1D1_E;
+            }
+            if(key == 1) {
+              rb = keypad;         
+              state.d = state.A1D2_A;
+            }
+
+          state.A1D1_E:
+            address.d = b0110010;
+            state.d = state.A1D1_F;
         
-      state.ANSWER_GENERATION:
-        address.d = b1000001; // need to update to store B, reading B as literal
-        next = 1;
-        rb = ans;
-        state.d = state.MAX_DIGIT;
+          state.A1D1_F:
+            address.d = b0110001;
+            state.d = state.A1D0;
+
+    //ATTEMPT 1 DIGIT 2   
+          state.A1D2_A:
+            rb = CU_ROM[address.q][17:14];
+            address.d = b0111100;
+            state.d = state.A1D2_B;
+
+          state.A1D2_B:
+            address.d = b0111000;
+            state.d = state.A1D2_C;
+
+          state.A1D2_C:
+            address.d = b0111010;
+            state.d = state.A1D2_D;
+
+          state.A1D2_D:
+            address.d = b0110111;
+            state.d = state.A1D2;
+
+          state.A1D2:
+            address.d = b1001011;
+            case(red) {
+              b1: state.d = state.A1D2_E;
+            }
+            if(key == 1) {
+              rb = keypad;
+              state.d = state.A1D3_A;
+            }
+                  
+          state.A1D2_E:
+            address.d = b0110010;
+            state.d = state.A1D2_F;
         
-      state.MAX_DIGIT:
-        address.d = b1000000;
-        next = 0;
-        state.d = state.MIN_DIGIT;
+          state.A1D2_F:
+            address.d = b0110000;
+            state.d = state.A1D1;
+          
+    //ATTEMPT 1 DIGIT 3
+          state.A1D3_A:
+            rb = CU_ROM[address.q][17:14];
+            address.d = b0111100;
+            state.d = state.A1D3_B;
 
-      state.MIN_DIGIT:
-        address.d = b0111111;
-        state.d = state.HINT_CALCULATION;
+          state.A1D3_B:
+            address.d = b0110110;
+            state.d = state.A1D3_C;
 
-      state.HINT_CALCULATION:
-        address.d = b0111110;
-        state.d = state.HINT_RGB;
+          state.A1D3_C:
+            address.d = b0111010;
+            state.d = state.A1D3_D;
 
-      state.HINT_RGB:
-        address.d = b0111101;
-        state.d = state.A1D0;
+          state.A1D3_D:
+            address.d = b0110101;
+            state.d = state.A1D3;
+
+          state.A1D3:
+            address.d = b1000010;
+            case(red) {
+              b1: state.d = state.A1D3_E;
+            }
+            if(key == 1) {
+              rb = keypad;
+              state.d = state.A1D4_A;
+            }
+          
+          state.A1D3_E:
+            address.d = b0110010;
+            state.d = state.A1D3_F;
+        
+          state.A1D3_F:
+            address.d = b0101111;
+            state.d = state.A1D2;
+
+    //ATTEMPT 1 DIGIT 4
+          state.A1D4_A:
+            rb = CU_ROM[address.q][17:14];
+            address.d = b0111100;
+            state.d = state.A1D4_B;
+
+          state.A1D4_B:
+            address.d = b0110100;
+            state.d = state.A1D4_C;
+
+          state.A1D4_C:
+            address.d = b0111010;
+            state.d = state.A1D4_D;
+
+          state.A1D4_D:
+            address.d = b0110011;
+            state.d = state.A1D4;
+
+          state.A1D4:
+            address.d = b1000010;
+            case(red) {
+              b1: state.d = state.A1D4_E;
+            }
+            case(green){
+              b1: state.d = state.A1_MAX;
+            }
+          
+          state.A1D4_E:
+            address.d = b0110010;
+            state.d = state.A1D4_F;
+        
+          state.A1D4_F:
+            address.d = b0101110;
+            state.d = state.A1D3;
+
+    //ATTEMPT 1 CHECK
+          state.A1_MAX:
+            address.d = b0101101;
+            state.d = state.A1_MIN;
+          
+          state.A1_MIN:
+            address.d = b0101100;
+            state.d = state.A1_HINT;
+          
+          state.A1_HINT:
+            address.d = b0101011;
+            state.d = state.A1_CMPEQ;
+
+          state.A1_CMPEQ:
+            address.d = b0101010;
+            state.d = state.A1_CHECK;
+
+          state.A1_CHECK:
+            case(ra_data) {
+                h0001:
+                  state.d = state.SEED;
+                default:
+                  state.d = state.A1D4;
+            }  
+            
+          state.SEED:
+            address.d = b0101000;
+            state.d = state.COUNTER;
+
+          state.COUNTER:
+            address.d = b0100111;
+            state.d = state.COUNTER_RGB;
+          
+          state.COUNTER_RGB:
+            address.d = b0100110;
+            state.d = state.A1_CHECK_GREEN;
+
+    //ATTEMPT 1 CHECK RGB      
+          state.A1_CHECK_GREEN:
+            address.d = b0100101;
+            state.d = state.A1_SHIFT_GREEN;
+          
+          state.A1_SHIFT_GREEN:
+            address.d = b0100100;
+            state.d = state.A1_MERGE_GREEN;      
+          
+          state.A1_MERGE_GREEN:
+            address.d = b0100011;
+            case(ra_data) {
+              h4444:
+                state.d = state.END;
+              default:
+                state.d = state.A1_CHECK_YELLOW;
+            }
+
+          state.A1_CHECK_YELLOW:
+            address.d = b0100010;
+            state.d = state.A1_SHIFT_YELLOW;
+          
+          state.A1_SHIFT_YELLOW:
+            address.d = b0100001;
+            state.d = state.A1_MERGE_YELLOW;
+
+          state.A1_MERGE_YELLOW:
+            address.d = b0100000;
+            state.d = state.A2D0;
 
 
-//ATTEMPT 1
+    //ATTEMPT 2
 
-//ATTEMPT 1 DIGIT 1
-      state.A1D0:
-      
-        if (key == 1) {
-          rb = keypad;
-          address.d = b1001011; // need to update to store B to temp reg of choice, reading B as literal
-          state.d = state.A1D1_A;
-        }
+    //ATTEMPT 2 DIGIT 1
+          state.A2D0:
+            address.d = b1000010;
+            state.d = state.A2D1_A;
 
-      state.A1D1_A:
-        rb = CU_ROM[address.q][17:14];
-        address.d = b0111100; // need to update to access register using rb, instead of reading as literal
-        state.d = state.A1D1_B;
+          state.A2D1_A:
+            rb = CU_ROM[address.q][17:14];
+            address.d = b0111100;
+            state.d = state.A2D1_B;
 
-      state.A1D1_B:
-        address.d = b0111011;
-        state.d = state.A1D1_C;
+          state.A2D1_B:
+            address.d = b0111011;
+            state.d = state.A2D1_C;
 
-      state.A1D1_C:
-        address.d = b0111010;
-        state.d = state.A1D1_D;
+          state.A2D1_C:
+            address.d = b0011111;
+            state.d = state.A2D1_D;
 
-      state.A1D1_D:
-        address.d = b0111001;
-        state.d = state.A1D1;
+          state.A2D1_D:
+            address.d = b0011110;
+            state.d = state.A2D1;
 
-      state.A1D1:
-        address.d = b1001011;
-        case(red) {
-          b1: state.d = state.A1D1_E;
-        }
-        if(key == 1) {
-          rb = keypad         
-          state.d = state.A1D2_A;
-        }
+          state.A2D1:
+            address.d = b1000010;
+            case(red) {
+              b1: state.d = state.A2D1_E;
+            }
+            if(key == 1) {
+              rb = keypad;
+              state.d = state.A2D2_A;
+            }
 
-      state.A1D1_E:
-        address.d = b0110010;
-        state.d = state.A1D1_F;
-    
-      state.A1D1_F:
-        address.d = b0110001;
-        state.d = state.A1D0;
+          state.A2D1_E:
+            address.d = b0011010;
+            state.d = state.A2D1_F;
+        
+          state.A2D1_F:
+            address.d = b0011001;
+            state.d = state.A2D0;
 
-//ATTEMPT 1 DIGIT 2   
-      state.A1D2_A:
-        rb = CU_ROM[address.q][17:14];
-        address.d = b0111100;
-        state.d = state.A1D2_B;
+    //ATTEMPT 2 DIGIT 2
+          state.A2D2_A:
+            rb = CU_ROM[address.q][17:14];
+            address.d = b0111100;
+            state.d = state.A2D2_B;
 
-      state.A1D2_B:
-        address.d = b0111000;
-        state.d = state.A1D2_C;
+          state.A2D2_B:
+            address.d = b0111000;
+            state.d = state.A2D2_C;
 
-      state.A1D2_C:
-        address.d = b0111010;
-        state.d = state.A1D2_D;
+          state.A2D2_C:
+            address.d = b0011111;
+            state.d = state.A2D2_D;
 
-      state.A1D2_D:
-        address.d = b0110111;
-        state.d = state.A1D2;
+          state.A2D2_D:
+            address.d = b0011101;
+            state.d = state.A2D2;
 
-      state.A1D2:
-        address.d = b1001011;
-        case(red) {
-          b1: state.d = state.A1D2_E;
-        }
-        if(key == 1) {
-          rb = keypad
-          b1: state.d = state.A1D3_A;
-        }
-              
-      state.A1D2_E:
-        address.d = b0110010;
-        state.d = state.A1D2_F;
-    
-      state.A1D2_F:
-        address.d = b0110000;
-        state.d = state.A1D1;
-      
-//ATTEMPT 1 DIGIT 3
-      state.A1D3_A:
-        rb = CU_ROM[address.q][17:14];
-        address.d = b0111100;
-        state.d = state.A1D3_B;
+          state.A2D2:
+            address.d = b1000010;
+            case(red) {
+              b1: state.d = state.A2D2_E;
+            }
+            if(key == 1) {
+              rb = keypad;
+              state.d = state.A2D3_A;
+            }
 
-      state.A1D3_B:
-        address.d = b0110110;
-        state.d = state.A1D3_C;
+          state.A2D2_E:
+            address.d = b0011010;
+            state.d = state.A2D2_F;
+        
+          state.A2D2_F:
+            address.d = b0011000;
+            state.d = state.A2D1;
 
-      state.A1D3_C:
-        address.d = b0111010;
-        state.d = state.A1D3_D;
+    //ATTEMPT 2 DIGIT 3
+          state.A2D3_A:
+            rb = CU_ROM[address.q][17:14];
+            address.d = b0111100;
+            state.d = state.A2D3_B;
 
-      state.A1D3_D:
-        address.d = b0110101;
-        state.d = state.A1D3;
+          state.A2D3_B:
+            address.d = b0110110;
+            state.d = state.A2D3_C;
 
+<<<<<<< HEAD
       state.A1D3:
         address.d = b1001011;
         case(red) {
@@ -288,79 +500,149 @@ module control_unit (
       state.A1D3_F:
         address.d = b0101111;
         state.d = state.A1D2;
+=======
+          state.A2D3_C:
+            address.d = b0011111;
+            state.d = state.A2D3_D;
+>>>>>>> 85327f8c59c38bffebbe48227052bc6b77418847
 
-//ATTEMPT 1 DIGIT 4
-      state.A1D4_A:
-        rb = CU_ROM[address.q][17:14];
-        address.d = b0111100;
-        state.d = state.A1D4_B;
+          state.A2D3_D:
+            address.d = b0011100;
+            state.d = state.A2D3;
 
-      state.A1D4_B:
-        address.d = b0110100;
-        state.d = state.A1D4_C;
+          state.A2D3:
+            address.d = b1000010;
+            case(red) {
+              b1: state.d = state.A2D2_E;
+            }
+            if(key == 1) {
+              rb = keypad;
+              state.d = state.A2D4_A;
+            }
 
-      state.A1D4_C:
-        address.d = b0111010;
-        state.d = state.A1D4_D;
-
-      state.A1D4_D:
-        address.d = b0110011;
-        state.d = state.A1D4;
-
-      state.A1D4:
-        address.d = b1000010;
-        case(red) {
-          b1: state.d = state.A1D4_E;
-        }
-        case(green){
-          b1: state.d = state.A1_MAX;
-        }
-      
-      state.A1D4_E:
-        address.d = b0110010;
-        state.d = state.A1D4_F;
-    
-      state.A1D4_F:
-        address.d = b0101110;
-        state.d = state.A1D3;
-
-//ATTEMPT 1 CHECK
-      state.A1_MAX:
-        address.d = b0101101;
-        state.d = state.A1_MIN;
-      
-      state.A1_MIN:
-        address.d = b0101100;
-        state.d = state.A1_HINT;
-      
-      state.A1_HINT:
-        address.d = b0101011;
-        state.d = state.A1_CMPEQ;
-
-      state.A1_CMPEQ:
-        address.d = b0101010;
-        state.d = state.A1_CHECK;
-
-      state.A1_CHECK:
-        case(ra_data) {
-            h0001:
-              state.d = state.SEED;
-            default:
-              state.d = state.A1D4;
-        }  
+          state.A2D3_E:
+            address.d = b0011010;
+            state.d = state.A2D3_F;
         
-      state.SEED:
-        address.d = b0101000;
-        state.d = state.COUNTER;
+          state.A2D3_F:
+            address.d = b0010111;
+            state.d = state.A2D2;
 
-      state.COUNTER:
-        address.d = b0100111;
-        state.d = state.COUNTER_RGB;
-      
-      state.COUNTER_RGB:
-        address.d = b0100110;
-        state.d = state.A1_CHECK_GREEN;
+    //ATTEMPT 2 DIGIT 4
+          state.A2D4_A:
+            rb = CU_ROM[address.q][17:14];
+            address.d = b0111100;
+            state.d = state.A2D4_B;
 
+          state.A2D4_B:
+            address.d = b0110100;
+            state.d = state.A2D4_C;
+
+          state.A2D4_C:
+            address.d = b0011111;
+            state.d = state.A2D4_D;
+
+          state.A2D4_D:
+            address.d = b0011011;
+            state.d = state.A2D4;
+
+          state.A2D4:
+            address.d = b1000010;
+            case(red) {
+              b1: state.d = state.A2D4_E;
+            }
+            case(green){
+              b1: state.d = state.A2_MAX;
+            }
+
+          state.A2D4_E:
+            address.d = b0011010;
+            state.d = state.A2D4_F;
+        
+          state.A2D3_F:
+            address.d = b0010110;
+            state.d = state.A2D3;
+
+    //ATTEMPT 2 CHECK
+          state.A2_MAX:
+            address.d = b0010101;
+            state.d = state.A2_MIN;
+          
+          state.A2_MIN:
+            address.d = b0010100;
+            state.d = state.A2_HINT;
+          
+          state.A2_HINT:
+            address.d = b0101011;
+            state.d = state.A2_CMPEQ;
+
+          state.A2_CMPEQ:
+            address.d = b0101010;
+            state.d = state.A2_CHECK;
+
+          state.A2_CHECK:
+            case(ra_data) {
+                h0001:
+                  state.d = state.COUNTER;
+                default:
+                  state.d = state.A2D4;
+            }
+
+          state.COUNTER:
+            address.d = b0100111;
+            state.d = state.COUNTER_RGB;
+
+
+          state.COUNTER_RGB:
+            address.d = b0100110;
+            state.d = state.A1_CHECK_GREEN;
+
+    //BRANCH D1
+          state.BRANCH_D1:
+            address.d = b0010011;
+            case(ra_data[15:12]) {
+              h0001:
+                state.d = state.BRANCH_D2;
+              default:
+                state.d = state.EXTRACT_A1D1;
+            }
+          
+          state.EXTRACT_A1D1:
+            address.d = b0010010;
+            state.d = state.BRANCH_D1_GY;
+
+          state.BRANCH_D1_GY:
+            address.d = b0010011;
+            case(ra_data[15:12]) {
+              h0004:
+                state.d = state.EXTRACT_A2D1;
+            default:
+                state.d = state.COUNT_A1D1_IN_A1;
+            }
+
+          //SUBBRANCH 1
+          state.EXTRACT_A2D1:	
+            address.d = b0010001;	
+            state.d = state.D1G_CMPEQ;
+          
+          state.D1G_CMPEQ:	
+            address.d = b0010000;	
+            state.d = state.D1_RETURN_BRANCH;
+          
+          //SUBBRANCH 2
+          state.COUNT_A1D1_IN_A1:	
+            address.d = b0001111;	
+            state.d = state.COUNT_A1D1_IN_A2;
+          
+          state.COUNT_A1D1_IN_A2:	
+            address.d = b0001110;	
+            state.d = state.D1Y_CMPLE;
+          
+          state.D1Y_CMPLE:	
+            address.d = b0001101;	
+            state.d = state.D1_RETURN_BRANCH;
+
+<<<<<<< HEAD
 //ATTEMPT 1 CHECK RGB      
       state.A1_CHECK_GREEN:
         address.d = b0100101;
@@ -562,321 +844,265 @@ module control_unit (
         case(ra_data) {
             h0001:
               state.d = state.COUNTER;
+=======
+          state.D1_RETURN_BRANCH:
+            address.d = b0001100;
+            case(ra_data) {
+              h0000:
+                state.d = state.A2D4;
+>>>>>>> 85327f8c59c38bffebbe48227052bc6b77418847
             default:
-              state.d = state.A2D4;
-        }
+                state.d = state.BRANCH_D2;
+            }
 
-      state.COUNTER:
-        address.d = b0100111;
-        state.d = state.COUNTER_RGB;
+    //BRANCH D2
+          state.BRANCH_D2:
+            address.d = b0010011;
+            case(ra_data[11:8]) {
+              h0001:
+                state.d = state.BRANCH_D3;
+              default:
+                state.d = state.EXTRACT_A1D2;
+            }
 
+          state.EXTRACT_A1D2:	
+            address.d = b0001011;	
+            state.d = state.BRANCH_D2_GY;
 
-      state.COUNTER_RGB:
-        address.d = b0100110;
-        state.d = state.A1_CHECK_GREEN;
+          state.BRANCH_D2_GY:
+            address.d = b0010011;
+            case(ra_data[11:8]) {
+              h0004:
+                state.d = state.EXTRACT_A2D2;
+            default:
+                state.d = state.COUNT_A1D2_IN_A1;
+            }
 
-//BRANCH D1
-      state.BRANCH_D1:
-        address.d = b0010011;
-        case(ra_data[15:12]) {
-          h0001:
-            state.d = state.BRANCH_D2;
-          default:
-            state.d = state.EXTRACT_A1D1;
-        }
-      
-      state.EXTRACT_A1D1:
-        address.d = b0010010;
-        state.d = state.BRANCH_D1_GY;
+          //SUBBRANCH 1
+          state.EXTRACT_A2D2:	
+            address.d = b0001010;	
+            state.d = state.D2G_CMPEQ;
+          
+          state.D2G_CMPEQ:	
+            address.d = b0010000;
+            state.d = state.D2_RETURN_BRANCH;
+          
+          //SUBBRANCH 2      
+          state.COUNT_A1D2_IN_A1:	
+            address.d = b0001111;	
+            state.d = state.COUNT_A1D2_IN_A2;
+          
+          state.COUNT_A1D2_IN_A2:	
+            address.d = b0001110;	
+            state.d = state.D2Y_CMPLE;
+            
+          state.D2Y_CMPLE:	
+            address.d = b0001101;	
+            state.d = state.D2_RETURN_BRANCH;
 
-      state.BRANCH_D1_GY:
-        address.d = b0010011;
-        case(ra_data[15:12]) {
-          h0004:
-            state.d = state.EXTRACT_A2D1;
-        default:
-            state.d = state.COUNT_A1D1_IN_A1;
-        }
+          state.D2_RETURN_BRANCH:
+            address.d = b0001100;
+            case(ra_data) {
+              h0000:
+                state.d = state.A2D4;
+            default:
+                state.d = state.BRANCH_D3;
+            }
 
-      //SUBBRANCH 1
-      state.EXTRACT_A2D1:	
-        address.d = b0010001;	
-        state.d = state.D1G_CMPEQ;
-      
-      state.D1G_CMPEQ:	
-        address.d = b0010000;	
-        state.d = state.D1_RETURN_BRANCH;
-      
-      //SUBBRANCH 2
-      state.COUNT_A1D1_IN_A1:	
-        address.d = b0001111;	
-        state.d = state.COUNT_A1D1_IN_A2;
-      
-      state.COUNT_A1D1_IN_A2:	
-        address.d = b0001110;	
-        state.d = state.D1Y_CMPLE;
-      
-      state.D1Y_CMPLE:	
-        address.d = b0001101;	
-        state.d = state.D1_RETURN_BRANCH;
+    //BRANCH D3
+          state.BRANCH_D3:
+            address.d = b0010011;
+            case(ra_data[7:4]) {
+              h0001:
+                state.d = state.BRANCH_D4;
+              default:
+                state.d = state.EXTRACT_A1D3;
+            }
 
-      state.D1_RETURN_BRANCH:
-        address.d = b0001100;
-        case(ra_data) {
-          h0000:
-            state.d = state.A2D4;
-        default:
-            state.d = state.BRANCH_D2;
-        }
+          state.EXTRACT_A1D3:	
+            address.d = b0001001;	
+            state.d = state.BRANCH_D3_GY;
 
-//BRANCH D2
-      state.BRANCH_D2:
-        address.d = b0010011;
-        case(ra_data[11:8]) {
-          h0001:
-            state.d = state.BRANCH_D3;
-          default:
-            state.d = state.EXTRACT_A1D2;
-        }
+          state.BRANCH_D3_GY:
+            address.d = b0010011;
+            case(ra_data[7:4]) {
+              h0004:
+                state.d = state.EXTRACT_A2D3;
+            default:
+                state.d = state.COUNT_A1D3_IN_A1;
+            }
 
-      state.EXTRACT_A1D2:	
-        address.d = b0001011;	
-        state.d = state.BRANCH_D2_GY;
+          //SUBBRANCH 1
+          state.EXTRACT_A2D3:	
+            address.d = b0001000;	
+            state.d = state.D3G_CMPEQ;
+          
+          state.D3G_CMPEQ:	
+            address.d = b0010000;
+            state.d = state.D3_RETURN_BRANCH;
+          
+          //SUBBRANCH 2      
+          state.COUNT_A1D3_IN_A1:	
+            address.d = b0001111;	
+            state.d = state.COUNT_A1D3_IN_A2;
+          
+          state.COUNT_A1D3_IN_A2:	
+            address.d = b0001110;	
+            state.d = state.D3Y_CMPLE;
+            
+          state.D3Y_CMPLE:	
+            address.d = b0001101;	
+            state.d = state.D3_RETURN_BRANCH;
 
-      state.BRANCH_D2_GY:
-        address.d = b0010011;
-        case(ra_data[11:8]) {
-          h0004:
-            state.d = state.EXTRACT_A2D2;
-        default:
-            state.d = state.COUNT_A1D2_IN_A1;
-        }
+          state.D3_RETURN_BRANCH:
+            address.d = b0001100;
+            case(ra_data) {
+              h0000:
+                state.d = state.A2D4;
+            default:
+                state.d = state.BRANCH_D4;
+            }
 
-      //SUBBRANCH 1
-      state.EXTRACT_A2D2:	
-        address.d = b0001010;	
-        state.d = state.D2G_CMPEQ;
-      
-      state.D2G_CMPEQ:	
-        address.d = b0010000;
-        state.d = state.D2_RETURN_BRANCH;
-      
-      //SUBBRANCH 2      
-      state.COUNT_A1D2_IN_A1:	
-        address.d = b0001111;	
-        state.d = state.COUNT_A1D2_IN_A2;
-      
-      state.COUNT_A1D2_IN_A2:	
-        address.d = b0001110;	
-        state.d = state.D2Y_CMPLE;
-        
-      state.D2Y_CMPLE:	
-        address.d = b0001101;	
-        state.d = state.D2_RETURN_BRANCH;
+    //BRANCH D4
+          state.BRANCH_D4:
+            address.d = b0010011;
+            case(ra_data[3:0]) {
+              h0001:
+                state.d = state.A2_CHECK_GREEN;
+              default:
+                state.d = state.EXTRACT_A1D4;
+            }
 
-      state.D2_RETURN_BRANCH:
-        address.d = b0001100;
-        case(ra_data) {
-          h0000:
-            state.d = state.A2D4;
-        default:
-            state.d = state.BRANCH_D3;
-        }
+          state.EXTRACT_A1D4:	
+            address.d = b0000111;	
+            state.d = state.BRANCH_D4_GY;
 
-//BRANCH D3
-      state.BRANCH_D3:
-        address.d = b0010011;
-        case(ra_data[7:4]) {
-          h0001:
-            state.d = state.BRANCH_D4;
-          default:
-            state.d = state.EXTRACT_A1D3;
-        }
+          state.BRANCH_D4_GY:
+            address.d = b0010011;
+            case(ra_data[3:0]) {
+              h0004:
+                state.d = state.EXTRACT_A2D4;
+            default:
+                state.d = state.COUNT_A1D3_IN_A1;
+            }
 
-      state.EXTRACT_A1D3:	
-        address.d = b0001001;	
-        state.d = state.BRANCH_D3_GY;
+          //SUBBRANCH 1
+          state.EXTRACT_A2D4:	
+            address.d = b0000110;	
+            state.d = state.D4G_CMPEQ;
+          
+          state.D4G_CMPEQ:	
+            address.d = b0010000;
+            state.d = state.D4_RETURN_BRANCH;
+          
+          //SUBBRANCH 2      
+          state.COUNT_A1D4_IN_A1:	
+            address.d = b0001111;	
+            state.d = state.COUNT_A1D4_IN_A2;
+          
+          state.COUNT_A1D4_IN_A2:	
+            address.d = b0001110;	
+            state.d = state.D4Y_CMPLE;
+            
+          state.D4Y_CMPLE:	
+            address.d = b0001101;	
+            state.d = state.D4_RETURN_BRANCH;
 
-      state.BRANCH_D3_GY:
-        address.d = b0010011;
-        case(ra_data[7:4]) {
-          h0004:
-            state.d = state.EXTRACT_A2D3;
-        default:
-            state.d = state.COUNT_A1D3_IN_A1;
-        }
+          state.D4_RETURN_BRANCH:
+            address.d = b0001100;
+            case(ra_data) {
+              h0000:
+                state.d = state.A2D4;
+            default:
+                state.d = state.A2_CHECK_GREEN;
+            }
 
-      //SUBBRANCH 1
-      state.EXTRACT_A2D3:	
-        address.d = b0001000;	
-        state.d = state.D3G_CMPEQ;
-      
-      state.D3G_CMPEQ:	
-        address.d = b0010000;
-        state.d = state.D3_RETURN_BRANCH;
-      
-      //SUBBRANCH 2      
-      state.COUNT_A1D3_IN_A1:	
-        address.d = b0001111;	
-        state.d = state.COUNT_A1D3_IN_A2;
-      
-      state.COUNT_A1D3_IN_A2:	
-        address.d = b0001110;	
-        state.d = state.D3Y_CMPLE;
-        
-      state.D3Y_CMPLE:	
-        address.d = b0001101;	
-        state.d = state.D3_RETURN_BRANCH;
+    //ATTEMPT 2 CHECK RGB  
+          state.A2_CHECK_GREEN:	
+            address.d = b0000101;	
+            state.d = state.A2_SHIFT_GREEN;
+          
+          state.A2_SHIFT_GREEN:	
+            address.d = b0100100;	
+            state.d = state.A2_MERGE_GREEN;
+          
+          state.A2_MERGE_GREEN:	
+            address.d = b0000100;
+            case(ra_data) {
+              h4444:
+                state.d = state.END;
+            default:
+                state.d = state.A2_CHECK_YELLOW;
+            }	
 
-      state.D3_RETURN_BRANCH:
-        address.d = b0001100;
-        case(ra_data) {
-          h0000:
-            state.d = state.A2D4;
-        default:
-            state.d = state.BRANCH_D4;
-        }
+          state.A2_CHECK_YELLOW:	
+            address.d = b0000011;	
+            state.d = state.A2_SHIFT_YELLOW;
+          
+          state.A2_SHIFT_YELLOW:	
+            address.d = b0100001;	
+            state.d = state.A2_MERGE_YELLOW;
+          
+          state.A2_MERGE_YELLOW:	
+            address.d = b0000010;	
+            state.d = state.MIGRATE_A2_DIGIT;
 
- //BRANCH D4
-      state.BRANCH_D4:
-        address.d = b0010011;
-        case(ra_data[3:0]) {
-          h0001:
-            state.d = state.A2_CHECK_GREEN;
-          default:
-            state.d = state.EXTRACT_A1D4;
-        }
+    //SHIFT ATTEMPT 2 TO ATTEMPT 1      
+          state.MIGRATE_A2_DIGIT:	
+            address.d = b0000001;	
+            state.d = state.MIGRATE_A2_RGB;
+          
+          state.MIGRATE_A2_RGB:	
+            address.d = b0000000;	
+            state.d = state.RESET_A2_DIGIT;
+          
+          state.RESET_A2_DIGIT:	
+            address.d = b1001000;	
+            state.d = state.RESET_A2_RGB;
+          
+          state.RESET_A2_RGB:	
+            address.d = b1000111;	
+            state.d = state.A2D0;
 
-      state.EXTRACT_A1D4:	
-        address.d = b0000111;	
-        state.d = state.BRANCH_D4_GY;
+    //END RESET
+          state.END:
+            address.d = b1000010;
+            case(green || red) { // if enter/delete is pressed
+              b1:
+                state.d = state.RESET_A1;
+            }
 
-      state.BRANCH_D4_GY:
-        address.d = b0010011;
-        case(ra_data[3:0]) {
-          h0004:
-            state.d = state.EXTRACT_A2D4;
-        default:
-            state.d = state.COUNT_A1D3_IN_A1;
-        }
+          state.RESET_A1:
+            address.d = b1001010;
+            state.d = state.RESET_A2;
+          
+          state.RESET_A2:
+            address.d = b1001000;
+            state.d = state.RESET_A1_RGB;
+          
+          state.RESET_A1_RGB:
+            address.d = b1001001;
+            state.d = state.RESET_A2_RGB;
 
-      //SUBBRANCH 1
-      state.EXTRACT_A2D4:	
-        address.d = b0000110;	
-        state.d = state.D4G_CMPEQ;
-      
-      state.D4G_CMPEQ:	
-        address.d = b0010000;
-        state.d = state.D4_RETURN_BRANCH;
-      
-      //SUBBRANCH 2      
-      state.COUNT_A1D4_IN_A1:	
-        address.d = b0001111;	
-        state.d = state.COUNT_A1D4_IN_A2;
-      
-      state.COUNT_A1D4_IN_A2:	
-        address.d = b0001110;	
-        state.d = state.D4Y_CMPLE;
-        
-      state.D4Y_CMPLE:	
-        address.d = b0001101;	
-        state.d = state.D4_RETURN_BRANCH;
+          state.RESET_A2_RGB:
+            address.d = b1000111;
+            state.d = state.RESET_HINT;
 
-      state.D4_RETURN_BRANCH:
-        address.d = b0001100;
-        case(ra_data) {
-          h0000:
-            state.d = state.A2D4;
-        default:
-            state.d = state.A2_CHECK_GREEN;
-        }
+          state.RESET_HINT:
+            address.d = b1000110;
+            state.d = state.RESET_HINT_RGB;
 
-//ATTEMPT 2 CHECK RGB  
-      state.A2_CHECK_GREEN:	
-        address.d = b0000101;	
-        state.d = state.A2_SHIFT_GREEN;
-      
-      state.A2_SHIFT_GREEN:	
-        address.d = b0100100;	
-        state.d = state.A2_MERGE_GREEN;
-      
-      state.A2_MERGE_GREEN:	
-        address.d = b0000100;
-        case(ra_data) {
-          h4444:
-            state.d = state.END;
-        default:
-            state.d = state.A2_CHECK_YELLOW;
-        }	
-
-      state.A2_CHECK_YELLOW:	
-        address.d = b0000011;	
-        state.d = state.A2_SHIFT_YELLOW;
-      
-      state.A2_SHIFT_YELLOW:	
-        address.d = b0100001;	
-        state.d = state.A2_MERGE_YELLOW;
-      
-      state.A2_MERGE_YELLOW:	
-        address.d = b0000010;	
-        state.d = state.MIGRATE_A2_DIGIT;
-
-//SHIFT ATTEMPT 2 TO ATTEMPT 1      
-      state.MIGRATE_A2_DIGIT:	
-        address.d = b0000001;	
-        state.d = state.MIGRATE_A2_RGB;
-      
-      state.MIGRATE_A2_RGB:	
-        address.d = b0000000;	
-        state.d = state.RESET_A2_DIGIT;
-      
-      state.RESET_A2_DIGIT:	
-        address.d = b1001000;	
-        state.d = state.RESET_A2_RGB;
-      
-      state.RESET_A2_RGB:	
-        address.d = b1000111;	
-        state.d = state.A2D0;
-
-//END RESET
-      state.END:
-        address.d = b1000010;
-        case(green || red) { // if enter/delete is pressed
-          b1:
-            state.d = state.RESET_A1;
-        }
-
-      state.RESET_A1:
-        address.d = b1001010;
-        state.d = state.RESET_A2;
-      
-      state.RESET_A2:
-        address.d = b1001000;
-        state.d = state.RESET_A1_RGB;
-      
-      state.RESET_A1_RGB:
-        address.d = b1001001;
-        state.d = state.RESET_A2_RGB;
-
-      state.RESET_A2_RGB:
-        address.d = b1000111;
-        state.d = state.RESET_HINT;
-
-      state.RESET_HINT:
-        address.d = b1000110;
-        state.d = state.RESET_HINT_RGB;
-
-      state.RESET_HINT_RGB:
-        address.d = b1000101;
-        state.d = state.RESET_COUNTER;
-      
-      state.RESET_COUNTER:
-        address.d = b1000100;
-        state.d = state.RESET_COUNTER_RGB;
-      
-      state.RESET_COUNTER_RGB:
-        address.d = b1000011;
-        state.d = state.ANSWER_GENERATION;
+          state.RESET_HINT_RGB:
+            address.d = b1000101;
+            state.d = state.RESET_COUNTER;
+          
+          state.RESET_COUNTER:
+            address.d = b1000100;
+            state.d = state.RESET_COUNTER_RGB;
+          
+          state.RESET_COUNTER_RGB:
+            address.d = b1000011;
+            state.d = state.ANSWER_GENERATION;
 
 //      state.EXAMPLE:
 //        address.d = 6b0; // address of CURRENT state, will be the same regardless of button pressed
@@ -897,6 +1123,7 @@ module control_unit (
 //          default:
 //            state.d = state.EXAMPLE2;               
 //        }
+      }
     }
   }
 }

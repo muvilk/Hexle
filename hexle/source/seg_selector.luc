@@ -1,6 +1,6 @@
 module seg_selector (
     input sd[4], // extracted digit data from register
-    input seg_sig[7], // [6:5] = register; [4:3] = 1/2/3/4; [2:0] = 0-F
+    input seg_sig[7], // [6:5] = register; [4:3] = digit; [2:0] = pin A-G
     output cur_seg
   ) {
  

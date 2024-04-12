@@ -1,8 +1,8 @@
 module rgb_digit_selector (
     input cd[16], // rgb data from register
-    input rgb_sig[6], // [5:4] = register; [3:2] = g/y/w; [1:0] = r/g/b
+    input rgb_sig[4], // [3:2] = register; [1:0] = digit
     input cb, // high contrast signal
-    output cur_rgb
+    output cur_rgb[3]
   ) {
 
 rgb_selector rgb;
@@ -11,10 +11,9 @@ digit_selector sel; // generic digit selector module
   always {
   
     sel.data = cd;
-    sel.digit = rgb_sig[3:2];
+    sel.digit = rgb_sig[1:0];
     rgb.cd = sel.out;
     rgb.cb = cb;
-    rgb.rgb_sig = rgb_sig;
     cur_rgb = rgb.cur_rgb;
   }
 }

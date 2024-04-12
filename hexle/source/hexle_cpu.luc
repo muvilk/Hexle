@@ -9,11 +9,11 @@ module hexle_cpu (
     input ans[16],
     
     input seg_sig[7],
-    input rgb_sig[6],
+    input rgb_sig[4],
     input keyclk[2],
     
     output cur_seg,
-    output cur_rgb,
+    output cur_rgb[3],
     output debug[4][16],
     output seed[16],
     output next
@@ -44,7 +44,8 @@ module hexle_cpu (
     control_system.keypad = 0;
     control_system.ra_data = 0;
     control_system.ans = 0;
-    //control_system.slowclk = 0;
+    control_system.slowclk = 0;
+    control_system.key = 0;
     
     regfile_system.ra = 0;
     regfile_system.rb = 0;
@@ -52,7 +53,7 @@ module hexle_cpu (
     regfile_system.we = 0;
     regfile_system.sa = 0;
     regfile_system.ca = 0;
-    //regfile_system.slowclk = 0;
+    regfile_system.slowclk = 0;
     
     alu_system.alufn_signal = control_system.alufn;
 
@@ -97,11 +98,12 @@ module hexle_cpu (
     proc.keyclk = keyclk;
     
     //***** CONTROL unit ******//
-    //control_system.slowclk = slowclk;
+    control_system.slowclk = slowclk;
     control_system.green = green;
     control_system.red = red;
     control_system.keypad = proc.k;
     control_system.ra_data = regfile_system.reg_data_1;
+    control_system.key = |key_sig;
     
     //***** REGFILE unit *****//
     regfile_system.ra = control_system.ra;
@@ -110,7 +112,7 @@ module hexle_cpu (
     regfile_system.we = control_system.we;
     regfile_system.sa = proc.sa;
     regfile_system.ca = proc.ca;
-    //regfile_system.slowclk = slowclk;
+    regfile_system.slowclk = slowclk;
     
     proc.cd = regfile_system.cd;
     proc.sd = regfile_system.sd;

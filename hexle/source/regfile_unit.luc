@@ -8,7 +8,7 @@ module regfile_unit (
     input ca[4],
     input we,
     input wdsel_out[16],
-    //input slowclk,
+    input slowclk,
     output reg_data_1[16],
     output reg_data_2[16],
     output sd[16], // 
@@ -23,6 +23,10 @@ module regfile_unit (
     //*****REGFILE*******//
     // do not write anything to the regfile unless PC advances 
     regfile.write_enable = 0;
+
+    if (slowclk) {
+      regfile.write_enable = we;
+    }
     
     // connections to regfile memory
     regfile.read_address_2 = rb;
