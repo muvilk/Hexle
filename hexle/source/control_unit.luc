@@ -173,19 +173,18 @@ module control_unit (
 
 //ATTEMPT 1
 
-//ATTEMPT 1 DIGIT 1
-      state.A1D0:
-      
-        if (key == 1) {
-          rb = keypad;
-          address.d = b1001011; // need to update to store B to temp reg of choice, reading B as literal
-          state.d = state.A1D1_A;
-        }
+    //ATTEMPT 1 DIGIT 1
+          state.A1D0:
+          
+            if (key == 1) {
+              rb = c{12b0, keypad};
+              address.d = b1001011; // need to update to store B to temp reg of choice, reading B as literal
+              state.d = state.A1D1_A;
+            }
 
-      state.A1D1_A:
-        rb = CU_ROM[address.q][17:14];
-        address.d = b0111100; // need to update to access register using rb, instead of reading as literal
-        state.d = state.A1D1_B;
+          state.A1D1_A:
+            address.d = b0111100; // need to update to access register using rb, instead of reading as literal
+            state.d = state.A1D1_B;
 
       state.A1D1_B:
         address.d = b0111011;
@@ -199,15 +198,15 @@ module control_unit (
         address.d = b0111001;
         state.d = state.A1D1;
 
-      state.A1D1:
-        address.d = b1001011;
-        case(red) {
-          b1: state.d = state.A1D1_E;
-        }
-        if(key == 1) {
-          rb = keypad         
-          state.d = state.A1D2_A;
-        }
+          state.A1D1:
+            address.d = b1001011;
+            case(red) {
+              b1: state.d = state.A1D1_E;
+            }
+            if(key == 1) {
+              rb = c{12b0, keypad};        
+              state.d = state.A1D2_A;
+            }
 
       state.A1D1_E:
         address.d = b0110010;
@@ -217,11 +216,10 @@ module control_unit (
         address.d = b0110001;
         state.d = state.A1D0;
 
-//ATTEMPT 1 DIGIT 2   
-      state.A1D2_A:
-        rb = CU_ROM[address.q][17:14];
-        address.d = b0111100;
-        state.d = state.A1D2_B;
+    //ATTEMPT 1 DIGIT 2   
+          state.A1D2_A:
+            address.d = b0111100;
+            state.d = state.A1D2_B;
 
       state.A1D2_B:
         address.d = b0111000;
@@ -235,29 +233,28 @@ module control_unit (
         address.d = b0110111;
         state.d = state.A1D2;
 
-      state.A1D2:
-        address.d = b1001011;
-        case(red) {
-          b1: state.d = state.A1D2_E;
-        }
-        if(key == 1) {
-          rb = keypad
-          b1: state.d = state.A1D3_A;
-        }
-              
-      state.A1D2_E:
-        address.d = b0110010;
-        state.d = state.A1D2_F;
-    
-      state.A1D2_F:
-        address.d = b0110000;
-        state.d = state.A1D1;
-      
-//ATTEMPT 1 DIGIT 3
-      state.A1D3_A:
-        rb = CU_ROM[address.q][17:14];
-        address.d = b0111100;
-        state.d = state.A1D3_B;
+          state.A1D2:
+            address.d = b1001011;
+            case(red) {
+              b1: state.d = state.A1D2_E;
+            }
+            if(key == 1) {
+              rb = c{12b0, keypad};
+              state.d = state.A1D3_A;
+            }
+                  
+          state.A1D2_E:
+            address.d = b0110010;
+            state.d = state.A1D2_F;
+        
+          state.A1D2_F:
+            address.d = b0110000;
+            state.d = state.A1D1;
+          
+    //ATTEMPT 1 DIGIT 3
+          state.A1D3_A:
+            address.d = b0111100;
+            state.d = state.A1D3_B;
 
       state.A1D3_B:
         address.d = b0110110;
@@ -271,23 +268,23 @@ module control_unit (
         address.d = b0110101;
         state.d = state.A1D3;
 
-      state.A1D3:
-        address.d = b1001011;
-        case(red) {
-          b1: state.d = state.A1D3_E;
-        }
-        if(key == 1) {
-          rb = keypad
-          b1: state.d = state.A1D4_A;
-        }
-      
-      state.A1D3_E:
-        address.d = b0110010;
-        state.d = state.A1D3_F;
-    
-      state.A1D3_F:
-        address.d = b0101111;
-        state.d = state.A1D2;
+          state.A1D3:
+            address.d = b1000010;
+            case(red) {
+              b1: state.d = state.A1D3_E;
+            }
+            if(key == 1) {
+              rb = c{12b0, keypad};
+              state.d = state.A1D4_A;
+            }
+          
+          state.A1D3_E:
+            address.d = b0110010;
+            state.d = state.A1D3_F;
+        
+          state.A1D3_F:
+            address.d = b0101111;
+            state.d = state.A1D2;
 
 //ATTEMPT 1 DIGIT 4
       state.A1D4_A:
@@ -396,8 +393,12 @@ module control_unit (
 
 //ATTEMPT 2 DIGIT 1
       state.A2D0:
-        address.d = b1001011;
-        state.d = state.A2D1_A;
+
+            if (key == 1) {
+              rb = c{12b0, keypad};
+          address.d = b1001011;
+          state.d = state.A2D1_A;
+            }
 
       state.A2D1_A:
         rb = CU_ROM[address.q][17:14];
@@ -422,7 +423,7 @@ module control_unit (
           b1: state.d = state.A2D1_E;
         }
         if(key == 1) {
-          rb = keypad
+          rb = c{12b0, keypad}
           b1: state.d = state.A2D2_A;
         }
 
@@ -458,7 +459,7 @@ module control_unit (
           b1: state.d = state.A2D2_E;
         }
         if(key == 1) {
-          rb = keypad
+          rb = c{12b0, keypad}
           b1: state.d = state.A2D3_A;
         }
 
@@ -494,7 +495,7 @@ module control_unit (
           b1: state.d = state.A2D2_E;
         }
         if(key == 1) {
-          rb = keypad
+          rb = c{12b0, keypad}
           b1: state.d = state.A2D4_A;
         }
 
