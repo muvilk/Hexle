@@ -425,8 +425,8 @@ module control_unit (
             b1: state.d = state.A2D1_E;
           }
           if(key == 1) {
-            rb = c{12b0, keypad}
-            b1: state.d = state.A2D2_A;
+            rb = c{12b0, keypad};
+            state.d = state.A2D2_A;
           }
 
         state.A2D1_E:
@@ -460,8 +460,8 @@ module control_unit (
             b1: state.d = state.A2D2_E;
           }
           if(key == 1) {
-            rb = c{12b0, keypad}
-            b1: state.d = state.A2D3_A;
+            rb = c{12b0, keypad};
+            state.d = state.A2D3_A;
           }
 
         state.A2D2_E:
