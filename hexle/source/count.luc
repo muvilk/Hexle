@@ -4,18 +4,19 @@ module count (
     output count[4]
   ) {
 
-  var i;
-  var c;
+sig i;
+sig ii;
+sig iii;
+sig iv;
   
   always {
+
+    i = a[3:0] == b;
+    ii = a[7:4] == b;
+    iii = a[11:8] == b;
+    iv = a[15:12] == b;
     
-    for (i = 3; i > -1; i--) { 
-      if (a[3+4*i:4*i] == b) {
-        c = c + b1;
-      }
-    }
-    
-    count = c;
-    
+    count = i + ii + iii + iv;
+
   }
 }
