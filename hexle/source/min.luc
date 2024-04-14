@@ -3,16 +3,34 @@ module min (
     output out[16]
   ) {
 
-var i;
- var t;
-
+sig i[4];
+sig ii[4];
+sig iii[4];
+sig iv[4];
+  
   always {
-    t = b1111;
-    for (i = 3; i > -1; i--) {
-      if (a[3+4*i:4*i] < t) {
-        t = a[3+4*i:4*i];
-      }
+    
+    out = 16b0;
+  
+    i = a[3:0];
+    ii = a[7:4];
+    iii = a[11:8];
+    iv = a[15:12];
+    
+    if (i <= ii && i <= iii && i <= iv) {
+      out = i;
     }
-    out = c{12b0, t};
+    
+    if (ii <= i && ii <= iii && ii <= iv) {
+      out = ii;
+    }
+    
+    if (iii <= i && iii <= ii && iii <= iv) {
+      out = iii;
+    }
+    
+    if (iv <= i && iv <= ii && iv <= iii) {
+      out = iv;
+    }
   }
 }
