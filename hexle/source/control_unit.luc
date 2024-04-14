@@ -15,9 +15,11 @@ module control_unit (
     output bsel[3],
     output wdsel,
     output alufn[6],
-    output next
-    cur_state[7]
-  ) {
+    output next,
+    output cur_state[7]
+    ) 
+
+{
   
   const CU_ROM = { // format: c{ we (1 bit) + ra (4 bits) + rb (4 bits) + rc (4 bits) + bsel (3 bits) + wdsel (1 bit) + alufn (6 bits)} IN THIS ORDER; total: 23 bits in length
     b10000000011010100000101,  //A1D0
@@ -233,7 +235,7 @@ module control_unit (
       
         state.A1D1_F:
           address.d = b0110001;
-          cur_state = 00001101
+          cur_state = 00001101;
           state.d = state.A1D0;
 
   //ATTEMPT 1 DIGIT 2   
@@ -456,22 +458,27 @@ module control_unit (
 
         state.A2D1_A:
           address.d = b0111100;
+          cur_state = 50;
           state.d = state.A2D1_B;
 
         state.A2D1_B:
           address.d = b0111011;
+          cur_state = 51;
           state.d = state.A2D1_C;
 
         state.A2D1_C:
           address.d = b0011111;
+          cur_state = 52;
           state.d = state.A2D1_D;
 
         state.A2D1_D:
           address.d = b0011110;
+          cur_state = 53;
           state.d = state.A2D1;
 
         state.A2D1:
           address.d = b1001011;
+          cur_state = 54;
           case(red) {
             b1: state.d = state.A2D1_E;
           }
@@ -482,31 +489,38 @@ module control_unit (
 
         state.A2D1_E:
           address.d = b0011010;
+          cur_state = 55;
           state.d = state.A2D1_F;
       
         state.A2D1_F:
           address.d = b0011001;
+          cur_state = 56;
           state.d = state.A2D0;
 
   //ATTEMPT 2 DIGIT 2
         state.A2D2_A:
           address.d = b0111100;
+          cur_state = 57;
           state.d = state.A2D2_B;
 
         state.A2D2_B:
           address.d = b0111000;
+          cur_state = 58;
           state.d = state.A2D2_C;
 
         state.A2D2_C:
           address.d = b0011111;
+          cur_state = 59;
           state.d = state.A2D2_D;
 
         state.A2D2_D:
           address.d = b0011101;
+          cur_state = 60
           state.d = state.A2D2;
 
         state.A2D2:
           address.d = b1001011;
+          cur_state = 61;
           case(red) {
             b1: state.d = state.A2D2_E;
           }
@@ -517,31 +531,38 @@ module control_unit (
 
         state.A2D2_E:
           address.d = b0011010;
+          cur_state = 62;
           state.d = state.A2D2_F;
       
         state.A2D2_F:
           address.d = b0011000;
+          cur_state = 63;
           state.d = state.A2D1;
 
   //ATTEMPT 2 DIGIT 3
         state.A2D3_A:
           address.d = b0111100;
+          cur_state = 64;
           state.d = state.A2D3_B;
 
         state.A2D3_B:
           address.d = b0110110;
+          cur_state = 65;
           state.d = state.A2D3_C;
 
         state.A2D3_C:
           address.d = b0011111;
+          cur_state = 66;
           state.d = state.A2D3_D;
 
         state.A2D3_D:
           address.d = b0011100;
+          cur_state = 67;
           state.d = state.A2D3;
 
         state.A2D3:
           address.d = b1001011;
+          cur_state = 68;
           case(red) {
             b1: state.d = state.A2D2_E;
           }
@@ -552,31 +573,38 @@ module control_unit (
 
         state.A2D3_E:
           address.d = b0011010;
+          cur_state = 69;
           state.d = state.A2D3_F;
       
         state.A2D3_F:
           address.d = b0010111;
+          cur_state = 70;
           state.d = state.A2D2;
 
   //ATTEMPT 2 DIGIT 4
         state.A2D4_A:
           address.d = b0111100;
+          cur_state = 71;
           state.d = state.A2D4_B;
 
         state.A2D4_B:
           address.d = b0110100;
+          cur_state = 72;
           state.d = state.A2D4_C;
 
         state.A2D4_C:
           address.d = b0011111;
+          cur_state = 73;
           state.d = state.A2D4_D;
 
         state.A2D4_D:
           address.d = b0011011;
+          cur_state = 74;
           state.d = state.A2D4;
 
         state.A2D4:
           address.d = b1000010;
+          cur_state = 75;
           case(red) {
             b1: state.d = state.A2D4_E;
           }
@@ -586,30 +614,37 @@ module control_unit (
 
         state.A2D4_E:
           address.d = b0011010;
+          cur_state = 76
           state.d = state.A2D4_F;
       
         state.A2D3_F:
           address.d = b0010110;
+          cur_state = 77;
           state.d = state.A2D3;
 
   //ATTEMPT 2 CHECK
         state.A2_MAX:
           address.d = b0010101;
+          cur_state = 78;
           state.d = state.A2_MIN;
         
         state.A2_MIN:
           address.d = b0010100;
+          cur_state = 79;
           state.d = state.A2_HINT;
         
         state.A2_HINT:
           address.d = b0101011;
+          cur_state = 80;
           state.d = state.A2_CMPEQ;
 
         state.A2_CMPEQ:
           address.d = b0101010;
+          cur_state = 81;
           state.d = state.A2_CHECK;
 
         state.A2_CHECK:
+          cur_state = 82;
           case(ra_data) {
               h0001:
                 state.d = state.COUNTER_A2;
@@ -619,16 +654,19 @@ module control_unit (
 
         state.COUNTER_A2:
           address.d = b0100111;
+          cur_state = 83;
           state.d = state.COUNTER_RGB_A2;
 
 
         state.COUNTER_RGB_A2:
           address.d = b0100110;
+          cur_state = 84;
           state.d = state.BRANCH_D1;
 
   //BRANCH D1
         state.BRANCH_D1:
           address.d = b0010011;
+          cur_state = 85;
           case(ra_data[15:12]) {
             h0001:
               state.d = state.BRANCH_D2;
@@ -638,10 +676,12 @@ module control_unit (
         
         state.EXTRACT_A1D1:
           address.d = b0010010;
+          cur_state = 86;
           state.d = state.BRANCH_D1_GY;
 
         state.BRANCH_D1_GY:
           address.d = b0010011;
+          cur_state = 87;
           case(ra_data[15:12]) {
             h0004:
               state.d = state.EXTRACT_A2D1;
@@ -652,27 +692,33 @@ module control_unit (
         //SUBBRANCH 1
         state.EXTRACT_A2D1:	
           address.d = b0010001;	
+          cur_state = 88;
           state.d = state.D1G_CMPEQ;
         
         state.D1G_CMPEQ:	
           address.d = b0010000;	
+          cur_state = 89;
           state.d = state.D1_RETURN_BRANCH;
         
         //SUBBRANCH 2
         state.COUNT_A1D1_IN_A1:	
           address.d = b0001111;	
+          cur_state = 90;
           state.d = state.COUNT_A1D1_IN_A2;
         
         state.COUNT_A1D1_IN_A2:	
           address.d = b0001110;	
+          cur_state = 91;
           state.d = state.D1Y_CMPLE;
         
         state.D1Y_CMPLE:	
           address.d = b0001101;	
+          cur_state = 92;
           state.d = state.D1_RETURN_BRANCH;
 
         state.D1_RETURN_BRANCH:
           address.d = b0001100;
+          cur_state = 93;
           case(ra_data) {
             h0000:
               state.d = state.A2D4;
@@ -683,6 +729,7 @@ module control_unit (
   //BRANCH D2
         state.BRANCH_D2:
           address.d = b0010011;
+          cur_state = 94;
           case(ra_data[11:8]) {
             h0001:
               state.d = state.BRANCH_D3;
@@ -692,10 +739,12 @@ module control_unit (
 
         state.EXTRACT_A1D2:	
           address.d = b0001011;	
+          cur_state = 95;
           state.d = state.BRANCH_D2_GY;
 
         state.BRANCH_D2_GY:
           address.d = b0010011;
+          cur_state = 96;
           case(ra_data[11:8]) {
             h0004:
               state.d = state.EXTRACT_A2D2;
@@ -706,27 +755,33 @@ module control_unit (
         //SUBBRANCH 1
         state.EXTRACT_A2D2:	
           address.d = b0001010;	
+          cur_state = 97;
           state.d = state.D2G_CMPEQ;
         
         state.D2G_CMPEQ:	
           address.d = b0010000;
+          cur_state = 98;
           state.d = state.D2_RETURN_BRANCH;
         
         //SUBBRANCH 2      
         state.COUNT_A1D2_IN_A1:	
           address.d = b0001111;	
+          cur_state = 99;
           state.d = state.COUNT_A1D2_IN_A2;
         
         state.COUNT_A1D2_IN_A2:	
           address.d = b0001110;	
+          cur_state = 100;
           state.d = state.D2Y_CMPLE;
           
         state.D2Y_CMPLE:	
           address.d = b0001101;	
+          cur_state = 101;
           state.d = state.D2_RETURN_BRANCH;
 
         state.D2_RETURN_BRANCH:
           address.d = b0001100;
+          cur_state = 102;
           case(ra_data) {
             h0000:
               state.d = state.A2D4;
@@ -737,6 +792,7 @@ module control_unit (
   //BRANCH D3
         state.BRANCH_D3:
           address.d = b0010011;
+          cur_state = 103;
           case(ra_data[7:4]) {
             h0001:
               state.d = state.BRANCH_D4;
@@ -746,10 +802,12 @@ module control_unit (
 
         state.EXTRACT_A1D3:	
           address.d = b0001001;	
+          cur_state = 104;
           state.d = state.BRANCH_D3_GY;
 
         state.BRANCH_D3_GY:
           address.d = b0010011;
+          cur_state = 105;
           case(ra_data[7:4]) {
             h0004:
               state.d = state.EXTRACT_A2D3;
@@ -760,27 +818,33 @@ module control_unit (
         //SUBBRANCH 1
         state.EXTRACT_A2D3:	
           address.d = b0001000;	
+          cur_state = 106;
           state.d = state.D3G_CMPEQ;
         
         state.D3G_CMPEQ:	
           address.d = b0010000;
+          cur_state = 107;
           state.d = state.D3_RETURN_BRANCH;
         
         //SUBBRANCH 2      
         state.COUNT_A1D3_IN_A1:	
           address.d = b0001111;	
+          cur_state = 108;
           state.d = state.COUNT_A1D3_IN_A2;
         
         state.COUNT_A1D3_IN_A2:	
           address.d = b0001110;	
+          cur_state = 109;
           state.d = state.D3Y_CMPLE;
           
         state.D3Y_CMPLE:	
           address.d = b0001101;	
+          cur_state = 110;
           state.d = state.D3_RETURN_BRANCH;
 
         state.D3_RETURN_BRANCH:
           address.d = b0001100;
+          cur_state = 111;
           case(ra_data) {
             h0000:
               state.d = state.A2D4;
@@ -791,6 +855,7 @@ module control_unit (
   //BRANCH D4
         state.BRANCH_D4:
           address.d = b0010011;
+          cur_state = 112;
           case(ra_data[3:0]) {
             h0001:
               state.d = state.A2_CHECK_GREEN;
@@ -800,10 +865,12 @@ module control_unit (
 
         state.EXTRACT_A1D4:	
           address.d = b0000111;	
+          cur_state = 113;
           state.d = state.BRANCH_D4_GY;
 
         state.BRANCH_D4_GY:
           address.d = b0010011;
+          cur_state = 114;
           case(ra_data[3:0]) {
             h0004:
               state.d = state.EXTRACT_A2D4;
@@ -814,27 +881,33 @@ module control_unit (
         //SUBBRANCH 1
         state.EXTRACT_A2D4:	
           address.d = b0000110;	
+          cur_state = 115;
           state.d = state.D4G_CMPEQ;
         
         state.D4G_CMPEQ:	
           address.d = b0010000;
+          cur_state = 116;
           state.d = state.D4_RETURN_BRANCH;
         
         //SUBBRANCH 2      
         state.COUNT_A1D4_IN_A1:	
           address.d = b0001111;	
+          cur_state = 117;
           state.d = state.COUNT_A1D4_IN_A2;
         
         state.COUNT_A1D4_IN_A2:	
           address.d = b0001110;	
+          cur_state = 118;
           state.d = state.D4Y_CMPLE;
           
         state.D4Y_CMPLE:	
           address.d = b0001101;	
+          cur_state = 119;
           state.d = state.D4_RETURN_BRANCH;
 
         state.D4_RETURN_BRANCH:
           address.d = b0001100;
+          cur_state = 120;
           case(ra_data) {
             h0000:
               state.d = state.A2D4;
@@ -845,14 +918,17 @@ module control_unit (
   //ATTEMPT 2 CHECK RGB  
         state.A2_CHECK_GREEN:	
           address.d = b0000101;	
+          cur_state = 121;
           state.d = state.A2_SHIFT_GREEN;
         
         state.A2_SHIFT_GREEN:	
-          address.d = b0100100;	
+          address.d = b0100100;
+          cur_state = 122;	
           state.d = state.A2_MERGE_GREEN;
         
         state.A2_MERGE_GREEN:	
           address.d = b0000100;
+          cur_state = 123;
           case(ra_data) {
             h4444:
               state.d = state.END;
@@ -862,36 +938,44 @@ module control_unit (
 
         state.A2_CHECK_YELLOW:	
           address.d = b0000011;	
+          cur_state = 124;
           state.d = state.A2_SHIFT_YELLOW;
         
         state.A2_SHIFT_YELLOW:	
           address.d = b0100001;	
+          cur_state = 125;
           state.d = state.A2_MERGE_YELLOW;
         
         state.A2_MERGE_YELLOW:	
           address.d = b0000010;	
+          cur_state = 126;
           state.d = state.MIGRATE_A2_DIGIT;
 
   //SHIFT ATTEMPT 2 TO ATTEMPT 1      
         state.MIGRATE_A2_DIGIT:	
           address.d = b0000001;	
+          cur_state = 127;
           state.d = state.MIGRATE_A2_RGB;
         
         state.MIGRATE_A2_RGB:	
-          address.d = b0000000;	
+          address.d = b0000000;
+          cur_state = 128;	
           state.d = state.RESET_A2_DIGIT;
         
         state.RESET_A2_DIGIT:	
           address.d = b1001000;	
+          cur_state = 129;
           state.d = state.RESET_A2_RGB;
         
         state.RESET_A2_RGB:	
           address.d = b1000111;	
+          cur_state = 130;
           state.d = state.A2D0;
 
   //END RESET
         state.END:
           address.d = b1000010;
+          cur_state = 131;
           case(green || red) { // if enter/delete is pressed
             b1:
               state.d = state.RESET_A1;
@@ -899,34 +983,42 @@ module control_unit (
 
         state.RESET_A1:
           address.d = b1001010;
+          cur_state = 132;
           state.d = state.RESET_A2;
         
         state.RESET_A2:
           address.d = b1001000;
+          cur_state = 133;
           state.d = state.RESET_A1_RGB;
         
         state.RESET_A1_RGB:
           address.d = b1001001;
+          cur_state = 134;
           state.d = state.RESET_A2_RGB;
 
         state.RESET_A2_RGB:
           address.d = b1000111;
+          cur_state = 135;
           state.d = state.RESET_HINT;
 
         state.RESET_HINT:
           address.d = b1000110;
+          cur_state = 136;
           state.d = state.RESET_HINT_RGB;
 
         state.RESET_HINT_RGB:
           address.d = b1000101;
+          cur_state = 137;
           state.d = state.RESET_COUNTER;
         
         state.RESET_COUNTER:
           address.d = b1000100;
+          cur_state = 138;
           state.d = state.RESET_COUNTER_RGB;
         
         state.RESET_COUNTER_RGB:
           address.d = b1000011;
+          cur_state = 139;
           state.d = state.ANSWER_GENERATION;
 
 //      state.EXAMPLE:
