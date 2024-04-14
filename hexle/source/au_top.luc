@@ -53,7 +53,6 @@ module au_top (
     .rst(rst) {
       hexle_cpu hexle_cpu;
       counter frequency_divider(#SIZE(16));
-      pn_gen rng;
       multi_seven_seg seg (#DIGITS(4));
       
     }
@@ -129,10 +128,7 @@ module au_top (
     hexle_cpu.seg_sig = frequency_divider.value[13:7];
     hexle_cpu.rgb_sig = frequency_divider.value[6:3];
     hexle_cpu.keyclk = frequency_divider.value[1:0];
-    
-    rng.next = hexle_cpu.next;
-    rng.seed = 32x{b1};
-    hexle_cpu.ans = rng.num[15:0];
+  
     
     case (keyclock) {
       b00: key_vdd = b1000;

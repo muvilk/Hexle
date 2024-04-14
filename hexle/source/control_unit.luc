@@ -7,7 +7,6 @@ module control_unit (
     input key,
     input keypad[4],
     input ra_data[16],
-    input ans[16],
     output we,
     output ra[4],
     output rb[16],
@@ -102,6 +101,7 @@ module control_unit (
   
   .clk(clk) {
     .rst(rst) {
+      pn_gen rng;
       fsm state = {
         INITIALISATION, ANSWER_GENERATION, MAX_DIGIT, MIN_DIGIT, HINT_CALCULATION, HINT_RGB, 
         A1D0, 
@@ -146,25 +146,25 @@ module control_unit (
     wdsel = CU_ROM[address.q][6];
     alufn = CU_ROM[address.q][5:0];
     cur_state = 255;
-    next = 0;
+    rng.seed = 32x{b1};
+    rng.next = 0;
 
     if (slowclk) {
     
-      case (state.q){
+      case (state.q) {
         
         state.INITIALISATION:
           address.d = b1000010;
           cur_state = 0;
-          case(green || red) { // if enter/delete is pressed
-            b1:
-              state.d = state.ANSWER_GENERATION;
+          if (green || red) { // if enter/delete is pressed
+            rng.next = 1;
+            state.d = state.ANSWER_GENERATION;
           }
           
         state.ANSWER_GENERATION:
           address.d = b1000001; // need to update to store B, reading B as literal
           cur_state = 1;
-          next = 1;
-          rb = ans;
+          rb = rng.num[15:0];
           state.d = state.MAX_DIGIT;
           
         state.MAX_DIGIT:
@@ -222,10 +222,10 @@ module control_unit (
         state.A1D1:
           address.d = b1001011;
           cur_state = 11;
-          case(red) {
-            b1: state.d = state.A1D1_E;
+          if (red) {
+            state.d = state.A1D1_E;
           }
-          if(key == 1) {
+          if (key) {
             rb = c{12b0, keypad};        
             state.d = state.A1D2_A;
           }
@@ -264,10 +264,10 @@ module control_unit (
         state.A1D2:
           address.d = b1001011;
           cur_state = 18;
-          case(red) {
-            b1: state.d = state.A1D2_E;
+          if (red) {
+            state.d = state.A1D2_E;
           }
-          if(key == 1) {
+          if (key) {
             rb = c{12b0, keypad};
             state.d = state.A1D3_A;
           }
@@ -306,10 +306,10 @@ module control_unit (
         state.A1D3:
           address.d = b1001011;
           cur_state = 25;
-          case(red) {
-            b1: state.d = state.A1D3_E;
+          if (red) {
+            state.d = state.A1D3_E;
           }
-          if(key == 1) {
+          if (key) {
             rb = c{12b0, keypad};
             state.d = state.A1D4_A;
           }
@@ -348,11 +348,11 @@ module control_unit (
         state.A1D4:
           address.d = b1000010;
           cur_state = 32;
-          case(red) {
-            b1: state.d = state.A1D4_E;
+          if (red) {
+            state.d = state.A1D4_E;
           }
-          case(green){
-            b1: state.d = state.A1_MAX;
+          if (green){
+            state.d = state.A1_MAX;
           }
         
         state.A1D4_E:
@@ -389,7 +389,7 @@ module control_unit (
         state.A1_CHECK:
           address.d = b0101001;
           cur_state = 39;
-          case(ra_data) {
+          case (ra_data) {
               h0001:
                 state.d = state.SEED;
               default:
@@ -425,7 +425,7 @@ module control_unit (
         state.A1_MERGE_GREEN:
           address.d = b0100011;
           cur_state = 45;
-          case(ra_data) {
+          case (ra_data) {
             h4444:
               state.d = state.END;
             default:
@@ -482,10 +482,10 @@ module control_unit (
         state.A2D1:
           address.d = b1001011;
           cur_state = 54;
-          case(red) {
-            b1: state.d = state.A2D1_E;
+          if (red) {
+            state.d = state.A2D1_E;
           }
-          if(key == 1) {
+          if (key) {
             rb = c{12b0, keypad};
             state.d = state.A2D2_A;
           }
@@ -524,10 +524,10 @@ module control_unit (
         state.A2D2:
           address.d = b1001011;
           cur_state = 61;
-          case(red) {
-            b1: state.d = state.A2D2_E;
+          if (red) {
+            state.d = state.A2D2_E;
           }
-          if(key == 1) {
+          if (key) {
             rb = c{12b0, keypad};
             state.d = state.A2D3_A;
           }
@@ -566,10 +566,10 @@ module control_unit (
         state.A2D3:
           address.d = b1001011;
           cur_state = 68;
-          case(red) {
-            b1: state.d = state.A2D2_E;
+          if (red) {
+            state.d = state.A2D2_E;
           }
-          if(key == 1) {
+          if (key) {
             rb = c{12b0, keypad};
             state.d = state.A2D4_A;
           }
@@ -608,11 +608,11 @@ module control_unit (
         state.A2D4:
           address.d = b1000010;
           cur_state = 75;
-          case(red) {
-            b1: state.d = state.A2D4_E;
+          if (red) {
+            state.d = state.A2D4_E;
           }
-          case(green){
-            b1: state.d = state.A2_MAX;
+          if (green){
+            state.d = state.A2_MAX;
           }
 
         state.A2D4_E:
@@ -649,7 +649,7 @@ module control_unit (
         state.A2_CHECK:
           address.d = b0101001;
           cur_state = 82;
-          case(ra_data) {
+          case (ra_data) {
               h0001:
                 state.d = state.COUNTER_A2;
               default:
@@ -671,7 +671,7 @@ module control_unit (
         state.BRANCH_D1:
           address.d = b0010011;
           cur_state = 85;
-          case(ra_data[15:12]) {
+          case (ra_data[15:12]) {
             h0001:
               state.d = state.BRANCH_D2;
             default:
@@ -686,7 +686,7 @@ module control_unit (
         state.BRANCH_D1_GY:
           address.d = b0010011;
           cur_state = 87;
-          case(ra_data[15:12]) {
+          case (ra_data[15:12]) {
             h0004:
               state.d = state.EXTRACT_A2D1;
           default:
@@ -723,7 +723,7 @@ module control_unit (
         state.D1_RETURN_BRANCH:
           address.d = b0001100;
           cur_state = 93;
-          case(ra_data) {
+          case (ra_data) {
             h0000:
               state.d = state.A2D4;
           default:
@@ -734,7 +734,7 @@ module control_unit (
         state.BRANCH_D2:
           address.d = b0010011;
           cur_state = 94;
-          case(ra_data[11:8]) {
+          case (ra_data[11:8]) {
             h0001:
               state.d = state.BRANCH_D3;
             default:
@@ -749,7 +749,7 @@ module control_unit (
         state.BRANCH_D2_GY:
           address.d = b0010011;
           cur_state = 96;
-          case(ra_data[11:8]) {
+          case (ra_data[11:8]) {
             h0004:
               state.d = state.EXTRACT_A2D2;
           default:
@@ -786,7 +786,7 @@ module control_unit (
         state.D2_RETURN_BRANCH:
           address.d = b0001100;
           cur_state = 102;
-          case(ra_data) {
+          case (ra_data) {
             h0000:
               state.d = state.A2D4;
           default:
@@ -797,7 +797,7 @@ module control_unit (
         state.BRANCH_D3:
           address.d = b0010011;
           cur_state = 103;
-          case(ra_data[7:4]) {
+          case (ra_data[7:4]) {
             h0001:
               state.d = state.BRANCH_D4;
             default:
@@ -812,7 +812,7 @@ module control_unit (
         state.BRANCH_D3_GY:
           address.d = b0010011;
           cur_state = 105;
-          case(ra_data[7:4]) {
+          case (ra_data[7:4]) {
             h0004:
               state.d = state.EXTRACT_A2D3;
           default:
@@ -849,7 +849,7 @@ module control_unit (
         state.D3_RETURN_BRANCH:
           address.d = b0001100;
           cur_state = 111;
-          case(ra_data) {
+          case (ra_data) {
             h0000:
               state.d = state.A2D4;
           default:
@@ -860,7 +860,7 @@ module control_unit (
         state.BRANCH_D4:
           address.d = b0010011;
           cur_state = 112;
-          case(ra_data[3:0]) {
+          case (ra_data[3:0]) {
             h0001:
               state.d = state.A2_CHECK_GREEN;
             default:
@@ -875,7 +875,7 @@ module control_unit (
         state.BRANCH_D4_GY:
           address.d = b0010011;
           cur_state = 114;
-          case(ra_data[3:0]) {
+          case (ra_data[3:0]) {
             h0004:
               state.d = state.EXTRACT_A2D4;
           default:
@@ -912,7 +912,7 @@ module control_unit (
         state.D4_RETURN_BRANCH:
           address.d = b0001100;
           cur_state = 120;
-          case(ra_data) {
+          case (ra_data) {
             h0000:
               state.d = state.A2D4;
           default:
@@ -933,7 +933,7 @@ module control_unit (
         state.A2_MERGE_GREEN:	
           address.d = b0000100;
           cur_state = 123;
-          case(ra_data) {
+          case (ra_data) {
             h4444:
               state.d = state.END;
           default:
@@ -980,9 +980,8 @@ module control_unit (
         state.END:
           address.d = b1000010;
           cur_state = 131;
-          case(green || red) { // if enter/delete is pressed
-            b1:
-              state.d = state.RESET_A1;
+          if (green || red) { // if enter/delete is pressed
+            state.d = state.RESET_A1;
           }
 
         state.RESET_A1:

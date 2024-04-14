@@ -6,16 +6,12 @@ module hexle_cpu (
     input red,
     input key_sig[4],
     input high_contrast,
-    input ans[16],
-    
     input seg_sig[7],
     input rgb_sig[4],
     input keyclk[2],
-    
     output cur_seg,
     output cur_rgb[3],
     output debug[4][16],
-    output next,
     output cur_state[8],
     output reg_debug[16][16]
 
@@ -44,7 +40,6 @@ module hexle_cpu (
     control_system.red = 0;
     control_system.keypad = 0;
     control_system.ra_data = 0;
-    control_system.ans = 0;
     control_system.slowclk = 0;
     control_system.key = 0;
     
@@ -120,10 +115,7 @@ module hexle_cpu (
     proc.sd = regfile_system.sd;
     cur_rgb = proc.cur_rgb;
     cur_seg = proc.cur_seg;
-    
-    next = control_system.next;
-    control_system.ans = ans;
-
+  
     reg_debug = regfile_system.reg_debug;
 
     // debug signals
