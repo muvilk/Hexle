@@ -4,7 +4,7 @@ module rgb_selector (
     output cur_rgb[3]
   ) {
  
-sig rgb[9];
+sig rgb[3];
 
   always {
 
