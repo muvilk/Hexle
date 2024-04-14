@@ -31,20 +31,14 @@ pin digit[4] A40;
 pin digit[5] A43;
 pin digit[6] A46;
 
-pin rgb_red[0] A18;
-pin rgb_red[1] A15;
-pin rgb_red[2] A17;
-pin rgb_red[3] A14;
+pin rgb_clock[0] A18;
+pin rgb_clock[1] A15;
+pin rgb_clock[2] A17;
+pin rgb_clock[3] A14;
 
-pin rgb_green[0] A12;
-pin rgb_green[1] A9;
-pin rgb_green[2] A11;
-pin rgb_green[3] A8;
-
-pin rgb_blue[0] A6;
-pin rgb_blue[1] A3;
-pin rgb_blue[2] A5;
-pin rgb_blue[3] A2;
+pin rgb[0] A12;
+pin rgb[1] A9;
+pin rgb[2] A11;
 
 // inputs
 
