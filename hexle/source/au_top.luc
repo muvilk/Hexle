@@ -25,6 +25,7 @@ module au_top (
   
   sig rst;                  // reset signal
   sig keyclock[2];
+  seven_seg_processor proc;
   
   
   .clk(clk) { // input > button conditioner > edge detector > dff
@@ -53,6 +54,7 @@ module au_top (
       hexle_cpu hexle_cpu;
       counter frequency_divider(#SIZE(16));
       pn_gen rng;
+      multi_seven_seg seg (#DIGITS(4));
       
     }
   }
@@ -71,6 +73,12 @@ module au_top (
     io_sel = 4b1111; // turn off all digits
       
     //
+    
+    proc.cur_state = hexle_cpu.cur_state;
+    seg.values = proc.values;
+    
+    io_seg = ~seg.seg; // counter synced with slowclock is connected to 7-seg output to track state changes
+    io_sel = ~seg.sel;
 
     rgb_red = b1111;
     rgb_green = b1111;
@@ -123,7 +131,7 @@ module au_top (
     hexle_cpu.keyclk = frequency_divider.value[1:0];
     
     rng.next = hexle_cpu.next;
-    rng.seed = hexle_cpu.seed;
+    rng.seed = 32x{b1};
     hexle_cpu.ans = rng.num[15:0];
     
     case (keyclock) {

@@ -4,7 +4,9 @@
     <src>green.luc</src>
     <src>yellow.luc</src>
     <component>pipeline.luc</component>
-    <src>digit_selector.luc</src>
+    <src top="true">au_top.luc</src>
+    <src>seven_seg.luc</src>
+    <src>extract.luc</src>
     <component>counter.luc</component>
     <src>boolean.luc</src>
     <src>compare.luc</src>
@@ -14,8 +16,13 @@
     <src>mux_2.luc</src>
     <src>rgb_interpreter.luc</src>
     <src>rgb_digit_selector.luc</src>
-    <src>alu.luc</src>
-    <src>hexle_cpu.luc</src>
+    <src>seg_interpreter.luc</src>
+    <src>control_unit.luc</src>
+    <src>rgb_selector.luc</src>
+    <src>multi_seven_seg.luc</src>
+    <src>sig_interpreter.luc</src>
+    <src>sig_selector.luc</src>
+    <src>x_bit_shifter.luc</src>
     <src>min.luc</src>
     <src>seg_digit_selector.luc</src>
     <src>regfile_memory.luc</src>
@@ -37,9 +44,19 @@
     <src>rgb_selector.luc</src>
     <src>x_bit_shifter.luc</src>
     <src>sixteenbit_rca.luc</src>
-    <src>regfile_unit.luc</src>
-    <src>multiplier.luc</src>
-    <src>rca_adderarray.luc</src>
+    <src>alu.luc</src>
+    <src>yellow.luc</src>
+    <src>boolean.luc</src>
+    <component>pn_gen.luc</component>
+    <src>key_interpreter.luc</src>
+    <src>digit_selector.luc</src>
+    <src>seg_digit_selector.luc</src>
+    <src>hexle_cpu.luc</src>
+    <src>seg_selector.luc</src>
+    <src>seven_seg_processor.luc</src>
+    <src>mux_4.luc</src>
+    <src>regfile_memory.luc</src>
+    <src>count.luc</src>
     <component>edge_detector.luc</component>
     <src>control_unit.luc</src>
     <constraint>custom.xdc</constraint>

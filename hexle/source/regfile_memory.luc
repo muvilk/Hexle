@@ -12,10 +12,11 @@ module regfile_memory (
     input ca[4],
     output sd[16],
     output cd[16],
-    output seed[16]
+    output reg_debug[16][16]
   ) {
   
   dff registers[16][16](#INIT(16x{{16h0}}), .clk(clk), .rst(rst));
+  var i;
   
   always {
   
@@ -165,8 +166,6 @@ module regfile_memory (
         cd = registers.q[15];
     }
     
-    seed = registers.q[9];
-    
     case(write_enable) {
     
       b0:
@@ -175,6 +174,10 @@ module regfile_memory (
       b1: 
         registers.d[8 * write_address[3] + 4 * write_address[2] + 2 * write_address[1] + 1 * write_address[0]] = write_data;
    
+    }
+    
+    for (i = 0; i < 16; i++) {
+      reg_debug[i] = registers.q[i];
     }
   }
 }
