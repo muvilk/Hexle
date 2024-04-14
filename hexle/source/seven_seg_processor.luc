@@ -1,0 +1,51 @@
+module seven_seg_processor (
+    input cur_state[8],
+    output values[4][4]
+  ) {
+
+  sig hundreds[4];
+  sig tens[4];
+  sig ones[4];
+  
+  always {
+    
+    values = 4x{{h0}};
+    hundreds = h0;
+    tens = h0;
+  
+    if (cur_state > 199) {
+      hundreds = h2;
+    } else if (cur_state > 99) {
+      hundreds = h1;
+    } 
+      
+    if ((cur_state - 100 * hundreds) > 89) {
+      tens = h9;
+    } else if ((cur_state - 100 * hundreds) > 79) {
+      tens = h8;
+    } else if ((cur_state - 100 * hundreds) > 69) {
+      tens = h7;
+    } else if ((cur_state - 100 * hundreds) > 59) {
+      tens = h6;
+    } else if ((cur_state - 100 * hundreds) > 49) {
+      tens = h5;
+    } else if ((cur_state - 100 * hundreds) > 39) {
+      tens = h4;
+    } else if ((cur_state - 100 * hundreds) > 29) {
+      tens = h3;
+    } else if ((cur_state - 100 * hundreds) > 19) {
+      tens = h2;
+    } else if ((cur_state - 100 * hundreds) > 9) {
+      tens = h1;
+    }
+    
+    ones = cur_state - 100 * hundreds - 10 * tens;
+    
+    values[3] = h0;
+    values[2] = hundreds;
+    values[1] = tens;
+    values[0] = ones;
+
+  }
+}
+
