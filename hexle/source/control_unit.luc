@@ -130,7 +130,7 @@ module control_unit (
         
         MIGRATE_A2_DIGIT, MIGRATE_A2_RGB, RESET_A2_DIGIT, RESET_A2_RGB, 
         END, 
-        RESET_A1, RESET_A2, RESET_A1_RGB, RESET_A2_RGB, RESET_HINT, RESET_HINT_RGB, RESET_COUNTER, RESET_COUNTER_RGB}; // we need to add everything here
+        RESET_A1, RESET_A2, RESET_A1_RGB, RESET_A2_RGB_2, RESET_HINT, RESET_HINT_RGB, RESET_COUNTER, RESET_COUNTER_RGB}; // we need to add everything here
       dff address[7]; // adjust bits when we finalise our number of unique control signal combinations ALSO not sure if we need to use dffs or can just initialise a varialbe
     }
   }
@@ -387,6 +387,7 @@ module control_unit (
           state.d = state.A1_CHECK;
 
         state.A1_CHECK:
+          address.d = b0101001;
           cur_state = 39;
           case(ra_data) {
               h0001:
@@ -451,10 +452,10 @@ module control_unit (
 
   //ATTEMPT 2 DIGIT 1
         state.A2D0:
+          address.d = b1001011;
           cur_state = 49;
             if (key == 1) {
               rb = c{12b0, keypad};
-              address.d = b1001011;
               state.d = state.A2D1_A;
             }
 
@@ -646,6 +647,7 @@ module control_unit (
           state.d = state.A2_CHECK;
 
         state.A2_CHECK:
+          address.d = b0101001;
           cur_state = 82;
           case(ra_data) {
               h0001:
@@ -998,7 +1000,7 @@ module control_unit (
           cur_state = 134;
           state.d = state.RESET_A2_RGB;
 
-        state.RESET_A2_RGB:
+        state.RESET_A2_RGB_2:
           address.d = b1000111;
           cur_state = 135;
           state.d = state.RESET_HINT;
