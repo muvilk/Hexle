@@ -11,16 +11,16 @@ sig rgb[3];
     case (cd) {
 
         b0111: // green, cyan for high contrast mode
-          rgb = (cb == 0) ? b101 : b100;
+          rgb = (cb == 0) ? b010: b011;
 
         b0011: // yellow, magenta for high contrast mode
-          rgb = (cb == 0) ? b001 : b010;
+          rgb = (cb == 0) ? b110 : b101;
 
         b0001: // white
-          rgb = b000;
+          rgb = b111;
         
         default:
-          rgb = b111;
+          rgb = b000;
     }
 
     cur_rgb = rgb;

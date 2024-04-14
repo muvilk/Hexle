@@ -17,9 +17,8 @@ module au_top (
     
     output key_vdd[4],
     output digit[7],
-    output rgb_red[4],
-    output rgb_green[4],
-    output rgb_blue[4]
+    output rgb_clock[4],
+    output rgb[3]
     
   ) {
   
@@ -104,17 +103,8 @@ module au_top (
       digit = frequency_divider.value[13:7];
     }
 
-    if (hexle_cpu.cur_rgb[2] == 0) {
-      rgb_red = frequency_divider.value[6:3];
-    }
-
-    if (hexle_cpu.cur_rgb[1] == 0) {
-      rgb_green = frequency_divider.value[6:3];
-    }
-
-    if (hexle_cpu.cur_rgb[0] == 0) {
-      rgb_blue = frequency_divider.value[6:3];
-    }
+    rgb = hexle_cpu.cur_rgb;
+    rgb_clock = frequency_divider.value[6:3];
 
     slowclock_edge.in = frequency_divider.value[2];
     keyclock = frequency_divider.value[1:0];
