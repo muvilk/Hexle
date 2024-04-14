@@ -16,6 +16,7 @@ module control_unit (
     output wdsel,
     output alufn[6],
     output next
+    cur_state[7]
   ) {
   
   const CU_ROM = { // format: c{ we (1 bit) + ra (4 bits) + rb (4 bits) + rc (4 bits) + bsel (3 bits) + wdsel (1 bit) + alufn (6 bits)} IN THIS ORDER; total: 23 bits in length
@@ -107,22 +108,24 @@ module control_unit (
         A1D3_A, A1D3_B, A1D3_C, A1D3_D, A1D3, A1D3_E, A1D3_F, 
         A1D4_A, A1D4_B, A1D4_C, A1D4_D, A1D4, A1D4_E, A1D4_F, 
         A1_MAX, A1_MIN, A1_HINT, A1_CMPEQ, 
-        A1_CHECK, SEED, COUNTER, COUNTER_RGB, 
+        A1_CHECK, SEED, COUNTER_A1, COUNTER_RGB_A1, 
         A1_CHECK_GREEN, A1_SHIFT_GREEN, A1_MERGE_GREEN, 
-        A1_CHECK_YELLOW, A1_SHIFT_YELLOW, A1_MERGE_YELLOW, 
+        A1_CHECK_YELLOW, A1_SHIFT_YELLOW, A1_MERGE_YELLOW,
+
         A2D0, 
         A2D1_A, A2D1_B, A2D1_C, A2D1_D, A2D1, A2D1_E, A2D1_F, 
         A2D2_A, A2D2_B, A2D2_C, A2D2_D, A2D2, A2D2_E, A2D2_F,
         A2D3_A, A2D3_B, A2D3_C, A2D3_D, A2D3, A2D3_E, A2D3_F, 
         A2D4_A, A2D4_B, A2D4_C, A2D4_D, A2D4, A2D4_E, A2D4_F, 
         A2_MAX, A2_MIN, A2_HINT, A2_CMPEQ, 
-        A2_CHECK, COUNTER, COUNTER_RGB, 
+        A2_CHECK, COUNTER_A2, COUNTER_RGB_A2, 
         BRANCH_D1, EXTRACT_A1D1, BRANCH_D1_GY, EXTRACT_A2D1, D1G_CMPEQ, COUNT_A1D1_IN_A1, COUNT_A1D1_IN_A2, D1Y_CMPLE, D1_RETURN_BRANCH, 
         BRANCH_D2, EXTRACT_A1D2, BRANCH_D2_GY, EXTRACT_A2D2, D2G_CMPEQ, COUNT_A1D2_IN_A1, COUNT_A1D2_IN_A2, D2Y_CMPLE, D2_RETURN_BRANCH, 
         BRANCH_D3, EXTRACT_A1D3, BRANCH_D3_GY, EXTRACT_A2D3, D3G_CMPEQ, COUNT_A1D3_IN_A1, COUNT_A1D3_IN_A2, D3Y_CMPLE, D3_RETURN_BRANCH, 
         BRANCH_D4, EXTRACT_A1D4, BRANCH_D4_GY, EXTRACT_A2D4, D4G_CMPEQ, COUNT_A1D4_IN_A1, COUNT_A1D4_IN_A2, D4Y_CMPLE, D4_RETURN_BRANCH, 
         A2_CHECK_GREEN, A2_SHIFT_GREEN, A2_MERGE_GREEN, 
         A2_CHECK_YELLOW, A2_SHIFT_YELLOW, A2_MERGE_YELLOW, 
+        
         MIGRATE_A2_DIGIT, MIGRATE_A2_RGB, RESET_A2_DIGIT, RESET_A2_RGB, 
         END, 
         RESET_A1, RESET_A2, RESET_A1_RGB, RESET_A2_RGB, RESET_HINT, RESET_HINT_RGB, RESET_COUNTER, RESET_COUNTER_RGB}; // we need to add everything here
@@ -147,6 +150,7 @@ module control_unit (
         
         state.INITIALISATION:
           address.d = b1000010;
+          cur_state = 00000000;
           case(green || red) { // if enter/delete is pressed
             b1:
               state.d = state.ANSWER_GENERATION;
@@ -154,24 +158,29 @@ module control_unit (
           
         state.ANSWER_GENERATION:
           address.d = b1000001; // need to update to store B, reading B as literal
+          cur_state = 00000001;
           next = 1;
           rb = ans;
           state.d = state.MAX_DIGIT;
           
         state.MAX_DIGIT:
           address.d = b1000000;
+          cur_state = 00000010;
           state.d = state.MIN_DIGIT;
 
         state.MIN_DIGIT:
           address.d = b0111111;
+          cur_state = 00000011;
           state.d = state.HINT_CALCULATION;
 
         state.HINT_CALCULATION:
           address.d = b0111110;
+          cur_state = 00000100;
           state.d = state.HINT_RGB;
 
         state.HINT_RGB:
           address.d = b0111101;
+          cur_state = 00000101;
           state.d = state.A1D0;
 
 
@@ -179,31 +188,36 @@ module control_unit (
 
       //ATTEMPT 1 DIGIT 1
         state.A1D0:
-        
           if (key == 1) {
             rb = c{12b0, keypad};
             address.d = b1001011; // need to update to store B to temp reg of choice, reading B as literal
+            cur_state = 00000110;
             state.d = state.A1D1_A;
           }
 
         state.A1D1_A:
           address.d = b0111100; // need to update to access register using rb, instead of reading as literal
+          cur_state = 00000111;
           state.d = state.A1D1_B;
 
         state.A1D1_B:
           address.d = b0111011;
+          cur_state = 00001000;
           state.d = state.A1D1_C;
 
         state.A1D1_C:
           address.d = b0111010;
+          cur_state = 00001001;
           state.d = state.A1D1_D;
 
         state.A1D1_D:
           address.d = b0111001;
+          cur_state = 00001010;
           state.d = state.A1D1;
 
         state.A1D1:
           address.d = b1001011;
+          cur_state = 00001011;
           case(red) {
             b1: state.d = state.A1D1_E;
           }
@@ -214,31 +228,38 @@ module control_unit (
 
         state.A1D1_E:
           address.d = b0110010;
+          cur_state = 00001100;
           state.d = state.A1D1_F;
       
         state.A1D1_F:
           address.d = b0110001;
+          cur_state = 00001101
           state.d = state.A1D0;
 
   //ATTEMPT 1 DIGIT 2   
         state.A1D2_A:
           address.d = b0111100;
+          cur_state = 00001110;
           state.d = state.A1D2_B;
 
         state.A1D2_B:
           address.d = b0111000;
+          cur_state = 00001111;
           state.d = state.A1D2_C;
 
         state.A1D2_C:
           address.d = b0111010;
+          cur_state = 00010000;
           state.d = state.A1D2_D;
 
         state.A1D2_D:
           address.d = b0110111;
+          cur_state = 00010001;
           state.d = state.A1D2;
 
         state.A1D2:
           address.d = b1001011;
+          cur_state = 00010010;
           case(red) {
             b1: state.d = state.A1D2_E;
           }
@@ -249,31 +270,38 @@ module control_unit (
                     
         state.A1D2_E:
           address.d = b0110010;
+          cur_state = 00010011;
           state.d = state.A1D2_F;
       
         state.A1D2_F:
           address.d = b0110000;
+          cur_state = 00010100;
           state.d = state.A1D1;
             
   //ATTEMPT 1 DIGIT 3
         state.A1D3_A:
           address.d = b0111100;
+          cur_state = 00010101;
           state.d = state.A1D3_B;
 
         state.A1D3_B:
           address.d = b0110110;
+          cur_state = 00010110;
           state.d = state.A1D3_C;
 
         state.A1D3_C:
           address.d = b0111010;
+          cur_state = 00010111;
           state.d = state.A1D3_D;
 
         state.A1D3_D:
           address.d = b0110101;
+          cur_state = 00011000;
           state.d = state.A1D3;
 
         state.A1D3:
           address.d = b1001011;
+          cur_state = 00011001;
           case(red) {
             b1: state.d = state.A1D3_E;
           }
@@ -284,31 +312,38 @@ module control_unit (
         
         state.A1D3_E:
           address.d = b0110010;
+          cur_state = 00011010;
           state.d = state.A1D3_F;
       
         state.A1D3_F:
           address.d = b0101111;
+          cur_state = 00011011;
           state.d = state.A1D2;
 
   //ATTEMPT 1 DIGIT 4
         state.A1D4_A:
           address.d = b0111100;
+          cur_state = 00011100;
           state.d = state.A1D4_B;
 
         state.A1D4_B:
           address.d = b0110100;
+          cur_state = 00011101;
           state.d = state.A1D4_C;
 
         state.A1D4_C:
           address.d = b0111010;
+          cur_state = 00011110;
           state.d = state.A1D4_D;
 
         state.A1D4_D:
           address.d = b0110011;
+          cur_state = 00011111;
           state.d = state.A1D4;
 
         state.A1D4:
           address.d = b1000010;
+          cur_state = 00100000;
           case(red) {
             b1: state.d = state.A1D4_E;
           }
@@ -318,30 +353,37 @@ module control_unit (
         
         state.A1D4_E:
           address.d = b0110010;
+          cur_state = 00100001;
           state.d = state.A1D4_F;
       
         state.A1D4_F:
           address.d = b0101110;
+          cur_state = 00100010;
           state.d = state.A1D3;
 
   //ATTEMPT 1 CHECK
         state.A1_MAX:
           address.d = b0101101;
+          cur_state = 00100011;
           state.d = state.A1_MIN;
         
         state.A1_MIN:
           address.d = b0101100;
+          cur_state = 00100100;
           state.d = state.A1_HINT;
         
         state.A1_HINT:
           address.d = b0101011;
+          cur_state = 00100101;
           state.d = state.A1_CMPEQ;
 
         state.A1_CMPEQ:
           address.d = b0101010;
+          cur_state = 00100110;
           state.d = state.A1_CHECK;
 
         state.A1_CHECK:
+          cur_state = 00100111;
           case(ra_data) {
               h0001:
                 state.d = state.SEED;
@@ -351,27 +393,33 @@ module control_unit (
           
         state.SEED:
           address.d = b0101000;
-          state.d = state.COUNTER;
+          cur_state = 00101000;
+          state.d = state.COUNTER_A1;
 
-        state.COUNTER:
+        state.COUNTER_A1:
           address.d = b0100111;
-          state.d = state.COUNTER_RGB;
+          cur_state = 00101001;
+          state.d = state.COUNTER_RGB_A1;
         
-        state.COUNTER_RGB:
+        state.COUNTER_RGB_A1:
           address.d = b0100110;
+          cur_state = 00101010;
           state.d = state.A1_CHECK_GREEN;
 
   //ATTEMPT 1 CHECK RGB      
         state.A1_CHECK_GREEN:
           address.d = b0100101;
+          cur_state = 00101011;
           state.d = state.A1_SHIFT_GREEN;
         
         state.A1_SHIFT_GREEN:
           address.d = b0100100;
+          cur_state = 00101100;
           state.d = state.A1_MERGE_GREEN;      
         
         state.A1_MERGE_GREEN:
           address.d = b0100011;
+          cur_state = 00101101;
           case(ra_data) {
             h4444:
               state.d = state.END;
@@ -381,14 +429,17 @@ module control_unit (
 
         state.A1_CHECK_YELLOW:
           address.d = b0100010;
+          cur_state = 00101110;
           state.d = state.A1_SHIFT_YELLOW;
         
         state.A1_SHIFT_YELLOW:
           address.d = b0100001;
+          cur_state = 00101111;
           state.d = state.A1_MERGE_YELLOW;
 
         state.A1_MERGE_YELLOW:
           address.d = b0100000;
+          cur_state = 00110000;
           state.d = state.A2D0;
 
 
@@ -396,7 +447,7 @@ module control_unit (
 
   //ATTEMPT 2 DIGIT 1
         state.A2D0:
-
+          cur_state = 00110001;
             if (key == 1) {
               rb = c{12b0, keypad};
               address.d = b1001011;
@@ -561,19 +612,19 @@ module control_unit (
         state.A2_CHECK:
           case(ra_data) {
               h0001:
-                state.d = state.COUNTER;
+                state.d = state.COUNTER_A2;
               default:
                 state.d = state.A2D4;
           }
 
-        state.COUNTER:
+        state.COUNTER_A2:
           address.d = b0100111;
-          state.d = state.COUNTER_RGB;
+          state.d = state.COUNTER_RGB_A2;
 
 
-        state.COUNTER_RGB:
+        state.COUNTER_RGB_A2:
           address.d = b0100110;
-          state.d = state.A1_CHECK_GREEN;
+          state.d = state.BRANCH_D1;
 
   //BRANCH D1
         state.BRANCH_D1:
