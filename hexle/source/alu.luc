@@ -62,10 +62,10 @@ module alu (
     case(alufn_signal) {
       b000000: out = adder.out;
       b000001: out = adder.out; // module for SUB
-      b000010: out = shifter.shift; // module for SHL
-      b000011: out = c{15b0, compare.cmp}; // module for CMPEQ
-      b000100: out = c{15b0, compare.cmp}; // module for CMPLE
-      b000101: out = boolean.bool; // module for B
+      b100000: out = shifter.shift; // module for SHL
+      b110011: out = c{15b0, compare.cmp}; // module for CMPEQ
+      b110111: out = c{15b0, compare.cmp}; // module for CMPLE
+      b010101: out = boolean.bool; // module for B
       b000111: out = green.out; // module for GRN
       b010111: out = yellow.out; // module for YLW
       b100111: out = c{12b0, extract.out}; // module for EXT
