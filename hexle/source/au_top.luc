@@ -126,5 +126,122 @@ module au_top (
       b10: key_vdd = b0010;
       b11: key_vdd = b0001;
     }
+
+    case (io_dip[0]) {
+      h00:
+        io_led[0] = hexle_cpu.reg_debug[0][7:0];
+        io_led[1] = hexle_cpu.reg_debug[0][15:8];
+      h01:
+        io_led[0] = hexle_cpu.reg_debug[1][7:0];
+        io_led[1] = hexle_cpu.reg_debug[1][15:8];
+      
+      h02:
+        io_led[0] = hexle_cpu.reg_debug[2][7:0];
+        io_led[1] = hexle_cpu.reg_debug[2][15:8];
+      
+      h03:
+        io_led[0] = hexle_cpu.reg_debug[3][7:0];
+        io_led[1] = hexle_cpu.reg_debug[3][15:8];
+      
+      h04:
+        io_led[0] = hexle_cpu.reg_debug[4][7:0];
+        io_led[1] = hexle_cpu.reg_debug[4][15:8];
+      
+      h05:
+        io_led[0] = hexle_cpu.reg_debug[5][7:0];
+        io_led[1] = hexle_cpu.reg_debug[5][15:8];
+      
+      h06:
+        io_led[0] = hexle_cpu.reg_debug[6][7:0];
+        io_led[1] = hexle_cpu.reg_debug[6][15:8];
+      
+      h07:
+        io_led[0] = hexle_cpu.reg_debug[7][7:0];
+        io_led[1] = hexle_cpu.reg_debug[7][15:8];
+      
+      h08:
+        io_led[0] = hexle_cpu.reg_debug[8][7:0];
+        io_led[1] = hexle_cpu.reg_debug[8][15:8];
+      
+      h09:
+        io_led[0] = hexle_cpu.reg_debug[9][7:0];
+        io_led[1] = hexle_cpu.reg_debug[9][15:8];
+      
+      h0A:
+        io_led[0] = hexle_cpu.reg_debug[10][7:0];
+        io_led[1] = hexle_cpu.reg_debug[10][15:8];
+      
+      h0B:
+        io_led[0] = hexle_cpu.reg_debug[11][7:0];
+        io_led[1] = hexle_cpu.reg_debug[11][15:8];
+      
+      h0C:
+        io_led[0] = hexle_cpu.reg_debug[12][7:0];
+        io_led[1] = hexle_cpu.reg_debug[12][15:8];
+      
+      h0D:
+        io_led[0] = hexle_cpu.reg_debug[13][7:0];
+        io_led[1] = hexle_cpu.reg_debug[13][15:8];
+      
+      h0E:
+        io_led[0] = hexle_cpu.reg_debug[14][7:0];
+        io_led[1] = hexle_cpu.reg_debug[14][15:8];
+      
+      h0F:
+        io_led[0] = hexle_cpu.reg_debug[15][7:0];
+        io_led[1] = hexle_cpu.reg_debug[15][15:8];
+        
+      h10:
+        io_led[0] = hexle_cpu.debug[0][7:0];
+        io_led[1] = hexle_cpu.debug[0][15:8];
+      h11:
+        io_led[0] = hexle_cpu.debug[1][7:0];
+        io_led[1] = hexle_cpu.debug[1][15:8];
+      
+      h12:
+        io_led[0] = hexle_cpu.debug[2][7:0];
+        io_led[1] = hexle_cpu.debug[2][15:8];
+        
+      h13:
+        io_led[0] = hexle_cpu.debug[3][7:0];
+        io_led[1] = hexle_cpu.debug[3][15:8];
+      
+      h14:
+        io_led[0] = hexle_cpu.debug[4][7:0];
+        io_led[1] = hexle_cpu.debug[4][15:8];
+        
+      h15:
+        io_led[0] = hexle_cpu.debug[5][7:0];
+        io_led[1] = hexle_cpu.debug[5][15:8];
+        
+      h16:
+        io_led[0] = hexle_cpu.debug[6][7:0];
+        io_led[1] = hexle_cpu.debug[6][15:8];
+        
+      h17:
+        io_led[0] = hexle_cpu.debug[7][7:0];
+        io_led[1] = hexle_cpu.debug[7][15:8];
+      
+      h18:
+        io_led[0] = hexle_cpu.debug[8][7:0];
+        io_led[1] = hexle_cpu.debug[8][15:8];
+      
+      h19:
+        io_led[0] = hexle_cpu.debug[9][7:0];
+        io_led[1] = hexle_cpu.debug[9][15:8];
+        
+      h1A:
+        io_led[0] = hexle_cpu.debug[10][7:0];
+        io_led[1] = hexle_cpu.debug[10][15:8];
+        
+      h1B:
+        io_led[0] = hexle_cpu.debug[11][7:0];
+        io_led[1] = hexle_cpu.debug[11][15:8];
+      
+      h1C:
+        io_led[0] = hexle_cpu.debug[12][7:0];
+        io_led[1] = hexle_cpu.debug[12][15:8];
+      
+    }
   }
 }
