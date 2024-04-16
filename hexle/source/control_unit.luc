@@ -56,7 +56,7 @@ module control_unit (
     b10001000011100000111111, //A1_MIN
     b11111111011100000000001, //A1_HINT
     b11110100011100000110011, //A1_CMPEQ
-    b11110000000000000000000, //A1_CHECK
+    b01110000000000000000000, //A1_CHECK
     b10000000110010000011100, //SEED
     b10110000101100010000000, //COUNTER_A1
     b10101000101010010000000, //COUNTER_RGB_A1
@@ -199,9 +199,9 @@ module control_unit (
     //ATTEMPT 1 DIGIT 1
       state.A1D0:
         cur_state = 6;
+        rb = c{12b0, keypad};
+        address.d = b1001011; // need to update to store B to temp reg of choice, reading B as literal
         if (key) {
-          rb = c{12b0, keypad};
-          address.d = b1001011; // need to update to store B to temp reg of choice, reading B as literal
           statetemp.d = state.A1D1_A;
         }
 
@@ -227,12 +227,12 @@ module control_unit (
 
       state.A1D1:
         address.d = b1001011;
+        rb = c{12b0, keypad};   
         cur_state = 11;
         if (red) {
           statetemp.d = state.A1D1_E;
         }
         if (key) {
-          rb = c{12b0, keypad};        
           statetemp.d = state.A1D2_A;
         }
 
@@ -270,11 +270,11 @@ module control_unit (
       state.A1D2:
         address.d = b1001011;
         cur_state = 18;
+        rb = c{12b0, keypad};
         if (red) {
           statetemp.d = state.A1D2_E;
         }
         if (key) {
-          rb = c{12b0, keypad};
           statetemp.d = state.A1D3_A;
         }
                   
@@ -312,11 +312,11 @@ module control_unit (
       state.A1D3:
         address.d = b1001011;
         cur_state = 25;
+        rb = c{12b0, keypad};
         if (red) {
           statetemp.d = state.A1D3_E;
         }
         if (key) {
-          rb = c{12b0, keypad};
           statetemp.d = state.A1D4_A;
         }
       
@@ -459,9 +459,9 @@ module control_unit (
 //ATTEMPT 2 DIGIT 1
       state.A2D0:
         address.d = b1001011;
+        rb = c{12b0, keypad};
         cur_state = 49;
           if (key) {
-            rb = c{12b0, keypad};
             statetemp.d = state.A2D1_A;
           }
 
@@ -488,11 +488,11 @@ module control_unit (
       state.A2D1:
         address.d = b1001011;
         cur_state = 54;
+        rb = c{12b0, keypad};
         if (red) {
           statetemp.d = state.A2D1_E;
         }
         if (key) {
-          rb = c{12b0, keypad};
           statetemp.d = state.A2D2_A;
         }
 
@@ -530,11 +530,11 @@ module control_unit (
       state.A2D2:
         address.d = b1001011;
         cur_state = 61;
+        rb = c{12b0, keypad};
         if (red) {
           statetemp.d = state.A2D2_E;
         }
         if (key) {
-          rb = c{12b0, keypad};
           statetemp.d = state.A2D3_A;
         }
 
@@ -572,11 +572,11 @@ module control_unit (
       state.A2D3:
         address.d = b1001011;
         cur_state = 68;
+        rb = c{12b0, keypad};
         if (red) {
           statetemp.d = state.A2D2_E;
         }
         if (key) {
-          rb = c{12b0, keypad};
           statetemp.d = state.A2D4_A;
         }
 
