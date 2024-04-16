@@ -17,13 +17,13 @@ pin usb_rx USB_TX;
 pin usb_tx USB_RX;
 
 // Alchitry Io
-pin seg[0] B21;
-pin seg[1] B20;
-pin seg[2] B18;
-pin seg[3] B17;
-pin seg[4] B15;
-pin seg[5] B14;
-pin seg[6] B12;
+pin segment[0] B21;
+pin segment[1] B20;
+pin segment[2] B18;
+pin segment[3] B17;
+pin segment[4] B15;
+pin segment[5] B14;
+pin segment[6] B12;
 pin digit[0] B11;
 pin digit[1] B9;
 pin digit[2] B8;
@@ -78,40 +78,11 @@ pin io_sel[1] A8;
 pin io_sel[2] A42;
 pin io_sel[3] A43;
 
-pin io_seg[0] A5;
-pin io_seg[1] A6;
-pin io_seg[2] A48;
-pin io_seg[3] A46;
-pin io_seg[4] A45;
-pin io_seg[5] A3;
-pin io_seg[6] A2;
-pin io_seg[7] A49;
-// outputs
-
-pin key_vdd[0] A33;
-pin key_vdd[1] A36;
-pin key_vdd[2] A34;
-pin key_vdd[3] A37;
-
-pin seg[0] A39;
-pin seg[1] A42;
-pin seg[2] A45;
-pin seg[3] A48;
-pin seg[4] A40;
-pin seg[5] A43;
-pin seg[6] A46;
-
-pin rgb_red[0] A18;
-pin rgb_red[1] A15;
-pin rgb_red[2] A20;
-pin rgb_red[3] A14;
-
-pin rgb_green[0] A12;
-pin rgb_green[1] A9;
-pin rgb_green[2] A11;
-pin rgb_green[3] A8;
-
-pin rgb_blue[0] A6;
-pin rgb_blue[1] A3;
-pin rgb_blue[2] A5;
-pin rgb_blue[3] A2;
+pin io_segment[0] A5;
+pin io_segment[1] A6;
+pin io_segment[2] A48;
+pin io_segment[3] A46;
+pin io_segment[4] A45;
+pin io_segment[5] A3;
+pin io_segment[6] A2;
+pin io_segment[7] A49;

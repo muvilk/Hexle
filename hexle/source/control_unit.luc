@@ -19,13 +19,6 @@ module control_unit (
     ) 
 
 {
-  
-
-
-
-
-
-
 
   const CU_ROM = { // format: c{ we (1 bit) + ra (4 bits) + rb (4 bits) + rc (4 bits) + bsel (3 bits) + wdsel (1 bit) + alufn (6 bits)} IN THIS ORDER; total: 23 bits in length
     b10001101100010000000000, //A1D2_C
@@ -114,7 +107,7 @@ module control_unit (
     b10000001011110000010111, //A2_CHECK_YELLOW
     b10100111101000000000000, //A2_MERGE_YELLOW
     b10000001000010001011100, //MIGRATE_A2_DIGIT
-    b10000010000110001011100, //MIGRATE_A2_RGB
+    b10000010000110001011100 //MIGRATE_A2_RGB
 
     };
   
@@ -236,17 +229,6 @@ module control_unit (
         address.d = b0111001;
         cur_state = 10;
         statetemp.d = state.A1D2_A;
-
-      state.A1D1:
-        address.d = b1010000;
-        rb = c{12b0, keypad};   
-        cur_state = 11;
-        if (red) {
-          statetemp.d = state.A1D1_E;
-        }
-        if (black) {
-          statetemp.d = state.A1D2_A;
-        }
 
       state.A1D1_E:
         address.d = b0110010;
@@ -964,7 +946,7 @@ module control_unit (
       state.RESET_A2_RGB:	
         address.d = b1000111;	
         cur_state = 130;
-        statetemp.d = state.A2D0;
+        statetemp.d = state.A2D1_A;
 
 //END RESET
       state.END:

@@ -76,7 +76,7 @@ module au_top (
     io_seg = ~seg.seg; // counter synced with slowclock is connected to 7-seg output to track state changes
     io_sel = ~seg.sel;
 
-    seg = 7b0;
+    segment = 7b0;
     digit = 4b0;
     rgb = 3b0;
     
@@ -97,7 +97,7 @@ module au_top (
     hc_button.d = hc_button_edge.out;
 
     if (hexle_cpu.cur_seg) {
-      seg = frequency_divider.value[13:7];
+      segment = frequency_divider.value[13:7];
     }
 
     rgb = hexle_cpu.cur_rgb;
