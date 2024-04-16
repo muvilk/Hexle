@@ -20,15 +20,26 @@ module control_unit (
 
 {
   
+
+
+
+
+
+
+
   const CU_ROM = { // format: c{ we (1 bit) + ra (4 bits) + rb (4 bits) + rc (4 bits) + bsel (3 bits) + wdsel (1 bit) + alufn (6 bits)} IN THIS ORDER; total: 23 bits in length
-    b10000000010100010011100, //A1D0
-    b10000101011110000011100, //A1D1(a)
-    b10000000010110010011100, //A1D1
-    b10000101111110000011100, //A1D2(a)
-    b10000000011000010011100, //A1D2
-    b10000110011110000011100, //A1D3(a)
-    b10000000011010010011100, //A1D3
-    b10000110111110000011100, //A1D4(a)
+    b10001101100010000000000, //A1D2_C
+    b10001101100010000000001, //A1D2_E
+    b10001110000010000000000, //A1D3_C
+    b10001110000010000000001, //A1D3_E
+    b10001110100010000000000, //A1D4_C
+    b10001110100010000000001, //A1D4_E
+    b10010101100100000000000, //A2D2_C
+    b10010101100100000000001, //A2D2_E
+    b10010110000100000000000, //A2D3_C
+    b10010110000100000000001, //A2D3_E
+    b10010110100100000000000, //A2D4_C
+    b10010110100100000000001, //A2D4_E
     b10000000000010001000000, //RESET_A1
     b10000000000110001000000, //RESET_A1_RGB
     b10000000000100001000000, //RESET_A2_DIGIT
@@ -43,17 +54,17 @@ module control_unit (
     b10000000011110000111111, //MIN_DIGIT
     b11110111110000000000001, //HINT_CALCULATION
     b10111000101110010000000, //HINT_RGB
-    b10000110111110000011100, //A1D1_A
-    b11111110011110010100000, //A1D1_B
-    b10001111100010000000000, //A1D1_C
+    b10000000011110000011100, //A1D1_A
+    b11111110010100010100000, //A1D1_B
+    b10001101000010000000000, //A1D1_C
     b10011000000111000000000, //A1D1_D
-    b11111100011110010100000, //A1D2_B
+    b11111100010110010100000, //A1D2_B
     b10011000000110110000000, //A1D2_D
-    b11111010011110010100000, //A1D3_B
+    b11111010011000010100000, //A1D3_B
     b10011000000110100000000, //A1D3_D
-    b11111000011110010100000, //A1D4_B
+    b11111000011010010100000, //A1D4_B
     b10011000100110010000000, //A1D4_D
-    b10001111100010000000001, //A1D1_E
+    b10001101000010000000001, //A1D1_E
     b10011000000111000000001, //A1D1_F
     b10011000000110110000001, //A1D2_F
     b10011000000110100000001, //A1D3_F
@@ -62,7 +73,7 @@ module control_unit (
     b10001000011100000111111, //A1_MIN
     b11111111011100000000001, //A1_HINT
     b11110100011100000110011, //A1_CMPEQ
-    b01110000000000000000000, //A1_CHECK
+    b11110000000000000000000, //A1_CHECK
     b10000000110010000011100, //SEED
     b10110000101100010000000, //COUNTER_A1
     b10101000101010010000000, //COUNTER_RGB_A1
@@ -72,12 +83,12 @@ module control_unit (
     b10000000111110000010111, //A1_CHECK_YELLOW
     b11111000111110010100000, //A1_SHIFT_YELLOW
     b10011111100110000000000, //A1_MERGE_YELLOW
-    b10010111100100000000000, //A2D1_C
+    b10010101000100000000000, //A2D1_C
     b10100000001001000000000, //A2D1_D
     b10100000001000110000000, //A2D2_D
     b10100000001000100000000, //A2D3_D
     b10100000101000010000000, //A2D4_D
-    b10010111100100000000001, //A2D1_E
+    b10010101000100000000001, //A2D1_E
     b10100000001001000000001, //A2D1_F
     b10100000001000110000001, //A2D2_F
     b10100000001000100000001, //A2D3_F
@@ -103,7 +114,8 @@ module control_unit (
     b10000001011110000010111, //A2_CHECK_YELLOW
     b10100111101000000000000, //A2_MERGE_YELLOW
     b10000001000010001011100, //MIGRATE_A2_DIGIT
-    b10000010000110001011100 //MIGRATE_A2_RGB
+    b10000010000110001011100, //MIGRATE_A2_RGB
+
     };
   
   .clk(clk) {
@@ -250,7 +262,7 @@ module control_unit (
       state.A1D1_F:
         address.d = b0110001;
         cur_state = 13;
-        statetemp.d = state.A1D0;
+        statetemp.d = state.A1D1_A;
 
 //ATTEMPT 1 DIGIT 2   
       state.A1D2_A:
@@ -264,7 +276,7 @@ module control_unit (
         statetemp.d = state.A1D2_C;
 
       state.A1D2_C:
-        address.d = b0111010;
+        address.d = b1010110;
         cur_state = 16;
         statetemp.d = state.A1D2_D;
 
@@ -285,14 +297,14 @@ module control_unit (
         }
                   
       state.A1D2_E:
-        address.d = b0110010;
+        address.d = b1010101;
         cur_state = 19;
         statetemp.d = state.A1D2_F;
     
       state.A1D2_F:
         address.d = b0110000;
         cur_state = 20;
-        statetemp.d = state.A1D1;
+        statetemp.d = state.A1D2_A;
           
 //ATTEMPT 1 DIGIT 3
       state.A1D3_A:
@@ -306,7 +318,7 @@ module control_unit (
         statetemp.d = state.A1D3_C;
 
       state.A1D3_C:
-        address.d = b0111010;
+        address.d = b1010100;
         cur_state = 23;
         statetemp.d = state.A1D3_D;
 
@@ -327,14 +339,14 @@ module control_unit (
         }
       
       state.A1D3_E:
-        address.d = b0110010;
+        address.d = b1010011;
         cur_state = 26;
         statetemp.d = state.A1D3_F;
     
       state.A1D3_F:
         address.d = b0101111;
         cur_state = 27;
-        statetemp.d = state.A1D2;
+        statetemp.d = state.A1D3_A;
 
 //ATTEMPT 1 DIGIT 4
       state.A1D4_A:
@@ -348,7 +360,7 @@ module control_unit (
         statetemp.d = state.A1D4_C;
 
       state.A1D4_C:
-        address.d = b0111010;
+        address.d = b1010010;
         cur_state = 30;
         statetemp.d = state.A1D4_D;
 
@@ -368,14 +380,14 @@ module control_unit (
         }
       
       state.A1D4_E:
-        address.d = b0110010;
+        address.d = b1010001;
         cur_state = 33;
         statetemp.d = state.A1D4_F;
     
       state.A1D4_F:
         address.d = b0101110;
         cur_state = 34;
-        statetemp.d = state.A1D3;
+        statetemp.d = state.A1D4_A;
 
 //ATTEMPT 1 CHECK
       state.A1_MAX:
@@ -510,7 +522,7 @@ module control_unit (
       state.A2D1_F:
         address.d = b0011001;
         cur_state = 56;
-        statetemp.d = state.A2D0;
+        statetemp.d = state.A2D1_A;
 
 //ATTEMPT 2 DIGIT 2
       state.A2D2_A:
@@ -524,7 +536,7 @@ module control_unit (
         statetemp.d = state.A2D2_C;
 
       state.A2D2_C:
-        address.d = b0011111;
+        address.d = b1010000;
         cur_state = 59;
         statetemp.d = state.A2D2_D;
 
@@ -545,14 +557,14 @@ module control_unit (
         }
 
       state.A2D2_E:
-        address.d = b0011010;
+        address.d = b1001111;
         cur_state = 62;
         statetemp.d = state.A2D2_F;
     
       state.A2D2_F:
         address.d = b0011000;
         cur_state = 63;
-        statetemp.d = state.A2D1;
+        statetemp.d = state.A2D2_A;
 
 //ATTEMPT 2 DIGIT 3
       state.A2D3_A:
@@ -566,7 +578,7 @@ module control_unit (
         statetemp.d = state.A2D3_C;
 
       state.A2D3_C:
-        address.d = b0011111;
+        address.d = b1001110;
         cur_state = 66;
         statetemp.d = state.A2D3_D;
 
@@ -587,14 +599,14 @@ module control_unit (
         }
 
       state.A2D3_E:
-        address.d = b0011010;
+        address.d = b1001101;
         cur_state = 69;
         statetemp.d = state.A2D3_F;
     
       state.A2D3_F:
         address.d = b0010111;
         cur_state = 70;
-        statetemp.d = state.A2D2;
+        statetemp.d = state.A2D3_A;
 
 //ATTEMPT 2 DIGIT 4
       state.A2D4_A:
@@ -608,7 +620,7 @@ module control_unit (
         statetemp.d = state.A2D4_C;
 
       state.A2D4_C:
-        address.d = b0011111;
+        address.d = b1001100;
         cur_state = 73;
         statetemp.d = state.A2D4_D;
 
@@ -628,14 +640,14 @@ module control_unit (
         }
 
       state.A2D4_E:
-        address.d = b0011010;
+        address.d = b1001011;
         cur_state = 76;
         statetemp.d = state.A2D4_F;
     
       state.A2D3_F:
         address.d = b0010110;
         cur_state = 77;
-        statetemp.d = state.A2D3;
+        statetemp.d = state.A2D4_A;
 
 //ATTEMPT 2 CHECK
       state.A2_MAX:
