@@ -8,7 +8,6 @@ module hexle_cpu (
     input high_contrast,
     input seg_sig[7],
     input rgb_sig[4],
-    output cur_seg,
     output cur_rgb[3],
     output debug[13][16],
     output cur_state[8],
@@ -108,7 +107,6 @@ module hexle_cpu (
     proc.cd = regfile_system.cd;
     proc.sd = regfile_system.sd;
     cur_rgb = proc.cur_rgb;
-    cur_seg = proc.cur_seg;
   
     reg_debug = regfile_system.reg_debug;
 

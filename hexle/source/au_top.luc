@@ -96,12 +96,12 @@ module au_top (
     hc_button_edge.in = hc_button_conditioner.out;
     hc_button.d = hc_button_edge.out;
 
-    if (hexle_cpu.cur_seg) {
-      segment = frequency_divider.value[13:7];
-    }
-
-    rgb = hexle_cpu.cur_rgb;
+    
+    segment = frequency_divider.value[13:7];
     digit = frequency_divider.value[6:3];
+    rgb = hexle_cpu.cur_rgb;
+
+    
 
     slowclock_edge.in = frequency_divider.value[2];
     

@@ -42,8 +42,8 @@ pin io_led[2][5] A14;
 pin io_led[2][6] A12;
 pin io_led[2][7] A11;
 
-pin black B30 pulldown;
-pin red B31 pulldown;
+pin io_dip[0][0] B30 pulldown;
+pin io_dip[0][1] B31 pulldown;
 pin keypad[0] B33 pulldown;
 pin keypad[1] B34 pulldown;
 pin keypad[2] B36 pulldown;
@@ -65,24 +65,15 @@ pin io_dip[2][3] A34 pulldown;
 pin io_dip[2][4] A36 pulldown;
 pin io_dip[2][5] A37 pulldown;
 pin io_dip[2][6] A39 pulldown;
-pin io_dip[2][7] A40 pulldown;
+pin red A40 pulldown;
 
 pin io_button[0] B28 pulldown;
 pin io_button[1] B27 pulldown;
 pin io_button[2] B23 pulldown;
 pin io_button[3] B24 pulldown;
-pin io_button[4] C49 pulldown;
+pin black C49 pulldown;
 
 pin io_sel[0] A9;
 pin io_sel[1] A8;
 pin io_sel[2] A42;
 pin io_sel[3] A43;
-
-pin io_segment[0] A5;
-pin io_segment[1] A6;
-pin io_segment[2] A48;
-pin io_segment[3] A46;
-pin io_segment[4] A45;
-pin io_segment[5] A3;
-pin io_segment[6] A2;
-pin io_segment[7] A49;

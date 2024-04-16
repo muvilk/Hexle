@@ -7,7 +7,6 @@ module sig_processor (
     
     output sa[4], // digit data extracted from requested segment register
     output ca[4], // rgb data extracted from requested rgb register
-    output cur_seg,
     output cur_rgb[3]
   ) {
 
@@ -15,6 +14,8 @@ module sig_processor (
   sig_selector sel; // translate regfile data to extract current outputs using clock signal
   
   always {
+
+    cur_rgb = b000;
     
     int.seg_sig = seg_sig;
     int.rgb_sig = rgb_sig;
@@ -27,9 +28,14 @@ module sig_processor (
     
     sa = int.sa;
     ca = int.ca;
-    
-    cur_seg = sel.cur_seg;
-    cur_rgb = sel.cur_rgb;
-    
+
+    case (seg_sig[2:0]) {
+      b111: cur_rgb = b000;
+      default: 
+        case (sel.cur_seg) {
+          b0: cur_rgb = b000;
+          b1: cur_rgb = sel.cur_rgb;
+        }
+    }
   }
 }

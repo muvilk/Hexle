@@ -19,7 +19,7 @@ module control_unit (
     ) 
 
 {
-
+  
   const CU_ROM = { // format: c{ we (1 bit) + ra (4 bits) + rb (4 bits) + rc (4 bits) + bsel (3 bits) + wdsel (1 bit) + alufn (6 bits)} IN THIS ORDER; total: 23 bits in length
     b10001101100010000000000, //A1D2_C
     b10001101100010000000001, //A1D2_E
@@ -47,7 +47,7 @@ module control_unit (
     b10000000011110000111111, //MIN_DIGIT
     b11110111110000000000001, //HINT_CALCULATION
     b10111000101110010000000, //HINT_RGB
-    b10000000011110000011100, //A1D1_A
+    b10000000011110010011100, //A1D1_A
     b11111110010100010100000, //A1D1_B
     b10001101000010000000000, //A1D1_C
     b10011000000111000000000, //A1D1_D
@@ -66,7 +66,7 @@ module control_unit (
     b10001000011100000111111, //A1_MIN
     b11111111011100000000001, //A1_HINT
     b11110100011100000110011, //A1_CMPEQ
-    b11110000000000000000000, //A1_CHECK
+    b01110000000000000000000, //A1_CHECK
     b10000000110010000011100, //SEED
     b10110000101100010000000, //COUNTER_A1
     b10101000101010010000000, //COUNTER_RGB_A1
@@ -106,9 +106,8 @@ module control_unit (
     b11111010001000000000000, //A2_MERGE_GREEN
     b10000001011110000010111, //A2_CHECK_YELLOW
     b10100111101000000000000, //A2_MERGE_YELLOW
-    b10000001000010001011100, //MIGRATE_A2_DIGIT
-    b10000010000110001011100 //MIGRATE_A2_RGB
-
+    b10000001000010000011100, //MIGRATE_A2_DIGIT
+    b10000010000110000011100 //MIGRATE_A2_RGB
     };
   
   .clk(clk) {
@@ -124,9 +123,9 @@ module control_unit (
         A1_CHECK, COUNTER_A1, COUNTER_RGB_A1, 
         A1_CHECK_GREEN, A1_SHIFT_GREEN, A1_MERGE_GREEN, 
         A1_CHECK_YELLOW, A1_SHIFT_YELLOW, A1_MERGE_YELLOW,
-        A2D1_A, A2D1_B, A2D1_C, A2D1_D, A2D1, A2D1_E, A2D1_F, 
-        A2D2_A, A2D2_B, A2D2_C, A2D2_D, A2D2, A2D2_E, A2D2_F,
-        A2D3_A, A2D3_B, A2D3_C, A2D3_D, A2D3, A2D3_E, A2D3_F, 
+        A2D1_A, A2D1_B, A2D1_C, A2D1_D, A2D1_E, A2D1_F, 
+        A2D2_A, A2D2_B, A2D2_C, A2D2_D, A2D2_E, A2D2_F,
+        A2D3_A, A2D3_B, A2D3_C, A2D3_D, A2D3_E, A2D3_F, 
         A2D4_A, A2D4_B, A2D4_C, A2D4_D, A2D4, A2D4_E, A2D4_F, 
         A2_MAX, A2_MIN, A2_HINT, A2_CMPEQ, 
         A2_CHECK, COUNTER_A2, COUNTER_RGB_A2, 
@@ -185,6 +184,7 @@ module control_unit (
         address.d = b1000000;
         cur_state = 2;
         statetemp.d = state.MIN_DIGIT;
+     
 
       state.MIN_DIGIT:
         address.d = b0111111;
@@ -208,7 +208,7 @@ module control_unit (
 
 
       state.A1D1_A:
-        address.d = b1010001;
+        address.d = b0111100;
         rb = c{12b0, keypad};
         cur_state = 7;
         if (black) {
@@ -242,7 +242,7 @@ module control_unit (
 
 //ATTEMPT 1 DIGIT 2   
       state.A1D2_A:
-        address.d = b1001111;
+        address.d = b0111100;
         cur_state = 14;
         rb = c{12b0, keypad};
         if (red) {
@@ -279,7 +279,7 @@ module control_unit (
           
 //ATTEMPT 1 DIGIT 3
       state.A1D3_A:
-        address.d = b1001101;
+        address.d = b0111100;
         cur_state = 21;
         rb = c{12b0, keypad};
         if (red) {
@@ -316,7 +316,7 @@ module control_unit (
 
 //ATTEMPT 1 DIGIT 4
       state.A1D4_A:
-        address.d = b1001011;
+        address.d = b0111100;
         rb = c{12b0, keypad};
         cur_state = 28;
         if (red) {
@@ -444,7 +444,7 @@ module control_unit (
 //ATTEMPT 2 DIGIT 1
 
       state.A2D1_A:
-        address.d = b1010001;
+        address.d = b0111100;
         cur_state = 50;
         rb = c{12b0, keypad};
         if (black) {
@@ -478,7 +478,7 @@ module control_unit (
 
 //ATTEMPT 2 DIGIT 2
       state.A2D2_A:
-        address.d = b1001111;
+        address.d = b0111100;
         cur_state = 57;
         rb = c{12b0, keypad};
         if (red) {
@@ -515,7 +515,7 @@ module control_unit (
 
 //ATTEMPT 2 DIGIT 3
       state.A2D3_A:
-        address.d = b1001101;
+        address.d = b0111100;
         cur_state = 64;
         rb = c{12b0, keypad};
         if (red) {
@@ -552,11 +552,11 @@ module control_unit (
 
 //ATTEMPT 2 DIGIT 4
       state.A2D4_A:
-        address.d = b1001011;
+        address.d = b0111100;
         cur_state = 71;
         rb = c{12b0, keypad};
         if (red) {
-          statetemp.d = state.A2D2_E;
+          statetemp.d = state.A2D3_E;
         }
         if (black) {
         statetemp.d = state.A2D4_B;
@@ -592,7 +592,7 @@ module control_unit (
         cur_state = 76;
         statetemp.d = state.A2D4_F;
     
-      state.A2D3_F:
+      state.A2D4_F:
         address.d = b0010110;
         cur_state = 77;
         statetemp.d = state.A2D4_A;
@@ -851,7 +851,7 @@ module control_unit (
           h0004:
             statetemp.d = state.EXTRACT_A2D4;
         default:
-            statetemp.d = state.COUNT_A1D3_IN_A1;
+            statetemp.d = state.COUNT_A1D4_IN_A1;
         }
 
       //SUBBRANCH 1
