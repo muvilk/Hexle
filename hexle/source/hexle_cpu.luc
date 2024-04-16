@@ -104,7 +104,7 @@ module hexle_cpu (
     
     //***** REGFILE unit *****//
     regfile_system.ra = control_system.ra;
-    regfile_system.rb = control_system.rb;
+    regfile_system.rb = control_system.rb[3:0];
     regfile_system.rc = control_system.rc;
     regfile_system.we = control_system.we;
     regfile_system.sa = proc.sa;
