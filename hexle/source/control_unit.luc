@@ -14,7 +14,9 @@ module control_unit (
     output bsel[3],
     output wdsel,
     output alufn[6],
-    output cur_state[8]
+    output cur_state[8],
+    output cur_add[7],
+    output signals[23]
     ) 
 
 {
@@ -148,6 +150,8 @@ module control_unit (
     cur_state = 255;
     rng.seed = 32x{b1};
     rng.next = 0;
+    cur_add = address.q;
+    signals = CU_ROM[address.q];
 
     if (slowclk) {
       state.d = statetemp.q;
@@ -194,10 +198,10 @@ module control_unit (
 
     //ATTEMPT 1 DIGIT 1
       state.A1D0:
+        cur_state = 6;
         if (key) {
           rb = c{12b0, keypad};
           address.d = b1001011; // need to update to store B to temp reg of choice, reading B as literal
-          cur_state = 6;
           statetemp.d = state.A1D1_A;
         }
 
