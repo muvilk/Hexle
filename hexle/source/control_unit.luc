@@ -206,9 +206,9 @@ module control_unit (
     //ATTEMPT 1 DIGIT 1
       state.A1D0:
         cur_state = 6;
+        rb = c{12b0, keypad};
+        address.d = b1010010; // need to update to store B to temp reg of choice, reading B as literal
         if (key) {
-          rb = c{12b0, keypad};
-          address.d = b1001011; // need to update to store B to temp reg of choice, reading B as literal
           statetemp.d = state.A1D1_A;
         }
 
@@ -233,7 +233,8 @@ module control_unit (
         statetemp.d = state.A1D1;
 
       state.A1D1:
-        address.d = b1001011;
+        address.d = b1010000;
+        rb = c{12b0, keypad};   
         cur_state = 11;
         if (red) {
           statetemp.d = state.A1D1_E;
@@ -464,7 +465,8 @@ module control_unit (
 
 //ATTEMPT 2 DIGIT 1
       state.A2D0:
-        address.d = b1001011;
+        address.d = b1010010;
+        rb = c{12b0, keypad};
         cur_state = 49;
           if (key) {
             statetemp.d = state.A2D1_A;
