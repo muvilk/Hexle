@@ -97,8 +97,8 @@ module au_top (
     hc_button.d = hc_button_edge.out;
 
     
-    segment = frequency_divider.value[13:7];
-    digit = frequency_divider.value[6:3];
+    segment = frequency_divider.value[19:13];
+    digit = frequency_divider.value[12:9];
     rgb = hexle_cpu.cur_rgb;
 
     
@@ -111,8 +111,8 @@ module au_top (
     hexle_cpu.high_contrast = hc_button.q;  
     hexle_cpu.slowclk = slowclock_edge.out;  
     
-    hexle_cpu.seg_sig = frequency_divider.value[13:7];
-    hexle_cpu.rgb_sig = frequency_divider.value[6:3];
+    hexle_cpu.seg_sig = frequency_divider.value[19:13];
+    hexle_cpu.rgb_sig = frequency_divider.value[12:9];
 
     case (io_dip[0]) {
       h00:
