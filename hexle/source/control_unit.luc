@@ -22,7 +22,7 @@ module control_unit (
   
   const CU_ROM = { // format: c{ we (1 bit) + ra (4 bits) + rb (4 bits) + rc (4 bits) + bsel (3 bits) + wdsel (1 bit) + alufn (6 bits)} IN THIS ORDER; total: 23 bits in length
     b10000000010100010011100, //A1D0
-    b10000110111110000011100, //A1D1(a)
+    b10000101011110000011100, //A1D1(a)
     b10000000010110010011100, //A1D1
     b10000101111110000011100, //A1D2(a)
     b10000000011000010011100, //A1D2
@@ -1034,6 +1034,7 @@ module control_unit (
       state.RESET_COUNTER_RGB:
         address.d = b1000011;
         cur_state = 139;
+        rng.next = 1;
         statetemp.d = state.ANSWER_GENERATION;
 
     }
