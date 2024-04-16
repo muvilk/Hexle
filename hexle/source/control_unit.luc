@@ -1003,7 +1003,7 @@ module control_unit (
       state.RESET_A1_RGB:
         address.d = b1001001;
         cur_state = 134;
-        statetemp.d = state.RESET_A2_RGB;
+        statetemp.d = state.RESET_A2_RGB_2;
 
       state.RESET_A2_RGB_2:
         address.d = b1000111;
