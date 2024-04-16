@@ -1,26 +1,18 @@
 module sig_interpreter (
-    input key_sig[4],
     input seg_sig[7], // [6:5] = register; [4:3] = digit; [2:0] = pin A-G
     input rgb_sig[4], // [3:2] = register; [1:0] = digit
-    input keyclk[2],
-    
-    output k[4], // keypad data
     output sa[4], // address of requested segment register
     output ca[4] // address of requested rgb register
   ) {
   
-  key_interpreter key;
   rgb_interpreter rgb;
   seg_interpreter seg;
 
   always {
     
-    key.in = key_sig;
-    key.keyclk = keyclk;
     seg.seg_sig = seg_sig;
     rgb.rgb_sig = rgb_sig;
     
-    k = key.out;
     sa = seg.address;
     ca = rgb.address;
     

@@ -2,9 +2,8 @@ module control_unit (
     input clk,
     input rst,    
     input slowclk,
-    input green,
+    input black,
     input red,
-    input key,
     input keypad[4],
     input ra_data[16],
     output we,
@@ -23,7 +22,7 @@ module control_unit (
   
   const CU_ROM = { // format: c{ we (1 bit) + ra (4 bits) + rb (4 bits) + rc (4 bits) + bsel (3 bits) + wdsel (1 bit) + alufn (6 bits)} IN THIS ORDER; total: 23 bits in length
     b10000000010100010011100, //A1D0
-    b10000110111110000011100, //A1D1(a)
+    b10000101011110000011100, //A1D1(a)
     b10000000010110010011100, //A1D1
     b10000101111110000011100, //A1D2(a)
     b10000000011000010011100, //A1D2
@@ -169,7 +168,7 @@ module control_unit (
       state.INITIALISATION:
         address.d = b1000010;
         cur_state = 0;
-        if (green || red) { // if enter/delete is pressed
+        if (black || red) { // if enter/delete is pressed
           rng.next = 1;
           statetemp.d = state.ANSWER_GENERATION;
         }
@@ -208,7 +207,7 @@ module control_unit (
         cur_state = 6;
         rb = c{12b0, keypad};
         address.d = b1010010; // need to update to store B to temp reg of choice, reading B as literal
-        if (key) {
+        if (black) {
           statetemp.d = state.A1D1_A;
         }
 
@@ -239,7 +238,7 @@ module control_unit (
         if (red) {
           statetemp.d = state.A1D1_E;
         }
-        if (key) {
+        if (black) {
           statetemp.d = state.A1D2_A;
         }
 
@@ -281,7 +280,7 @@ module control_unit (
         if (red) {
           statetemp.d = state.A1D2_E;
         }
-        if (key) {
+        if (black) {
           statetemp.d = state.A1D3_A;
         }
                   
@@ -323,7 +322,7 @@ module control_unit (
         if (red) {
           statetemp.d = state.A1D3_E;
         }
-        if (key) {
+        if (black) {
           statetemp.d = state.A1D4_A;
         }
       
@@ -364,7 +363,7 @@ module control_unit (
         if (red) {
           statetemp.d = state.A1D4_E;
         }
-        if (green){
+        if (black){
           statetemp.d = state.A1_MAX;
         }
       
@@ -468,7 +467,7 @@ module control_unit (
         address.d = b1010010;
         rb = c{12b0, keypad};
         cur_state = 49;
-          if (key) {
+          if (black) {
             statetemp.d = state.A2D1_A;
           }
 
@@ -499,7 +498,7 @@ module control_unit (
         if (red) {
           statetemp.d = state.A2D1_E;
         }
-        if (key) {
+        if (black) {
           statetemp.d = state.A2D2_A;
         }
 
@@ -541,7 +540,7 @@ module control_unit (
         if (red) {
           statetemp.d = state.A2D2_E;
         }
-        if (key) {
+        if (black) {
           statetemp.d = state.A2D3_A;
         }
 
@@ -583,7 +582,7 @@ module control_unit (
         if (red) {
           statetemp.d = state.A2D2_E;
         }
-        if (key) {
+        if (black) {
           statetemp.d = state.A2D4_A;
         }
 
@@ -624,7 +623,7 @@ module control_unit (
         if (red) {
           statetemp.d = state.A2D4_E;
         }
-        if (green){
+        if (black){
           statetemp.d = state.A2_MAX;
         }
 
@@ -993,7 +992,7 @@ module control_unit (
       state.END:
         address.d = b1000010;
         cur_state = 131;
-        if (green || red) { // if enter/delete is pressed
+        if (black || red) { // if enter/delete is pressed
           statetemp.d = state.RESET_A1;
         }
 
@@ -1035,6 +1034,7 @@ module control_unit (
       state.RESET_COUNTER_RGB:
         address.d = b1000011;
         cur_state = 139;
+        rng.next = 1;
         statetemp.d = state.ANSWER_GENERATION;
 
     }

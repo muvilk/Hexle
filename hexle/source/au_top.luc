@@ -10,8 +10,8 @@ module au_top (
     input io_button [5],    // 5 buttons on IO Shield
     input io_dip [3][8],     // DIP switches on IO Shield
     
-    input key_sig[4],
-    input green,
+    input keypad[4],
+    input black,
     input red,
     input high_contrast,
     
@@ -23,7 +23,6 @@ module au_top (
   ) {
   
   sig rst;                  // reset signal
-  sig keyclock[2];
   seven_seg_processor proc;
   
   
@@ -33,9 +32,9 @@ module au_top (
     reset_conditioner reset_cond;
     edge_detector slowclock_edge(#RISE(1), #FALL(0));
     
-    button_conditioner green_button_conditioner;
-    edge_detector green_button_edge(#RISE(1), #FALL(0));
-    dff green_button;
+    button_conditioner black_button_conditioner;
+    edge_detector black_button_edge(#RISE(1), #FALL(0));
+    dff black_button;
     
     button_conditioner red_button_conditioner;
     edge_detector red_button_edge(#RISE(1), #FALL(0));
@@ -82,16 +81,17 @@ module au_top (
     rgb_green = b1111;
     rgb_blue = b1111;
     key_vdd = b0000;
+    digit = 7b0;
     
     red_button_conditioner.in = red;
     red_button_edge.in = red_button_conditioner.out;
     red_button.d = red_button_edge.out;
     
-    green_button_conditioner.in = green;
-    green_button_edge.in = green_button_conditioner.out;
-    green_button.d = green_button_edge.out;
+    black_button_conditioner.in = black;
+    black_button_edge.in = black_button_conditioner.out;
+    black_button.d = black_button_edge.out;
     
-    keypad_button_conditioner.in = key_sig;
+    keypad_button_conditioner.in = keypad;
     keypad_button_edge.in = keypad_button_conditioner.out;
     keypad_button.d = keypad_button_edge.out;
     
@@ -107,25 +107,15 @@ module au_top (
     rgb_clock = frequency_divider.value[6:3];
 
     slowclock_edge.in = frequency_divider.value[2];
-    keyclock = frequency_divider.value[1:0];
     
     hexle_cpu.red = red_button.q;
-    hexle_cpu.green = green_button.q;
-    hexle_cpu.key_sig = keypad_button.q;
+    hexle_cpu.black = black_button.q;
+    hexle_cpu.keypad = keypad_button.q;
     hexle_cpu.high_contrast = hc_button.q;  
     hexle_cpu.slowclk = slowclock_edge.out;  
     
     hexle_cpu.seg_sig = frequency_divider.value[13:7];
     hexle_cpu.rgb_sig = frequency_divider.value[6:3];
-    hexle_cpu.keyclk = frequency_divider.value[1:0];
-  
-    
-    case (keyclock) {
-      b00: key_vdd = b1000;
-      b01: key_vdd = b0100;
-      b10: key_vdd = b0010;
-      b11: key_vdd = b0001;
-    }
 
     case (io_dip[0]) {
       h00:

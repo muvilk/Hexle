@@ -1,13 +1,10 @@
 module sig_processor (
-    input key_sig[4],
-    input keyclk[2],
     input seg_sig[7], // [6:5] = register; [4:3] = digit; [2:0] = pin A-G
     input rgb_sig[4], // [3:2] = register; [1:0] = digit
     input sd[16], // segment data from register
     input cd[16], // rgb data from register
     input cb, // high contrast signal
     
-    output k[4],
     output sa[4], // digit data extracted from requested segment register
     output ca[4], // rgb data extracted from requested rgb register
     output cur_seg,
@@ -19,10 +16,8 @@ module sig_processor (
   
   always {
     
-    int.key_sig = key_sig;
     int.seg_sig = seg_sig;
     int.rgb_sig = rgb_sig;
-    int.keyclk = keyclk;
     
     sel.sd = sd;
     sel.cd = cd;
@@ -30,7 +25,6 @@ module sig_processor (
     sel.rgb_sig = rgb_sig;
     sel.cb = cb;
     
-    k = int.k;
     sa = int.sa;
     ca = int.ca;
     

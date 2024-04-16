@@ -2,13 +2,12 @@ module hexle_cpu (
     input clk,  // clock
     input slowclk,
     input rst,
-    input green,
+    input black,
     input red,
-    input key_sig[4],
+    input keypad[4],
     input high_contrast,
     input seg_sig[7],
     input rgb_sig[4],
-    input keyclk[2],
     output cur_seg,
     output cur_rgb[3],
     output debug[13][16],
@@ -29,19 +28,17 @@ module hexle_cpu (
     // initial setups to silence output compilation errors
     debug = 13x{{16h0}};
     
-    proc.key_sig = 0;
     proc.seg_sig = 0;
     proc.rgb_sig = 0;
     proc.cd = 0;
     proc.sd = 0;
     proc.cb = 0;
     
-    control_system.green = 0;
+    control_system.black = 0;
     control_system.red = 0;
     control_system.keypad = 0;
     control_system.ra_data = 0;
     control_system.slowclk = 0;
-    control_system.key = 0;
     
     regfile_system.ra = 0;
     regfile_system.rb = 0;
@@ -87,20 +84,17 @@ module hexle_cpu (
 
     // output connections
     
-    proc.key_sig = key_sig;
     proc.seg_sig = seg_sig;
     proc.rgb_sig = rgb_sig;
     proc.cb = high_contrast;
-    proc.keyclk = keyclk;
    
     
     //***** CONTROL unit ******//
     control_system.slowclk = slowclk;
-    control_system.green = green;
+    control_system.black = black;
     control_system.red = red;
-    control_system.keypad = proc.k; // keypad
+    control_system.keypad = keypad; // keypad
     control_system.ra_data = regfile_system.reg_data_1;
-    control_system.key = |key_sig; // keypad
     
     //***** REGFILE unit *****//
     regfile_system.ra = control_system.ra;
